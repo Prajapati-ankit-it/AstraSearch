@@ -1,0 +1,27 @@
+{
+  "name": "astrasearch",
+  "version": "1.0.0",
+  "description": "search engine",
+  "homepage": "https://github.com/Prajapati-ankit-it/AstraSearch#readme",
+  "bugs": {
+    "url": "https://github.com/Prajapati-ankit-it/AstraSearch/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Prajapati-ankit-it/AstraSearch.git"
+  },
+  "license": "ISC",
+  "author": "ankit prajapati",
+  "type": "commonjs",
+  "main": "search.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7"
+  }
+}
