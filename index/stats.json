@@ -2,6 +2,6 @@
   "documents_indexed": 2635,
   "vocabulary_size": 13020,
   "total_postings": 102812,
-  "indexing_time_seconds": 0.6295874118804932,
-  "processing_time_per_doc_ms": 0.2389326041292194
+  "indexing_time_seconds": 0.6214332580566406,
+  "processing_time_per_doc_ms": 0.2358380485983456
 }
