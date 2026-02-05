@@ -1,4 +1,4 @@
-import { InvertedIndex, SearchResult, SearchResponse } from '../types/search.types';
+import { SearchResult, SearchResponse } from '../types/search.types';
 import { IndexLoader } from './indexLoader';
 import { Tokenizer } from './tokenizer';
 import { Ranking } from './ranking';
