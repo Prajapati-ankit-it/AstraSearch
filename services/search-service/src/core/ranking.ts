@@ -17,6 +17,9 @@ export class Ranking {
         .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
         .slice(0, limit);
 
+      // Get the highest score for normalization
+      const maxScore = rankedDocs.length > 0 ? rankedDocs[0]?.[1] ?? 1 : 1;
+
       // Transform to SearchResult format
       const results: SearchResult[] = rankedDocs.map(([docId, score]) => {
         const doc = documents.get(docId);
@@ -28,7 +31,7 @@ export class Ranking {
         return {
           id: doc.answer_id,
           solution: doc.solution,
-          score: this.normalizeScore(score, rankedDocs.length)
+          score: this.normalizeScore(score, maxScore)
         };
       })
       .filter((result): result is SearchResult => result !== null);

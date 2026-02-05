@@ -1,9 +1,9 @@
 export interface Document {
-  id: number;
-  answer_id: string;
-  question_id: string;
-  score: number;
-  solution: string;
+  id: number; // Internal sequential ID (for indexing)
+  answer_id: string; // Original StackOverflow answer ID
+  question_id: string; // Original StackOverflow answer ID
+  score: number; // Original StackOverflow answer ID
+  solution: string; // Cleaned answer content
 }
 
 export interface InvertedIndex {
@@ -11,9 +11,9 @@ export interface InvertedIndex {
 }
 
 export interface SearchResult {
-  id: string;
-  solution: string;
-  score: number;
+  id: string;// Returns answer_id (string) for API consistency
+  solution: string;// Cleaned answer content
+  score: number;// Normalized relevance score
 }
 
 export interface SearchResponse {
