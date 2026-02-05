@@ -9,8 +9,8 @@ class TextNormalizer:
     """Normalize text by lowercasing, removing punctuation, and cleaning whitespace."""
     
     def __init__(self):
-        # Pattern to match punctuation (keep alphanumeric and spaces)
-        self.punctuation_pattern = re.compile(r'[^\w\s]')
+        # Pattern to match punctuation (keep alphanumeric, spaces, and underscores)
+        self.punctuation_pattern = re.compile(r'[^\w\s_]')
         self.whitespace_pattern = re.compile(r'\s+')
     
     def normalize(self, text: Optional[str]) -> str:

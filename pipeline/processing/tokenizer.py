@@ -1,3 +1,4 @@
+import re
 import logging
 from typing import List, Optional
 
@@ -22,6 +23,8 @@ class Tokenizer:
     def __init__(self, remove_stopwords: bool = True):
         self.remove_stopwords = remove_stopwords
         self.stopwords = STOPWORDS if remove_stopwords else set()
+        # Pattern to split on underscores and whitespace
+        self.split_pattern = re.compile(r'[_\s]+')
     
     def tokenize(self, text: Optional[str]) -> List[str]:
         """Tokenize text into words and optionally remove stopwords."""
@@ -29,8 +32,8 @@ class Tokenizer:
             return []
         
         try:
-            # Split on whitespace
-            tokens = text.split()
+            # Split on underscores and whitespace
+            tokens = self.split_pattern.split(text)
             
             # Filter out empty strings and stopwords
             if self.remove_stopwords:
