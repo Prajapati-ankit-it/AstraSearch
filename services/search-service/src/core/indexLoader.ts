@@ -31,7 +31,7 @@ export class IndexLoader {
       this.loaded = true;
 
       logger.info(`Index loaded successfully:`);
-      logger.info(`- Vocabulary size: ${Object.keys(this.index).length}`);
+      logger.info(`- Vocabulary size: ${Object.keys(this.index!).length}`);
       logger.info(`- Documents loaded: ${this.documents.size}`);
 
     } catch (error) {
