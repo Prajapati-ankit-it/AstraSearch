@@ -6,30 +6,26 @@ A scalable indexing system for searching StackOverflow answers using Python.
 
 ```
 search-engine/
+│
 ├── configs/
-│   └── ingestion.yaml          # Configuration-driven schema mapping
+│
 ├── data/
-│   ├── raw/
-│   │   └── dataset.txt         # StackOverflow CSV data
-│   ├── processed/
-│   │   └── documents.json      # Processed documents
-│   └── temp/                   # Temporary files
+│
 ├── index/
-│   ├── inverted_index.json     # Built inverted index
-│   └── stats.json              # Index statistics
-├── pipeline/
-│   ├── ingestion/
-│   │   └── stackoverflow_reader.py  # Document extraction
-│   ├── processing/
-│   │   ├── cleaner.py          # HTML cleaning
-│   │   ├── normalizer.py       # Text normalization
-│   │   └── tokenizer.py        # Tokenization & stopwords
-│   ├── indexing/
-│   │   ├── build_index.py      # Index building logic
-│   │   ├── inverted_index.py   # Inverted index data structure
-│   │   └── index_writer.py     # Disk I/O operations
-│   └── run_pipeline.py         # Main pipeline runner
-└── requirements.txt
+│
+├── pipeline/                ← Python offline jobs
+│
+├── services/                ← online services
+│   │
+│   └── search-service/      ← Node service
+│
+├── crawler/
+│
+├── docker/
+│
+├── requirements.txt
+└── README.md
+
 ```
 
 ## Features
