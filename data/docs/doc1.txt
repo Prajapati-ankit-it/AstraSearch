@@ -1,1 +1,1669 @@
-my name is Ankit.
+A search engine is a software system that provides hyperlinks to web pages, and other relevant information on the Web in response to a user's query. The user enters a query in a web browser or a mobile app, and the search results are typically presented as a list of hyperlinks accompanied by textual summaries and images. Users also have the option of limiting a search to specific types of results, such as images, videos, or news.
+
+For a search provider, its engine is part of a distributed computing system that can encompass many data centers throughout the world. The speed and accuracy of an engine's response to a query are based on a complex system of indexing that is continuously updated by automated web crawlers. This can include data mining the files and databases stored on web servers, although some content is not accessible to crawlers.
+
+There have been many search engines since the dawn of the Web in the 1990s; however, Google Search became the dominant one in the 2000s and has remained so. As of May 2025, according to StatCounter, Google holds approximately 89–90 % of the worldwide search share, with competitors trailing far behind: Bing (~4 %), Yandex (~2.5 %), Yahoo! (~1.3 %), DuckDuckGo (~0.8 %), and Baidu (~0.7 %).[1] Notably, this marks the first time in over a decade that Google's share has fallen below the 90% threshold. The business of websites improving their visibility in search results, known as marketing and optimization, has thus largely focused on Google.
+
+History
+Further information: Timeline of web search engines
+Timeline (full list)
+Year	Engine	Current status
+1993	W3Catalog	Inactive
+ALIWEB	Inactive
+JumpStation	Inactive
+WWW Worm	Inactive
+1994	WebCrawler	Active
+Go.com	Inactive, redirects to Disney
+Lycos	Active
+Infoseek	Inactive, redirects to Disney
+1995	Yahoo! Search	Active, initially a search function for Yahoo! Directory
+Daum	Active
+Search.ch	Active
+Magellan	Inactive
+Excite	Active
+MetaCrawler	Active
+AltaVista	Inactive, acquired by Yahoo! in 2003, since 2013 redirects to Yahoo!
+SAPO	Active
+1996	RankDex	Inactive, incorporated into Baidu in 2000
+Dogpile	Active
+HotBot	Inactive (used Inktomi search technology)
+Ask Jeeves	Active (rebranded ask.com)
+1997	AOL NetFind	Active (rebranded AOL Search since 1999)
+goo.ne.jp	Active
+Northern Light	Inactive
+Yandex	Active
+1998	Google	Active
+Ixquick	Active as Startpage.com
+MSN Search	Active as Bing
+empas	Inactive (merged with NATE)
+1999	AlltheWeb	Inactive (URL redirected to Yahoo!)
+GenieKnows	Inactive, rebranded Yellowee (was redirecting to justlocalbusiness.com)
+Naver	Active
+Teoma	Inactive (redirect to Ask.com)
+2000	Baidu	Active
+Exalead	Inactive
+Gigablast	Inactive
+2001	Kartoo	Inactive
+2003	Info.com	Active
+2004	A9.com	Inactive
+Clusty	Active, Yippy, previously Clusty, now owns Togoda.com
+Mojeek	Active
+Sogou	Active
+2005	SearchMe	Inactive
+KidzSearch	Active, Google Search
+2006	Soso	Inactive, merged with Sogou
+Quaero	Inactive
+Search.com	Active
+ChaCha	Inactive
+Ask.com	Active
+Live Search	Active as Bing, rebranded MSN Search
+2007	wikiseek	Inactive
+Sproose	Inactive
+Wikia Search	Inactive
+Blackle.com	Active, Google Search
+2008	Powerset	Inactive (redirects to Bing)
+Picollator	Inactive
+Viewzi	Inactive
+Boogami	Inactive
+LeapFish	Inactive
+Forestle	Inactive (redirects to Ecosia)
+DuckDuckGo	Active
+TinEye	Active
+2009	Bing	Active, rebranded Live Search
+Yebol	Inactive
+Scout (Goby)	Active
+NATE	Active
+Ecosia	Active
+Startpage.com	Active, sister engine of Ixquick
+2010	Blekko	Inactive, sold to IBM
+Cuil	Inactive
+Yandex (English)	Active
+Parsijoo	Active
+2011	YaCy	Active, P2P
+2012	Volunia	Inactive
+2013	Qwant	Active
+2014	Egerin	Active, Kurdish / Sorani
+Swisscows	Active
+Searx	Active
+2015	Yooz	Inactive
+Cliqz	Inactive
+2016	Kiddle	Active, Google Search
+2017	Presearch	Active
+2018	Kagi	Active
+2020	Petal	Active
+2021	Brave Search	Active
+You.com	Active
+2022	Perplexity	Active
+Pre-1990s
+In 1945, Vannevar Bush described an information retrieval system that would allow a user to access a great expanse of information, all at a single desk, which he called a memex.[2] He described this system in an article titled "As We May Think" in The Atlantic Monthly.[3] The memex was intended to give a user the capability to overcome the ever-increasing difficulty of locating information in ever-growing centralized indices of scientific work. Vannevar Bush envisioned libraries of research with connected annotations, which are similar to modern hyperlinks.[4]
+
+Link analysis eventually became a crucial component of search engines through algorithms such as Hyper Search and PageRank.[5][6]
+
+1990s: Birth of search engines
+The first internet search engines predate the debut of the Web in December 1990: WHOIS user search dates back to 1982,[7] and the Knowbot Information Service multi-network user search was first implemented in 1989.[8] The first well documented search engine that searched content files, namely FTP files, was Archie, which debuted on 10 September 1990.[9]
+
+Prior to September 1993, the World Wide Web was entirely indexed by hand. There was a list of webservers edited by Tim Berners-Lee and hosted on the CERN webserver. One snapshot of the list in 1992 remains,[10] but as more and more web servers went online the central list could no longer keep up. On the NCSA site, new servers were announced under the title "What's New!".[11]
+
+The first tool used for searching content (as opposed to users) on the Internet was Archie.[12] The name stands for "archive" without the "v".[13] It was created by Alan Emtage,[13][14][15][16] computer science student at McGill University in Montreal, Quebec, Canada. The program downloaded the directory listings of all the files located on public anonymous FTP (File Transfer Protocol) sites, creating a searchable database of file names; however, Archie Search Engine did not index the contents of these sites since the amount of data was so limited it could be readily searched manually.
+
+The rise of Gopher (created in 1991 by Mark McCahill at the University of Minnesota) led to two new search programs, Veronica and Jughead. Like Archie, they searched the file names and titles stored in Gopher index systems. Veronica (Very Easy Rodent-Oriented Net-wide Index to Computerized Archives) provided a keyword search of most Gopher menu titles in the entire Gopher listings. Jughead (Jonzy's Universal Gopher Hierarchy Excavation And Display) was a tool for obtaining menu information from specific Gopher servers. While the name of the search engine "Archie Search Engine" was not a reference to the Archie comic book series, "Veronica" and "Jughead" are characters in the series, thus referencing their predecessor.
+
+In the summer of 1993, no search engine existed for the web, though numerous specialized catalogs were maintained by hand. Oscar Nierstrasz at the University of Geneva wrote a series of Perl scripts that periodically mirrored these pages and rewrote them into a standard format. This formed the basis for W3Catalog, the web's first primitive search engine, released on September 2, 1993.[17]
+
+In June 1993, Matthew Gray, then at MIT, produced what was probably the first web robot, the Perl-based World Wide Web Wanderer, and used it to generate an index called "Wandex". The purpose of the Wanderer was to measure the size of the World Wide Web, which it did until late 1995. The web's second search engine Aliweb appeared in November 1993. Aliweb did not use a web robot, but instead depended on being notified by website administrators of the existence at each site of an index file in a particular format.
+
+JumpStation (created in December 1993[18] by Jonathon Fletcher) used a web robot to find web pages and to build its index, and used a web form as the interface to its query program. It was thus the first WWW resource-discovery tool to combine the three essential features of a web search engine (crawling, indexing, and searching) as described below. Because of the limited resources available on the platform it ran on, its indexing and hence searching were limited to the titles and headings found in the web pages the crawler encountered.
+
+One of the first "all text" crawler-based search engines was WebCrawler, which came out in 1994. Unlike its predecessors, it allowed users to search for any word in any web page, which has become the standard for all major search engines since. It was also the search engine that was widely known by the public. Also, in 1994, Lycos (which started at Carnegie Mellon University) was launched and became a major commercial endeavor.
+
+The first popular search engine on the Web was Yahoo! Search.[19] The first product from Yahoo!, founded by Jerry Yang and David Filo in January 1994, was a Web directory called Yahoo! Directory. In 1995, a search function was added, allowing users to search Yahoo! Directory.[20][21] It became one of the most popular ways for people to find web pages of interest, but its search function operated on its web directory, rather than its full-text copies of web pages.
+
+Soon after, a number of search engines appeared and vied for popularity. These included Magellan, Excite, Infoseek, Inktomi, Northern Light, and AltaVista. Information seekers could also browse the directory instead of doing a keyword-based search.
+
+In 1996, Robin Li developed the RankDex site-scoring algorithm for search engines results page ranking[22][23][24] and received a US patent for the technology.[25] It was the first search engine that used hyperlinks to measure the quality of websites it was indexing,[26] predating the very similar algorithm patent filed by Google two years later in 1998.[27] Larry Page referenced Li's work in some of his U.S. patents for PageRank.[28] Li later used his RankDex technology for the Baidu search engine, which was founded by him in China and launched in 2000.
+
+In 1996, Netscape was looking to give a single search engine an exclusive deal as the featured search engine on Netscape's web browser. There was so much interest that instead, Netscape struck deals with five of the major search engines: for $5 million a year, each search engine would be in rotation on the Netscape search engine page. The five engines were Yahoo!, Magellan, Lycos, Infoseek, and Excite.[29][30]
+
+Google adopted the idea of selling search terms in 1998 from a small search engine company named goto.com. This move had a significant effect on the search engine business, which went from struggling to one of the most profitable businesses in the Internet.[31][32]
+
+Search engines were also known as some of the brightest stars in the Internet investing frenzy that occurred in the late 1990s.[33] Several companies entered the market spectacularly, receiving record gains during their initial public offerings. Some have taken down their public search engine and are marketing enterprise-only editions, such as Northern Light. Many search engine companies were caught up in the dot-com bubble, a speculation-driven market boom that peaked in March 2000.
+
+2000s–present: Post dot-com bubble
+Around 2000, Google's search engine rose to prominence.[34] The company achieved better results for many searches with an algorithm called PageRank, as was explained in the paper Anatomy of a Search Engine written by Sergey Brin and Larry Page, the later founders of Google.[6] This iterative algorithm ranks web pages based on the number and PageRank of other web sites and pages that link there, on the premise that good or desirable pages are linked to more than others. Larry Page's patent for PageRank cites Robin Li's earlier RankDex patent as an influence.[28][24] Google also maintained a minimalist interface to its search engine. In contrast, many of its competitors embedded a search engine in a web portal. In fact, the Google search engine became so popular that spoof engines emerged such as Mystery Seeker.
+
+By 2000, Yahoo! was providing search services based on Inktomi's search engine. Yahoo! acquired Inktomi in 2002, and Overture (which owned AlltheWeb and AltaVista) in 2003. Yahoo! switched to Google's search engine until 2004, when it launched its own search engine based on the combined technologies of its acquisitions.
+
+Microsoft first launched MSN Search in the fall of 1998 using search results from Inktomi. In early 1999, the site began to display listings from Looksmart, blended with results from Inktomi. For a short time in 1999, MSN Search used results from AltaVista instead. In 2004, Microsoft began a transition to its own search technology, powered by its own web crawler (called msnbot).
+
+Microsoft's rebranded search engine, Bing, was launched on June 1, 2009. On July 29, 2009, Yahoo! and Microsoft finalized a deal in which Yahoo! Search would be powered by Microsoft Bing technology.
+
+As of 2019, active search engine crawlers include those of Baidu, Bing, Brave,[35] Google, DuckDuckGo, Gigablast, Mojeek, Sogou and Yandex.
+
+
+Distributed computing is a field of computer science that studies distributed systems, defined as computer systems whose inter-communicating components are located on different networked computers.[1][2]
+
+The components of a distributed system communicate and coordinate their actions by passing messages to one another in order to achieve a common goal. Three challenges of distributed systems are: maintaining concurrency of components, overcoming the lack of a global clock, and managing the independent failure of components.[1] When a component of one system fails, the entire system does not fail.[3] Examples of distributed systems vary from SOA-based systems to microservices to massively multiplayer online games to peer-to-peer applications. Distributed systems cost more than monolithic architectures, primarily due to increased needs for additional hardware, servers, gateways, firewalls, new subnets, proxies, and so on.[4] Distributed systems can also suffer from fallacies of distributed computing. Conversely, a well-designed distributed system is more scalable, more durable, more changeable, and more fine-tuned than a monolithic application deployed on a single machine.[5] According to Marc Brooker: "a system is scalable in the range where marginal cost of additional workload is nearly constant." Serverless technologies fit this definition but the total cost of ownership, and not just the infra cost must be considered.[6]
+
+A computer program that runs within a distributed system is called a distributed program,[7] and distributed programming is the process of writing such programs.[8] There are many types of implementations for the message-passing mechanism, including pure HTTP, RPC-like connectors, and message queues.[9]
+
+Distributed computing also refers to the use of distributed systems to solve computational problems. In distributed computing, a problem is divided into many tasks, each of which is solved by one or more computers,[10] which communicate with each other via message passing.[11]
+
+Introduction
+The word distributed in terms such as "distributed system", "distributed programming", and "distributed algorithm" originally referred to computer networks where individual computers were physically distributed within some geographical area.[12] The terms are nowadays used in a much wider sense, even referring to autonomous processes that run on the same physical computer and interact with each other by message passing.[11]
+
+There is no single definition of a distributed system,[13] but two common properties are generally cited:
+
+There are several autonomous computational entities (computers or nodes), each of which has its own local memory.[14]
+The entities communicate with each other by message passing.[15]
+A distributed system may have a common goal, such as solving a large computational problem;[16] the user then perceives the collection of autonomous processors as a unit. Alternatively, each computer may have its own user with individual needs, and the purpose of the distributed system is to coordinate the use of shared resources or provide communication services to the users.[17]
+
+Other typical properties of distributed systems are:
+
+The system must tolerate failures in individual computers.[18]
+The structure of the system (network topology, network latency, number of computers) is not known in advance.
+The system may consist of different kinds of computers and network links.
+The system may change during the execution of a distributed program.[19]
+Each computer has a limited, incomplete view of the system.
+Each computer may know only one part of the input.[20]
+Patterns
+Here are common architectural patterns used for distributed computing:[21]
+
+Saga interaction pattern
+Microservices
+Event driven architecture
+Client–server architecture
+Service-oriented architecture (SOA)
+Publish–subscribe pattern
+Peer-to-peer (P2P)
+Events vs. Messages
+In distributed systems, events represent a fact or state change (e.g., OrderPlaced) and are typically broadcast asynchronously to multiple consumers, promoting loose coupling and scalability. While events generally don't expect an immediate response, acknowledgment mechanisms are often implemented at the infrastructure level (e.g., Kafka commit offsets, SNS delivery statuses) rather than being an inherent part of the event pattern itself.[22][23]
+
+In contrast, messages serve a broader role, encompassing commands (e.g., ProcessPayment), events (e.g., PaymentProcessed), and documents (e.g., DataPayload). Both events and messages can support various delivery guarantees, including at-least-once, at-most-once, and exactly-once, depending on the technology stack and implementation. However, exactly-once delivery is often achieved through idempotency mechanisms rather than true, infrastructure-level exactly-once semantics.[22][23]
+
+Delivery patterns for both events and messages include publish/subscribe (one-to-many) and point-to-point (one-to-one). While request/reply is technically possible, it is more commonly associated with messaging patterns rather than pure event-driven systems. Events excel at state propagation and decoupled notifications, while messages are better suited for command execution, workflow orchestration, and explicit coordination.[22][23]
+
+Modern architectures commonly combine both approaches, leveraging events for distributed state change notifications and messages for targeted command execution and structured workflows based on specific timing, ordering, and delivery requirements.[22][23]
+
+Parallel and distributed computing
+
+(a), (b): a distributed system.
+(c): a parallel system.
+Distributed systems are groups of networked computers which share a common goal for their work. The terms "concurrent computing", "parallel computing", and "distributed computing" have much overlap, and no clear distinction exists between them.[24] The same system may be characterized both as "parallel" and "distributed"; the processors in a typical distributed system run concurrently in parallel.[25] Parallel computing may be seen as a particularly tightly coupled form of distributed computing,[26] and distributed computing may be seen as a loosely coupled form of parallel computing.[13] Nevertheless, it is possible to roughly classify concurrent systems as "parallel" or "distributed" using the following criteria:
+
+In parallel computing, all processors may have access to a shared memory to exchange information between processors.[27]
+In distributed computing, each processor has its own private memory (distributed memory). Information is exchanged by passing messages between the processors.[28]
+The figure on the right illustrates the difference between distributed and parallel systems. Figure (a) is a schematic view of a typical distributed system; the system is represented as a network topology in which each node is a computer and each line connecting the nodes is a communication link. Figure (b) shows the same distributed system in more detail: each computer has its own local memory, and information can be exchanged only by passing messages from one node to another by using the available communication links. Figure (c) shows a parallel system in which each processor has a direct access to a shared memory.
+
+The situation is further complicated by the traditional uses of the terms parallel and distributed algorithm that do not quite match the above definitions of parallel and distributed systems (see below for more detailed discussion). Nevertheless, as a rule of thumb, high-performance parallel computation in a shared-memory multiprocessor uses parallel algorithms while the coordination of a large-scale distributed system uses distributed algorithms.[29]
+
+History
+The use of concurrent processes which communicate through message-passing has its roots in operating system architectures studied in the 1960s.[30] The first widespread distributed systems were local-area networks such as Ethernet, which was invented in the 1970s.[31]
+
+ARPANET, one of the predecessors of the Internet, was introduced in the late 1960s, and ARPANET e-mail was invented in the early 1970s. E-mail became the most successful application of ARPANET,[32] and it is probably the earliest example of a large-scale distributed application. In addition to ARPANET (and its successor, the global Internet), other early worldwide computer networks included Usenet and FidoNet from the 1980s, both of which were used to support distributed discussion systems.[33]
+
+The study of distributed computing became its own branch of computer science in the late 1970s and early 1980s. The first conference in the field, Symposium on Principles of Distributed Computing (PODC), dates back to 1982, and its counterpart International Symposium on Distributed Computing (DISC) was first held in Ottawa in 1985 as the International Workshop on Distributed Algorithms on Graphs.[34]
+
+Distributed Computing Architectures
+Various hardware and software architectures are used for distributed computing. At a lower level, it is necessary to interconnect multiple CPUs with some sort of network, regardless of whether that network is printed onto a circuit board or made up of loosely coupled devices and cables. At a higher level, it is necessary to interconnect processes running on those CPUs with some sort of communication system.[35]
+
+Whether these CPUs share resources or not determines a first distinction between three types of architecture:
+
+Shared memory
+Shared disk
+Shared nothing.
+Distributed programming typically falls into one of several basic architectures: client–server, three-tier, n-tier, or peer-to-peer; or categories: loose coupling, or tight coupling.[36]
+
+Client–server: architectures where smart clients contact the server for data then format and display it to the users. Input at the client is committed back to the server when it represents a permanent change.
+Three-tier: architectures that move the client intelligence to a middle tier so that stateless clients can be used. This simplifies application deployment. Most web applications are three-tier.
+n-tier: architectures that refer typically to web applications which further forward their requests to other enterprise services. This type of application is the one most responsible for the success of application servers.
+Peer-to-peer: architectures where there are no special machines that provide a service or manage the network resources.[37]: 227  Instead all responsibilities are uniformly divided among all machines, known as peers. Peers can serve both as clients and as servers.[38] Examples of this architecture include BitTorrent and the bitcoin network.
+Another basic aspect of distributed computing architecture is the method of communicating and coordinating work among concurrent processes. Through various message passing protocols, processes may communicate directly with one another, typically in a main/sub relationship. Alternatively, a "database-centric" architecture can enable distributed computing to be done without any form of direct inter-process communication, by utilizing a shared database.[39] Database-centric architecture in particular provides relational processing analytics in a schematic architecture allowing for live environment relay. This enables distributed computing functions both within and beyond the parameters of a networked database.[40]
+
+Cell-Based Architecture
+Cell-based architecture is a distributed computing approach in which computational resources are organized into self-contained units called cells. Each cell operates independently, processing requests while maintaining scalability, fault isolation, and availability.[41][42][43]
+
+A cell typically consists of multiple services or application components and functions as an autonomous unit. Some implementations replicate entire sets of services across multiple cells, while others partition workloads between cells. In replicated models, requests may be rerouted to an operational cell if another experiences a failure. This design is intended to enhance system resilience by reducing the impact of localized failures.[44][45][46]
+
+Some implementations employ circuit breakers within and between cells. Within a cell, circuit breakers may be used to prevent cascading failures among services, while inter-cell circuit breakers can isolate failing cells and redirect traffic to those that remain operational.[47][48][49]
+
+Cell-based architecture has been adopted in some large-scale distributed systems, particularly in cloud-native and high-availability environments, where fault isolation and redundancy are key design considerations. Its implementation varies depending on system requirements, infrastructure constraints, and operational objectives.[50][51][52]
+
+Applications
+Reasons for using distributed systems and distributed computing may include:
+
+The very nature of an application may require the use of a communication network that connects several computers: for example, data produced in one physical location and required in another location.
+There are many cases in which the use of a single computer would be possible in principle, but the use of a distributed system is beneficial for practical reasons. For example:
+It can allow for much larger storage and memory, faster compute, and higher bandwidth than a single machine.
+It can provide more reliability than a non-distributed system, as there is no single point of failure. Moreover, a distributed system may be easier to expand and manage than a monolithic uniprocessor system.[53]
+It may be more cost-efficient to obtain the desired level of performance by using a cluster of several low-end computers, in comparison with a single high-end computer.
+Examples
+Examples of distributed systems and applications of distributed computing include the following:[54]
+
+telecommunications networks:
+telephone networks and cellular networks,
+computer networks such as the Internet,
+wireless sensor networks,
+routing algorithms;
+network applications:
+World Wide Web and peer-to-peer networks,
+massively multiplayer online games and virtual reality communities,
+distributed databases and distributed database management systems,
+network file systems,
+distributed cache such as burst buffers,
+distributed information processing systems such as banking systems and airline reservation systems;
+real-time process control:
+aircraft control systems,
+industrial control systems;
+parallel computation:
+scientific computing, including cluster computing, grid computing, cloud computing,[55] and various volunteer computing projects,
+distributed rendering in computer graphics.
+peer-to-peer
+Reactive distributed systems
+According to Reactive Manifesto, reactive distributed systems are responsive, resilient, elastic and message-driven. Subsequently, Reactive systems are more flexible, loosely-coupled and scalable. To make your systems reactive, you are advised to implement Reactive Principles. Reactive Principles are a set of principles and patterns which help to make your cloud native application as well as edge native applications more reactive.[56]
+
+Theoretical foundations
+Main article: Distributed algorithm
+Models
+Many tasks that we would like to automate by using a computer are of question–answer type: we would like to ask a question and the computer should produce an answer. In theoretical computer science, such tasks are called computational problems. Formally, a computational problem consists of instances together with a solution for each instance. Instances are questions that we can ask, and solutions are desired answers to these questions.
+
+Theoretical computer science seeks to understand which computational problems can be solved by using a computer (computability theory) and how efficiently (computational complexity theory). Traditionally, it is said that a problem can be solved by using a computer if we can design an algorithm that produces a correct solution for any given instance. Such an algorithm can be implemented as a computer program that runs on a general-purpose computer: the program reads a problem instance from input, performs some computation, and produces the solution as output. Formalisms such as random-access machines or universal Turing machines can be used as abstract models of a sequential general-purpose computer executing such an algorithm.[57][58]
+
+The field of concurrent and distributed computing studies similar questions in the case of either multiple computers, or a computer that executes a network of interacting processes: which computational problems can be solved in such a network and how efficiently? However, it is not at all obvious what is meant by "solving a problem" in the case of a concurrent or distributed system: for example, what is the task of the algorithm designer, and what is the concurrent or distributed equivalent of a sequential general-purpose computer?[citation needed]
+
+The discussion below focuses on the case of multiple computers, although many of the issues are the same for concurrent processes running on a single computer.
+
+Three viewpoints are commonly used:
+
+Parallel algorithms in shared-memory model
+All processors have access to a shared memory. The algorithm designer chooses the program executed by each processor.
+One theoretical model is the parallel random-access machines (PRAM) that are used.[59] However, the classical PRAM model assumes synchronous access to the shared memory.
+Shared-memory programs can be extended to distributed systems if the underlying operating system encapsulates the communication between nodes and virtually unifies the memory across all individual systems.
+A model that is closer to the behavior of real-world multiprocessor machines and takes into account the use of machine instructions, such as Compare-and-swap (CAS), is that of asynchronous shared memory. There is a wide body of work on this model, a summary of which can be found in the literature.[60][61]
+Parallel algorithms in message-passing model
+The algorithm designer chooses the structure of the network, as well as the program executed by each computer.
+Models such as Boolean circuits and sorting networks are used.[62] A Boolean circuit can be seen as a computer network: each gate is a computer that runs an extremely simple computer program. Similarly, a sorting network can be seen as a computer network: each comparator is a computer.
+Distributed algorithms in message-passing model
+The algorithm designer only chooses the computer program. All computers run the same program. The system must work correctly regardless of the structure of the network.
+A commonly used model is a graph with one finite-state machine per node.
+In the case of distributed algorithms, computational problems are typically related to graphs. Often the graph that describes the structure of the computer network is the problem instance. This is illustrated in the following example.[63]
+
+An example
+Consider the computational problem of finding a coloring of a given graph G. Different fields might take the following approaches:
+
+Centralized algorithms[63]
+The graph G is encoded as a string, and the string is given as input to a computer. The computer program finds a coloring of the graph, encodes the coloring as a string, and outputs the result.
+Parallel algorithms
+Again, the graph G is encoded as a string. However, multiple computers can access the same string in parallel. Each computer might focus on one part of the graph and produce a coloring for that part.
+The main focus is on high-performance computation that exploits the processing power of multiple computers in parallel.
+Distributed algorithms
+The graph G is the structure of the computer network. There is one computer for each node of G and one communication link for each edge of G. Initially, each computer only knows about its immediate neighbors in the graph G; the computers must exchange messages with each other to discover more about the structure of G. Each computer must produce its own color as output.
+The main focus is on coordinating the operation of an arbitrary distributed system.[63]
+While the field of parallel algorithms has a different focus than the field of distributed algorithms, there is much interaction between the two fields. For example, the Cole–Vishkin algorithm for graph coloring[64] was originally presented as a parallel algorithm, but the same technique can also be used directly as a distributed algorithm.
+
+Moreover, a parallel algorithm can be implemented either in a parallel system (using shared memory) or in a distributed system (using message passing).[65] The traditional boundary between parallel and distributed algorithms (choose a suitable network vs. run in any given network) does not lie in the same place as the boundary between parallel and distributed systems (shared memory vs. message passing).
+
+Complexity measures
+In parallel algorithms, yet another resource in addition to time and space is the number of computers. Indeed, often there is a trade-off between the running time and the number of computers: the problem can be solved faster if there are more computers running in parallel (see speedup). If a decision problem can be solved in polylogarithmic time by using a polynomial number of processors, then the problem is said to be in the class NC.[66] The class NC can be defined equally well by using the PRAM formalism or Boolean circuits—PRAM machines can simulate Boolean circuits efficiently and vice versa.[67]
+
+In the analysis of distributed algorithms, more attention is usually paid on communication operations than computational steps. Perhaps the simplest model of distributed computing is a synchronous system where all nodes operate in a lockstep fashion. This model is commonly known as the LOCAL model. During each communication round, all nodes in parallel (1) receive the latest messages from their neighbours, (2) perform arbitrary local computation, and (3) send new messages to their neighbors. In such systems, a central complexity measure is the number of synchronous communication rounds required to complete the task.[68]
+
+This complexity measure is closely related to the diameter of the network. Let D be the diameter of the network. On the one hand, any computable problem can be solved trivially in a synchronous distributed system in approximately 2D communication rounds: simply gather all information in one location (D rounds), solve the problem, and inform each node about the solution (D rounds).
+
+On the other hand, if the running time of the algorithm is much smaller than D communication rounds, then the nodes in the network must produce their output without having the possibility to obtain information about distant parts of the network. In other words, the nodes must make globally consistent decisions based on information that is available in their local D-neighbourhood. Many distributed algorithms are known with the running time much smaller than D rounds, and understanding which problems can be solved by such algorithms is one of the central research questions of the field.[69] Typically an algorithm which solves a problem in polylogarithmic time in the network size is considered efficient in this model.
+
+Another commonly used measure is the total number of bits transmitted in the network (cf. communication complexity).[70] The features of this concept are typically captured with the CONGEST(B) model, which is similarly defined as the LOCAL model, but where single messages can only contain B bits.
+
+Other problems
+Traditional computational problems take the perspective that the user asks a question, a computer (or a distributed system) processes the question, then produces an answer and stops. However, there are also problems where the system is required not to stop, including the dining philosophers problem and other similar mutual exclusion problems. In these problems, the distributed system is supposed to continuously coordinate the use of shared resources so that no conflicts or deadlocks occur.
+
+There are also fundamental challenges that are unique to distributed computing, for example those related to fault-tolerance. Examples of related problems include consensus problems,[71] Byzantine fault tolerance,[72] and self-stabilisation.[73]
+
+Much research is also focused on understanding the asynchronous nature of distributed systems:
+
+Synchronizers can be used to run synchronous algorithms in asynchronous systems.[74]
+Logical clocks provide a causal happened-before ordering of events.[75]
+Clock synchronization algorithms provide globally consistent physical time stamps.[76]
+Note that in distributed systems, latency should be measured through "99th percentile" because "median" and "average" can be misleading.[77]
+
+Election
+Coordinator election (or leader election) is the process of designating a single process as the organizer of some task distributed among several computers (nodes). Before the task is begun, all network nodes are either unaware which node will serve as the "coordinator" (or leader) of the task, or unable to communicate with the current coordinator. After a coordinator election algorithm has been run, however, each node throughout the network recognizes a particular, unique node as the task coordinator.[78]
+
+The network nodes communicate among themselves in order to decide which of them will get into the "coordinator" state. For that, they need some method in order to break the symmetry among them. For example, if each node has unique and comparable identities, then the nodes can compare their identities, and decide that the node with the highest identity is the coordinator.[78]
+
+The definition of this problem is often attributed to LeLann, who formalized it as a method to create a new token in a token ring network in which the token has been lost.[79]
+
+Coordinator election algorithms are designed to be economical in terms of total bytes transmitted, and time. The algorithm suggested by Gallager, Humblet, and Spira[80] for general undirected graphs has had a strong impact on the design of distributed algorithms in general, and won the Dijkstra Prize for an influential paper in distributed computing.
+
+Many other algorithms were suggested for different kinds of network graphs, such as undirected rings, unidirectional rings, complete graphs, grids, directed Euler graphs, and others. A general method that decouples the issue of the graph family from the design of the coordinator election algorithm was suggested by Korach, Kutten, and Moran.[81]
+
+In order to perform coordination, distributed systems employ the concept of coordinators. The coordinator election problem is to choose a process from among a group of processes on different processors in a distributed system to act as the central coordinator. Several central coordinator election algorithms exist.[82]
+
+Properties of distributed systems
+So far the focus has been on designing a distributed system that solves a given problem. A complementary research problem is studying the properties of a given distributed system.[83][84]
+
+The halting problem is an analogous example from the field of centralised computation: we are given a computer program and the task is to decide whether it halts or runs forever. The halting problem is undecidable in the general case, and naturally understanding the behaviour of a computer network is at least as hard as understanding the behaviour of one computer.[85]
+
+However, there are many interesting special cases that are decidable. In particular, it is possible to reason about the behaviour of a network of finite-state machines. One example is telling whether a given network of interacting (asynchronous and non-deterministic) finite-state machines can reach a deadlock. This problem is PSPACE-complete,[86] i.e., it is decidable, but not likely that there is an efficient (centralised, parallel or distributed) algorithm that solves the problem in the case of large networks.
+
+Other Topics
+Linearizability
+
+See also
+Actor model – Model of concurrent computation
+AppScale – American cloud infrastructure software company
+BOINC – Open source middleware system for volunteer and grid computing
+Code mobility – Process in distributed computing
+Dataflow programming – Computer programming paradigm
+Decentralized computing – Distribution of jobs across different computers
+Distributed algorithm – Algorithm run on hardware built from interconnected processors
+Distributed algorithmic mechanism design
+Distributed cache – Type of computer cache
+Distributed GIS – Type of geographic information system
+Distributed networking – Multi-source interconnected computing
+Distributed operating system – Operating system designed to operate on multiple systems over a network computer
+Eventual consistency – Consistency model used in distributed computing to achieve high availability
+Edsger W. Dijkstra Prize in Distributed Computing – Annual conference on computing
+Federation (information technology) – Group of network or telecommunication providers agreeing upon interoperability standards
+Flat neighborhood network
+Fog computing – Architecture that uses edge devices
+Folding@home – Distributed computing project simulating protein folding
+Grid computing – Use of widely distributed computer resources to reach a common goal
+Inferno – Distributed operating system
+Internet GIS – Internet technologies regarding spatial data
+Jungle computing – Type of distributed computing
+Layered queueing network
+Library Oriented Architecture (LOA)
+List of distributed computing conferences
+List of volunteer computing projects
+Model checking – Computer science field
+OpenHarmony – Family of distributed open-source operating systems based on HarmonyOS
+HarmonyOS – Distributed operating system by Huawei
+Parallel distributed processing – Cognitive science approach
+Parallel programming model – Abstraction of parallel computer architecture
+Plan 9 from Bell Labs – Research distributed operating system
+Shared nothing architecture – Type of distributed computing architecture
+Web GIS – Technologies employing the World Wide Web to manage spatial data
+Notes
+ Tanenbaum, Andrew S.; Steen, Maarten van (2002). Distributed systems: principles and paradigms. Upper Saddle River, NJ: Pearson Prentice Hall. ISBN 0-13-088893-1. Archived from the original on 2020-08-12. Retrieved 2020-08-28.
+ "Distributed Programs". Texts in Computer Science. London: Springer London. 2010. pp. 373–406. doi:10.1007/978-1-84882-745-5_11. ISBN 978-1-84882-744-8. ISSN 1868-0941. Systems consist of a number of physically distributed components that work independently using their private storage, but also communicate from time to time by explicit message passing. Such systems are called distributed systems.
+ Dusseau & Dusseau 2016, p. 1–2.
+ Ford, Neal (March 3, 2020). Fundamentals of Software Architecture: An Engineering Approach (1st ed.). O'Reilly Media. pp. 146–147. ISBN 978-1-4920-4345-4.
+ Monolith to Microservices Evolutionary Patterns to Transform Your Monolith. O'Reilly Media. ISBN 978-1-4920-4781-0.
+ Building Serverless Applications on Knative. O'Reilly Media. ISBN 978-1-0981-4204-9.
+ "Distributed Programs". Texts in Computer Science. London: Springer London. 2010. pp. 373–406. doi:10.1007/978-1-84882-745-5_11. ISBN 978-1-84882-744-8. ISSN 1868-0941. Distributed programs are abstract descriptions of distributed systems. A distributed program consists of a collection of processes that work concurrently and communicate by explicit message passing. Each process can access a set of variables which are disjoint from the variables that can be changed by any other process.
+ Andrews (2000). Dolev (2000). Ghosh (2007), p. 10.
+ Magnoni, L. (2015). "Modern Messaging for Distributed Sytems (sic)". Journal of Physics: Conference Series. 608 (1) 012038. Bibcode:2015JPhCS.608a2038M. doi:10.1088/1742-6596/608/1/012038. ISSN 1742-6596.
+ Godfrey (2002).
+ Andrews (2000), p. 291–292. Dolev (2000), p. 5.
+ Lynch (1996), p. 1.
+ Ghosh (2007), p. 10.
+ Andrews (2000), pp. 8–9, 291. Dolev (2000), p. 5. Ghosh (2007), p. 3. Lynch (1996), p. xix, 1. Peleg (2000), p. xv.
+ Andrews (2000), p. 291. Ghosh (2007), p. 3. Peleg (2000), p. 4.
+ Ghosh (2007), p. 3–4. Peleg (2000), p. 1.
+ Ghosh (2007), p. 4. Peleg (2000), p. 2.
+ Ghosh (2007), p. 4, 8. Lynch (1996), p. 2–3. Peleg (2000), p. 4.
+ Lynch (1996), p. 2. Peleg (2000), p. 1.
+ Ghosh (2007), p. 7. Lynch (1996), p. xix, 2. Peleg (2000), p. 4.
+ Fundamentals of Software Architecture: An Engineering Approach. O'Reilly Media. 2020. ISBN 978-1-4920-4345-4.
+ Kleppmann, Martin (2017). Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems. O'Reilly Media. ISBN 978-1-4493-7332-0.
+ Building Event-Driven Microservices: Leveraging Organizational Data at Scale. ISBN 978-1-4920-5789-5.
+ Ghosh (2007), p. 10. Keidar (2008).
+ Lynch (1996), p. xix, 1–2. Peleg (2000), p. 1.
+ Peleg (2000), p. 1.
+ Papadimitriou (1994), Chapter 15. Keidar (2008).
+ See references in Introduction.
+ Bentaleb, A.; Yifan, L.; Xin, J.; et al. (2016). "Parallel and Distributed Algorithms" (PDF). National University of Singapore. Archived (PDF) from the original on 2017-03-26. Retrieved 20 July 2018.
+ Andrews (2000), p. 348.
+ Andrews (2000), p. 32.
+ Peter (2004), The history of email Archived 2009-04-15 at the Wayback Machine.
+ Banks, M. (2012). On the Way to the Web: The Secret History of the Internet and its Founders. Apress. pp. 44–5. ISBN 978-1-4302-5074-6. Archived from the original on 2023-01-20. Retrieved 2018-07-20.
+ Tel, G. (2000). Introduction to Distributed Algorithms. Cambridge University Press. pp. 35–36. ISBN 978-0-521-79483-1. Archived from the original on 2023-01-20. Retrieved 2018-07-20.
+ Ohlídal, M.; Jaroš, J.; Schwarz, J.; et al. (2006). "Evolutionary Design of OAB and AAB Communication Schedules for Interconnection Networks". In Rothlauf, F.; Branke, J.; Cagnoni, S. (eds.). Applications of Evolutionary Computing. Springer Science & Business Media. pp. 267–78. ISBN 978-3-540-33237-4.
+ "Real Time And Distributed Computing Systems" (PDF). ISSN 2278-0661. Archived from the original (PDF) on 2017-01-10. Retrieved 2017-01-09. {{cite journal}}: Cite journal requires |journal= (help)
+ Vigna P, Casey MJ. The Age of Cryptocurrency: How Bitcoin and the Blockchain Are Challenging the Global Economic Order St. Martin's Press January 27, 2015 ISBN 9781250065636
+ Quang Hieu Vu; Mihai Lupu; Beng Chin Ooi (2010). Peer-to-peer computing: principles and applications. Heidelberg: Springer. p. 16. ISBN 978-3-642-03513-5. OCLC 663093862.
+ Lind P, Alm M (2006), "A database-centric virtual chemistry system", J Chem Inf Model, 46 (3): 1034–9, doi:10.1021/ci050360b, PMID 16711722.
+ Chiu, G (1990). "A model for optimal database allocation in distributed computing systems". Proceedings. IEEE INFOCOM'90: Ninth Annual Joint Conference of the IEEE Computer and Communications Societies.
+ Newman, Sam (2015-02-20). Building Microservices. O'Reilly Media. ISBN 978-1-4919-5035-7.
+ Richardson, Chris (2019). Microservices patterns: with examples in Java. Shelter Island, NY: Manning Publications. ISBN 978-1-61729-454-9.
+ Christudas, Binildas (2019). Practical Microservices Architectural Patterns: Event-Based Java Microservices with Spring Boot and Spring Cloud. Berkeley, CA: Apress L. P. ISBN 978-1-4842-4501-9.
+ Newman, Sam (2015-02-20). Building Microservices. O'Reilly Media. ISBN 978-1-4919-5035-7.
+ Richardson, Chris (2019). Microservices patterns: with examples in Java. Shelter Island, NY: Manning Publications. ISBN 978-1-61729-454-9.
+ Christudas, Binildas (2019). Practical Microservices Architectural Patterns: Event-Based Java Microservices with Spring Boot and Spring Cloud. Berkeley, CA: Apress L. P. ISBN 978-1-4842-4501-9.
+ Newman, Sam (2015-02-20). Building Microservices. O'Reilly Media. ISBN 978-1-4919-5035-7.
+ Richardson, Chris (2019). Microservices patterns: with examples in Java. Shelter Island, NY: Manning Publications. ISBN 978-1-61729-454-9.
+ Christudas, Binildas (2019). Practical Microservices Architectural Patterns: Event-Based Java Microservices with Spring Boot and Spring Cloud. Berkeley, CA: Apress L. P. ISBN 978-1-4842-4501-9.
+ Newman, Sam (2015-02-20). Building Microservices. O'Reilly Media. ISBN 978-1-4919-5035-7.
+ Richardson, Chris (2019). Microservices patterns: with examples in Java. Shelter Island, NY: Manning Publications. ISBN 978-1-61729-454-9.
+ Christudas, Binildas (2019). Practical Microservices Architectural Patterns: Event-Based Java Microservices with Spring Boot and Spring Cloud. Berkeley, CA: Apress L. P. ISBN 978-1-4842-4501-9.
+ Elmasri & Navathe (2000), Section 24.1.2.
+ Andrews (2000), p. 10–11. Ghosh (2007), p. 4–6. Lynch (1996), p. xix, 1. Peleg (2000), p. xv. Elmasri & Navathe (2000), Section 24.
+ Haussmann, J. (2019). "Cost-efficient parallel processing of irregularly structured problems in cloud computing environments". Journal of Cluster Computing. 22 (3): 887–909. doi:10.1007/s10586-018-2879-3. S2CID 54447518.
+ Reactive Application Development. Manning. 2018. ISBN 978-1-63835-581-6.
+ Toomarian, N.B.; Barhen, J.; Gulati, S. (1992). "Neural Networks for Real-Time Robotic Applications". In Fijany, A.; Bejczy, A. (eds.). Parallel Computation Systems For Robotics: Algorithms And Architectures. World Scientific. p. 214. ISBN 978-981-4506-17-5. Archived from the original on 2020-08-01. Retrieved 2018-07-20.
+ Savage, J.E. (1998). Models of Computation: Exploring the Power of Computing. Addison Wesley. p. 209. ISBN 978-0-201-89539-1.
+ Cormen, Leiserson & Rivest (1990), Section 30.
+ Herlihy & Shavit (2008), Chapters 2–6.
+ Lynch (1996)
+ Cormen, Leiserson & Rivest (1990), Sections 28 and 29.
+ TULSIRAMJI GAIKWAD-PATIL College of Engineering & Technology, Nagpur Department of Information Technology Introduction to Distributed Systems[1]
+ Cole & Vishkin (1986). Cormen, Leiserson & Rivest (1990), Section 30.5.
+ Andrews (2000), p. ix.
+ Arora & Barak (2009), Section 6.7. Papadimitriou (1994), Section 15.3.
+ Papadimitriou (1994), Section 15.2.
+ Lynch (1996), p. 17–23.
+ Peleg (2000), Sections 2.3 and 7. Linial (1992). Naor & Stockmeyer (1995).
+ Schneider, J.; Wattenhofer, R. (2011). "Trading Bit, Message, and Time Complexity of Distributed Algorithms". In Peleg, D. (ed.). Distributed Computing. Springer Science & Business Media. pp. 51–65. ISBN 978-3-642-24099-7. Archived from the original on 2020-08-01. Retrieved 2018-07-20.
+ Lynch (1996), Sections 5–7. Ghosh (2007), Chapter 13.
+ Lynch (1996), p. 99–102. Ghosh (2007), p. 192–193.
+ Dolev (2000). Ghosh (2007), Chapter 17.
+ Lynch (1996), Section 16. Peleg (2000), Section 6.
+ Lynch (1996), Section 18. Ghosh (2007), Sections 6.2–6.3.
+ Ghosh (2007), Section 6.4.
+ Kamburugamuve, Supun; Ekanayake, Saliya (2021). Foundations of Data Intensive Applications Large Scale Data Analytics Under the Hood. John Wiley & Sons. ISBN 978-1-119-71301-2.
+ Haloi, S. (2015). Apache ZooKeeper Essentials. Packt Publishing Ltd. pp. 100–101. ISBN 978-1-78439-832-3. Archived from the original on 2023-01-20. Retrieved 2018-07-20.
+ LeLann, G. (1977). "Distributed systems - toward a formal approach". Information Processing. 77: 155·160 – via Elsevier.
+ R. G. Gallager, P. A. Humblet, and P. M. Spira (January 1983). "A Distributed Algorithm for Minimum-Weight Spanning Trees" (PDF). ACM Transactions on Programming Languages and Systems. 5 (1): 66–77. doi:10.1145/357195.357200. S2CID 2758285. Archived (PDF) from the original on 2017-09-26.
+ Korach, Ephraim; Kutten, Shay; Moran, Shlomo (1990). "A Modular Technique for the Design of Efficient Distributed Leader Finding Algorithms" (PDF). ACM Transactions on Programming Languages and Systems. 12 (1): 84–101. CiteSeerX 10.1.1.139.7342. doi:10.1145/77606.77610. S2CID 9175968. Archived (PDF) from the original on 2007-04-18.
+ Hamilton, Howard. "Distributed Algorithms". Archived from the original on 2012-11-24. Retrieved 2013-03-03.
+ "Major unsolved problems in distributed systems?". cstheory.stackexchange.com. Archived from the original on 20 January 2023. Retrieved 16 March 2018.
+ "How big data and distributed systems solve traditional scalability problems". theserverside.com. Archived from the original on 17 March 2018. Retrieved 16 March 2018.
+ Svozil, K. (2011). "Indeterminism and Randomness Through Physics". In Hector, Z. (ed.). Randomness Through Computation: Some Answers, More Questions. World Scientific. pp. 112–3. ISBN 978-981-4462-63-1. Archived from the original on 2020-08-01. Retrieved 2018-07-20.
+ Papadimitriou (1994), Section 19.3.
+References
+Books
+Andrews, Gregory R. (2000), Foundations of Multithreaded, Parallel, and Distributed Programming, Addison–Wesley, ISBN 978-0-201-35752-3.
+Arora, Sanjeev; Barak, Boaz (2009), Computational Complexity – A Modern Approach, Cambridge, ISBN 978-0-521-42426-4.
+Cormen, Thomas H.; Leiserson, Charles E.; Rivest, Ronald L. (1990), Introduction to Algorithms (1st ed.), MIT Press, Bibcode:1990ita..book.....C, ISBN 978-0-262-03141-7.
+Dolev, Shlomi (2000), Self-Stabilization, MIT Press, ISBN 978-0-262-04178-2.
+Elmasri, Ramez; Navathe, Shamkant B. (2000), Fundamentals of Database Systems (3rd ed.), Addison–Wesley, ISBN 978-0-201-54263-9.
+Ghosh, Sukumar (2007), Distributed Systems – An Algorithmic Approach, Chapman & Hall/CRC, ISBN 978-1-58488-564-1.
+Lynch, Nancy A. (1996), Distributed Algorithms, Morgan Kaufmann, ISBN 978-1-55860-348-6.
+Herlihy, Maurice P.; Shavit, Nir N. (2008), The Art of Multiprocessor Programming, Morgan Kaufmann, ISBN 978-0-12-370591-4.
+Papadimitriou, Christos H. (1994), Computational Complexity, Addison–Wesley, ISBN 978-0-201-53082-7.
+Peleg, David (2000), Distributed Computing: A Locality-Sensitive Approach, SIAM, ISBN 978-0-89871-464-7, archived from the original on 2009-08-06, retrieved 2009-07-16.
+Articles
+Cole, Richard; Vishkin, Uzi (1986), "Deterministic coin tossing with applications to optimal parallel list ranking", Information and Control, 70 (1): 32–53, doi:10.1016/S0019-9958(86)80023-7.
+Keidar, Idit (2008), "Distributed computing column 32 – The year in review", ACM SIGACT News, 39 (4): 53–54, CiteSeerX 10.1.1.116.1285, doi:10.1145/1466390.1466402, S2CID 7607391, archived from the original on 2014-01-16, retrieved 2009-08-20.
+Linial, Nathan (1992), "Locality in distributed graph algorithms", SIAM Journal on Computing, 21 (1): 193–201, CiteSeerX 10.1.1.471.6378, doi:10.1137/0221015.
+Naor, Moni; Stockmeyer, Larry (1995), "What can be computed locally?" (PDF), SIAM Journal on Computing, 24 (6): 1259–1277, CiteSeerX 10.1.1.29.669, doi:10.1137/S0097539793254571, archived (PDF) from the original on 2013-01-08.
+Web sites
+Godfrey, Bill (2002). "A primer on distributed computing". Archived from the original on 2021-05-13. Retrieved 2021-05-13.
+Peter, Ian (2004). "Ian Peter's History of the Internet". Archived from the original on 2010-01-20. Retrieved 2009-08-04.
+Further reading
+Books
+Attiya, Hagit and Jennifer Welch (2004), Distributed Computing: Fundamentals, Simulations, and Advanced Topics, Wiley-Interscience ISBN 0-471-45324-2.
+Christian Cachin; Rachid Guerraoui; Luís Rodrigues (2011), Introduction to Reliable and Secure Distributed Programming (2. ed.), Springer, Bibcode:2011itra.book.....C, ISBN 978-3-642-15259-7
+Coulouris, George; et al. (2011), Distributed Systems: Concepts and Design (5th Edition), Addison-Wesley ISBN 0-132-14301-1.
+Faber, Jim (1998), Java Distributed Computing, O'Reilly, archived from the original on 2010-08-24, retrieved 2010-09-29: Java Distributed Computing by Jim Faber, 1998 Archived 2010-08-24 at the Wayback Machine
+Garg, Vijay K. (2002), Elements of Distributed Computing, Wiley-IEEE Press ISBN 0-471-03600-5.
+Tel, Gerard (1994), Introduction to Distributed Algorithms, Cambridge University Press
+Chandy, Mani; et al. (1988), Parallel Program Design, Addison-Wesley ISBN 0201058669
+Dusseau, Remzi H.; Dusseau, Andrea (2016). Operating Systems: Three Easy Pieces, Chapter 48 Distributed Systems (PDF). Archived from the original (PDF) on 31 August 2021. Retrieved 8 October 2021.
+Articles
+Keidar, Idit; Rajsbaum, Sergio, eds. (2000–2009), "Distributed computing column", ACM SIGACT News, archived from the original on 2014-01-16, retrieved 2009-08-16.
+Birrell, A. D.; Levin, R.; Schroeder, M. D.; Needham, R. M. (April 1982). "Grapevine: An exercise in distributed computing" (PDF). Communications of the ACM. 25 (4): 260–274. doi:10.1145/358468.358487. S2CID 16066616. Archived (PDF) from the original on 2016-07-30.
+Conference Papers
+Rodriguez, Carlos; Villagra, Marcos; Baran, Benjamin (2007). "Asynchronous team algorithms for Boolean Satisfiability". 2007 2nd Bio-Inspired Models of Network, Information and Computing Systems. pp. 66–69. doi:10.1109/BIMNICS.2007.4610083. S2CID 15185219.
+
+The AI Evolution of Graph Search at Netflix: From Structured Queries to Natural Language
+Netflix Technology Blog
+Netflix Technology Blog
+
+Follow
+13 min read
+·
+Jan 27, 2026
+536
+
+
+4
+
+
+
+
+
+By Alex Hutter and Bartosz Balukiewicz
+
+Our previous blog posts (part 1, part 2, part 3) detailed how Netflix’s Graph Search platform addresses the challenges of searching across federated data sets within Netflix’s enterprise ecosystem. Although highly scalable and easy to configure, it still relies on a structured query language for input. Natural language based search has been possible for some time, but the level of effort required was high. The emergence of readily-available AI, specifically Large Language Models (LLMs), has created new opportunities to integrate AI search features, with a smaller investment and improved accuracy.
+
+While Text-to-Query and Text-to-SQL are established problems, the complexity of distributed Graph Search data in the GraphQL ecosystem necessitates innovative solutions. This is the first in a three-part series where we will detail our journey: how we implemented these solutions, evaluated their performance, and ultimately evolved them into a self-managed platform.
+
+The Need for Intuitive Search: Addressing Business and Product Demands
+Natural language search is the ability to use everyday language to retrieve information as opposed to complex, structured query languages like the Graph Search Filter Domain Specific Language (DSL). When users interact with 100’s of various UIs within the suite of Content and Business Products applications, a frequent task is filtering a data table like the one below:
+
+Press enter or click to view image in full size
+
+Example Content and Business Products application view
+Ideally, a user simply wants to satisfy a query like “I want to see all movies from the 90s about robots from the US.” Because the underlying platform operates on the Graph Search Filter DSL, the application acts as an intermediary. Users input their requirements through UI elements — toggling facets or using query builders — and the system programmatically converts these interactions into a valid DSL query to filter the data.
+
+
+The Complexity of filtering and DSL generation
+This process presents a few issues.
+
+Today, many applications have bespoke components for collecting user input — the experience varies across them and they have inconsistent support for the DSL. Users need to “learn” how to use each application to achieve their goals.
+
+Additionally, some domains have hundreds of fields in an index that could be faceted or filtered by. A subject matter expert (SME) may know exactly what they want to accomplish, but be bottlenecked by the inefficient pace of filling out a large scale UI form and translating their questions in order to encode it in a representation Graph Search needs.
+
+Most importantly, users think and operate using natural language, not technical constructs like query builders, components, or DSLs. By requiring them to switch contexts, we introduce friction that slows them down or even prevents their progress.
+
+With readily-available AI components, our users can now interact with our systems through natural language. The challenge now is to make sure our offering, searching Netflix’s complex enterprise state with natural language, is an intuitive and trustworthy experience.
+
+
+Natural language queries translated into Graph Search Filter DSL
+We’ve made a decision to pursue generating Graph Search Filter statements from natural language to meet this need. Our intention is to augment and not replace existing applications with retrieval augmented generation (RAG), providing tooling and capabilities so that applications in our ecosystem have newly accessible means of processing and presenting their data in their distinct domain flavours. It should be noted that all the work here has direct application to building a RAG system on top of Graph Search in the future.
+
+Under the Hood: Our Approach to Text-to-Query
+The core function of the text-to-query process is converting a user’s (often ambiguous) natural language question into a structured query. We primarily achieve this through the use of an LLM.
+
+Before we dive deeper, let’s quickly revisit the structure of Graph Search Filter DSL. Each Graph Search index is defined by a GraphQL query, made up of a collection of fields. Each field has a type e.g. boolean, string, and some have their permitted values governed by controlled vocabularies — a standardized and governed list of values (like an enumeration, or a foreign key). The names of those fields can be used to construct expressions using comparison (e.g. > or ==) or inclusion/exclusion operators (e.g. IN). In turn those expressions can be combined using logical operators (e.g. AND) to construct complex statements.
+
+
+Graph Search Filter DSL
+With that understanding, we can now more rigorously define the conversion process. We need the LLM to generate a Graph Search Filter DSL statement that is syntactically, semantically, and pragmatically correct.
+
+Syntactic correctness is easy — does it parse? To be syntactically correct, the generated statement must be well formed i.e. follow the grammar of the Graph Search Filter DSL.
+
+Semantic correctness adds some additional complexity as it requires more knowledge of the index itself. To be semantically correct:
+
+it must respect the field types i.e. only use comparisons that make sense given the underlying type;
+it must only use fields that are actually present in the index, i.e. does not hallucinate;
+when the values of a field are constrained to a controlled vocabulary, any comparison must only use values from that controlled vocabulary.
+Pragmatic correctness is much more difficult. It asks the question: does the generated filter actually capture the intent of the user’s query?
+
+The following sections will detail how we pre-process the user’s question to create appropriate context for the instructions that we will provide to the LLM — both of which are fundamental to LLM interaction — as well as post-processing we perform on the generated statement to validate it, and help users understand and trust the results they receive.
+
+At a high level that process looks like this:
+
+
+Graph Search FIlter DSL generation process
+Context Engineering
+Preparation for the filter generation task is predominantly engineering the appropriate context. The LLM will need access to the fields of an index and their metadata in order to construct semantically correct filters. As the indices are defined by GraphQL queries, we can use the type information from the GraphQL schema to derive much of the required information. For some fields, there is additional information we can provide beyond what’s available in the schema as well, in particular permissible values that pull from controlled vocabularies.
+
+Each field in the index is associated with metadata as seen below, and that metadata is provided as part of the context.
+
+
+Graph Search index representation
+The field is derived from the document path as characterized by the GraphQL query.
+The description is the comment from the GraphQL schema for the field.
+The type is derived from the GraphQL schema for the field e.g. Boolean, String, enum. We also support an additional controlled vocabulary type we will discuss more of shortly.
+The valid values are derived from enum values for the enum type or from a controlled vocabulary as we will now discuss.
+A controlled vocabulary is a specific field type that consists of a finite set of allowed values, which are defined by a SMEs or domain owners. Index fields can be associated with a particular controlled vocabulary, e.g. countries with members such as Spain and Thailand, and any usage of that field within a generated statement must refer to values from that vocabulary.
+
+Naively providing all the metadata as context to the LLM worked for simple cases but did not scale. Some indices have hundreds of fields and some controlled vocabularies have thousands of valid values. Providing all of those, especially the controlled vocabulary values and their accompanying metadata, expands the context; this proportionally increases latency and decreases the correctness of generated filter statements. Not providing the values wasn’t an option as we needed to ground the LLMs generated statements- without them, the LLM would frequently hallucinate values that did not exist.
+
+Curating the context to an appropriate subset was a problem we addressed using the well known RAG pattern.
+
+Field RAG
+As mentioned previously, some indices have hundreds of fields, however, most user’s questions typically refer only to a handful of them. If there was no cost in including them all, we would, but as mentioned prior, there is a cost in terms of the latency of query generation as well as the correctness of the generated query (e.g. needle-in-the-hackstack problem) and non-deterministic results.
+
+To determine which subset of fields to include in the context, we “match” them against the intent of the user’s question.
+
+Embeddings are created for index fields and their metadata (name, description, type) and are indexed in a vector store
+At filter generation time, the user’s question is chunked with an overlapping strategy. For each chunk, we perform a vector search to identify the top K most relevant values and the fields to which they belong.
+Deduplication: The top K fields from each chunk are both consolidated and deduplicated before being provided as context to the system instructions.
+
+Field RAG process (chunking, merge, deduplicate)
+Controlled Vocabularies RAG
+Index fields of the controlled vocabulary type are associated with a particular controlled vocabulary, again, countries are one example. Given a user’s question, we can infer whether or not it refers to values of a particular controlled vocabulary. In turn, by knowing which controlled vocabulary values are present, we can identify additional, related index fields that should be included in the context that may not have been identified by the field RAG step.
+
+Become a member
+Each controlled vocabulary value has:
+
+a unique identifier within its type;
+a human readable display name;
+a description of the value;
+also-known-as values or AKA display names, e.g. “romcom” for “Romantic Comedy”.
+To determine which subset of values to include in the context for controlled vocabulary fields (and also possibly infer additional fields), we “match” them against the user’s question.
+
+Embeddings are created for controlled vocabulary values and their metadata, and these are indexed in a vector store. The controlled vocabularies are available via GraphQL and are regularly fetched and reindexed so this system stays up to date with any changes in the domain.
+At filter generation time, the user’s question is chunked. For each chunk, we perform a vector search to identify the top K most relevant values (but only for the controlled vocabularies that are associated with fields in the index)
+The top K values from each chunk are deduplicated by their controlled vocabulary type. The associated field definition is then injected into the context along with the matched values.
+
+Controlled Vocabularies RAG
+Combining both approaches, the RAG of fields and controlled vocabularies, we end up with the solution that each input question resolves in available and matched fields and values:
+
+Press enter or click to view image in full size
+
+Field and CV RAG
+The quality of results generated by the RAG tool can be significantly enhanced by tuning its various parameters, or “levers.” These include strategies for reranking, chunking, and the selection of different embedding generation models. The careful and systematic evaluation of these factors will be the focus of the subsequent parts of this series.
+
+The Instructions
+Once the context is constructed, it is provided to the LLM with a set of instructions and the user’s question. The instructions can be summarised as follows: “Given a natural language question, generate a syntactically, semantically, and pragmatically correct filter statement given the availability of the following index fields and their metadata.”
+
+In order to generate a syntactically correct filter statement, the instructions include the syntax rules of the DSL.
+In order to generate a semantically correct filter statement, the instructions tell the LLM to ground the generated statement in the provided context.
+In order to generate a pragmatically correct filter statement, so far we focus on better context engineering to ensure that only the most relevant fields and values are provided. We haven’t identified any instructions that make the LLM just “do better” at this aspect of the task.
+Press enter or click to view image in full size
+
+Graph Search Filter DSL generation
+After the filter statement is generated by the LLM, we deterministically validate it prior to returning the values to the user.
+
+Validation
+Syntactic Correctness
+Syntactic correctness ensures the LLM output is a parsable filter statement. We utilize an Abstract Syntax Tree (AST) parser built for our custom DSL. If the generated string fails to parse into a valid AST, we know immediately that the query is malformed and there is a fundamental issue with the generation.
+
+The other approach to solve this problem could be using the structured outputs modes provided by some LLMs. However, our initial evaluation yielded mixed results, as the custom DSL is not natively supported and requires further work.
+
+Semantic Correctness
+Despite careful context engineering using the RAG pattern, the LLM sometimes hallucinates both fields and available values in the generated filter statement. The most straightforward way of preventing this phenomenon is validating the generated filters against available index metadata. This approach does not impact the overall latency of the system, as we are already working with an AST of the filter statement, and the metadata is freely available from the context engineering stage.
+
+
+DSL verification & hallucinations
+If a hallucination is detected it can be returned as an error to a user, indicating the need to refine the query, or can be provided back to the LLM in the form of a feedback loop for self correction.
+
+This increases the filter generation time, so should be used cautiously with a limited number of retries.
+
+Building Confidence
+You probably noticed we are not validating the generated filter for pragmatic correctness. That task is the hardest challenge: The filter parses (syntactic) and uses real fields (semantic), but is it what the user meant? When a user searches for “Dark”, do they mean the specific German sci-fi series Dark, or are they browsing for the mood category “dark TV shows”?
+
+The gap between what a user intended and the generated filter statement is often caused by ambiguity. Ambiguity stems from the compression of natural language. A user says “German time-travel mystery with the missing boy and the cave” but the index contains discrete metadata fields like releaseYear, genreTags, and synopsisKeywords.
+
+How do we ensure users aren’t inadvertently led to wrong answers or to answers for questions they didn’t ask?
+
+Showing Our Work
+One way we are handling ambiguity is by showing our work. We visualise the generated filters in the UI in a user-friendly way allowing them to very clearly see if the answer we’re returning is what they were looking for so they can trust the results..
+
+We cannot show a raw DSL string (e.g., origin.country == ‘Germany’ AND genre.tags CONTAINS ‘Time Travel’ AND synopsisKeywords LIKE ‘*cave*’) to a non-technical user. Instead, we reflect its underlying AST into UI components.
+
+After the LLM generates a filter statement, we parse it into an AST, and then map that AST to the existing “Chips” and “Facets” in our UI (see below). If the LLM generates a filter for origin.country == ‘Germany’, the user sees the “Country” dropdown pre-selected to “Germany.” This gives users immediate visual feedback and the ability to easily fine-tune the query using standard UI controls when the results need improvement or further experimentation.
+
+Press enter or click to view image in full size
+
+Generated filters visualisation
+Explicit Entity Selection
+Another strategy we’ve developed to remove ambiguity happens at query time. We give users the ability to constrain their input to refer to known entities using “@mentions”. Similar to Slack, typing @ lets them search for entities directly from our specialized UI Graph Search component, giving them easy access to multiple controlled vocabularies (plus other identifying metadata like launch year) to feel confident they’re choosing the entity they intend.
+
+If a user types, “When was @dark produced”, we explicitly know they are referring to the Series controlled vocabulary, allowing us to bypass the RAG inference step and hard-code that context, significantly increasing pragmatic correctness (and building user trust in the process).
+
+Press enter or click to view image in full size
+
+Example @mentions usage in the UI
+End-to-end architecture
+As mentioned previously, the solution architecture is divided into pre-processing, filter statement generation, and then post-processing stages. The pre-processing handles context building and involves a RAG pattern for similarity search, while the post-processing validation stage checks the correctness of the LLM-generated filter statements and provides visibility into the results for end users. This design strategically balances LLM involvement with more deterministic strategies.
+
+Press enter or click to view image in full size
+
+End-to-end architecture
+The end-to-end process is as follows:
+
+A user’s natural language question (with optional `@mentions` statements) are provided as input, along with the Graph Search index context
+The context is scoped by using the RAG pattern on both fields and possible values
+The pre-processed context and the question are fed into the LLM with an instruction asking for a syntactically and semantically correct filter statement
+The generated filer statement DSL is verified and checked for hallucinations
+The final response contains the related AST in order to build “Chips” and “Facets”
+Summary
+By combining our existing Graph Search infrastructure with the power and flexibility of LLMs, we’ve bridged the gap between complex filter statements and user intent. We moved from requiring users to speak our language (DSL) to our systems understanding theirs.
+
+The initial challenge for our users was successfully addressed. However, our next steps involve transforming this system into a comprehensive and expandable platform, rigorously evaluating its performance in a live production environment, and expanding its capabilities to support GraphQL-first user interfaces. These topics, and others, will be the focus of the subsequent installments in this series. Be sure to follow along!
+
+You may have noticed that we have a lot more to do on this project, including named entity recognition and extraction, intent detection so we can route questions to the appropriate indices, and query rewriting among others. If this kind of work interests you, reach out! We’re hiring in our Warsaw office, check for open roles here.
+
+
+Write
+Notifications
+
+Ankitprajapati
+Home
+Library
+Profile
+Stories
+Stats
+Following
+Find writers and publications to follow.
+
+See suggestions
+Get unlimited access to the best of Medium for less than $1/week.
+Become a member
+
+Netflix TechBlog
+Netflix TechBlog
+Learn about Netflix’s world class engineering efforts, company culture, product developments and more.
+
+Following
+
+How Temporal Powers Reliable Cloud Operations at Netflix
+Netflix Technology Blog
+Netflix Technology Blog
+
+Follow
+11 min read
+·
+Dec 16, 2025
+239
+
+
+12
+
+
+
+
+
+By Jacob Meyers and Rob Zienert
+
+Temporal is a Durable Execution platform which allows you to write code “as if failures don’t exist”. It’s become increasingly critical to Netflix since its initial adoption in 2021, with users ranging from the operators of our Open Connect global CDN to our Live reliability teams now depending on Temporal to operate their business-critical services. In this post, I’ll give a high-level overview of what Temporal offers users, the problems we were experiencing operating Spinnaker that motivated its initial adoption at Netflix, and how Temporal helped us reduce the number of transient deployment failures at Netflix from 4% to 0.0001%.
+
+A Crash Course on (some of) Spinnaker
+Spinnaker is a multi-cloud continuous delivery platform that powers the vast majority of Netflix’s software deployments. It’s composed of several (mostly nautical themed) microservices. Let’s double-click on two in particular to understand the problems we were facing that led us to adopting Temporal.
+
+In case you’re completely new to Spinnaker, Spinnaker’s fundamental tool for deployments is the Pipeline. A Pipeline is composed of a sequence of steps called Stages, which themselves can be decomposed into one or more Tasks, or other Stages. An example deployment pipeline for a production service may consist of these stages: Find Image -> Run Smoke Tests -> Run Canary -> Deploy to us-east-2 -> Wait -> Deploy to us-east-1.
+
+Press enter or click to view image in full size
+An example Spinnaker Pipeline
+An example Spinnaker Pipeline for a Netflix service
+Pipeline configuration is extremely flexible. You can have Stages run completely serially, one after another, or you can have a mix of concurrent and serial Stages. Stages can also be executed conditionally based on the result of previous stages. This brings us to our first Spinnaker service: Orca. Orca is the orca-stration engine of Spinnaker. It’s responsible for managing the execution of the Stages and Tasks that a Pipeline unrolls into and coordinating with other Spinnaker services to actually execute them.
+
+One of those collaborating services is called Clouddriver. In the example Pipeline above, some of the Stages will require interfacing with cloud infrastructure. For example, the canary deployment involves creating ephemeral hosts to run an experiment, and a full deployment of a new version of the service may involve spinning up new servers and then tearing down the old ones. We call these sorts of operations that mutate cloud infrastructure Cloud Operations. Clouddriver’s job is to decompose and execute Cloud Operations sent to it by Orca as part of a deployment. Cloud Operations sent from Orca to Clouddriver are relatively high level (for example: createServerGroup), so Clouddriver understands how to translate these into lower-level cloud provider API calls.
+
+Pain points in the interaction between Orca and Clouddriver and the implementation details of Cloud Operation execution in Clouddriver are what led us to look for new solutions and ultimately migrate to Temporal, so we’ll next look at the anatomy of a Cloud Operation. Cloud Operations in the OSS version of Spinnaker still work as described below, so motivated readers can follow along in source code, however our migration to Temporal is entirely closed-source following a fork from OSS in 2020 to allow Netflix to make larger pivots to the product such as this one.
+
+The Original Cloud Operation Flow
+A Cloud Operation’s execution goes something like this:
+
+Orca, in orchestrating a Pipeline execution, decides a particular Cloud Operation needs to be performed. It sends a POST request to Clouddriver’s /ops endpoint with an untyped bag-of-fields.
+Clouddriver attempts to resolve the operation Orca sent into a set of AtomicOperation s— internal operations that only Clouddriver understands.
+If the payload was valid and Clouddriver successfully resolved the operation, it will immediately return a Task ID to Orca.
+Orca will immediately begin polling Clouddriver’s GET /task/<id> endpoint to keep track of the status of the Cloud Operation.
+Asynchronously, Clouddriver begins executing AtomicOperations using its own internal orchestration engine. Ultimately, the AtomicOperations resolve into cloud provider API calls. As the Cloud Operation progresses, Clouddriver updates an internal state store to surface progress to Orca.
+Eventually, if all went well, Clouddriver will mark the Cloud Operation complete, which eventually surfaces to Orca in its polling. Orca considers the Cloud Operation finished, and the deployment can progress.
+Press enter or click to view image in full size
+
+A sequence diagram of a Cloud Operation execution
+This works well enough on the happy path, but veer off the happy path and dragons begin to emerge:
+
+Clouddriver has its own internal orchestration system independent of Orca to allow Orca to query the progress of Cloud Operation. This is largely undifferentiated lifting relative to Clouddriver’s goal of actuating cloud infrastructure changes, and ultimately adds complexity and surface area for bugs to the application. Additionally, Orca is tightly coupled to Clouddriver’s orchestration system — it must understand how to poll Clouddriver, interpret the status, and handle errors returned by Clouddriver.
+Distributed systems are messy — networks and external services are unreliable. While executing a Cloud Operation, Clouddriver could experience transient network issues, or the cloud provider it’s attempting to call into may be having an outage, or any number of issues in between. Despite all of this, Clouddriver must be as reliable as reasonably possible as a core platform service. To deal with this shape of issue, Clouddriver internally evolved complex retry logic, further adding cognitive complexity to the system.
+Remember how a Cloud Operation gets decomposed by Clouddriver into AtomicOperations? Sometimes, if there’s a failure in the middle of a Cloud Operation, we need to be able to roll back what was done in AtomicOperations prior to the failure. This led to a homegrown Saga framework being implemented inside Clouddriver. While this did result in a big step forward in reliability of Cloud Operations facing transient failures because the Saga framework also allowed replaying partially-failed Cloud Operations, it added yet more undifferentiated lifting inside the service.
+The task state kept by Clouddriver was instance-local. In other words, if the Clouddriver instance carrying out a Cloud Operation crashed, that Cloud Operation state was lost, and Orca would eventually time out polling for the task status. The Saga implementation mentioned above mitigated this for certain operations, but was not widely adopted across all cloud providers supported by Spinnaker.
+We introduced a lot of incidental complexity into Clouddriver in an effort to keep Cloud Operation execution reliable, and despite all this deployments still failed around 4% of the time due to transient Cloud Operation failures.
+
+Now, I can already hear you saying: “So what? Can’t people re-try their deployments if they fail?” While true, some pipelines take days to complete for complex deployments, and a failed Cloud Operation mid-way through requires re-running the whole thing. This was detrimental to engineering productivity at Netflix in a non-trivial way. Rather than continue trying to build a faster horse, we began to look elsewhere for our reliable orchestration requirements, which is where Temporal comes in.
+
+Temporal: Basic Concepts
+Temporal is an open source product that offers a durable execution platform for your applications. Durable execution means that the platform will ensure your programs run to completion despite adverse conditions. With Temporal, you organize your business logic into Workflows, which are a deterministic series of steps. The steps inside of Workflows are called Activities, which is where you encapsulate all your non-deterministic logic that needs to happen in the course of executing your Workflows. As your Workflows execute in processes called Workers, the Temporal server durably stores their execution state so that in the event of failures your Workflows can be retried or even migrated to a different Worker. This makes Workflows incredibly resilient to the sorts of transient failures Clouddriver was susceptible to. Here’s a simple example Workflow in Java that runs an Activity to send an email once every 30 days:
+
+@WorkflowInterface
+public interface SleepForDaysWorkflow {
+    @WorkflowMethod
+    void run();
+}
+
+public class SleepForDaysWorkflowImpl implements SleepForDaysWorkflow {
+
+    private final SendEmailActivities emailActivities =
+            Workflow.newActivityStub(
+                    SendEmailActivities.class,
+                    ActivityOptions.newBuilder()
+                            .setStartToCloseTimeout(Duration.ofSeconds(10))
+                            .build());
+
+    @Override
+    public void run() {
+        while (true) {
+            // Activities already carry retries/timeouts via options.
+            emailActivities.sendEmail();
+
+            // Pause the workflow for 30 days before sending the next email.
+            Workflow.sleep(Duration.ofDays(30));
+        }
+    }
+}
+
+@ActivityInterface
+public interface SendEmailActivities {
+    void sendEmail();
+}
+There’s some interesting things to note about this Workflow:
+
+Workflows and Activities are just code, so you can test them using the same techniques and processes as the rest of your codebase.
+Activities are automatically retried by Temporal with configurable exponential backoff.
+Temporal manages all the execution state of the Workflow, including timers (like the one used by Workflow.sleep). If the Worker executing this workflow were to have its power cable unplugged, Temporal would ensure another Worker continues to execute it (even during the 30 day sleep).
+Workflow sleeps are not compute-intensive, and they don’t tie up the process.
+You might already begin to see how Temporal solves a lot of the problems we had with Clouddriver. Ultimately, we decided to pull the trigger on migrating Cloud Operation execution to Temporal.
+
+Cloud Operations with Temporal
+Today, we execute Cloud Operations as Temporal workflows. Here’s what that looks like.
+
+Orca, using a Temporal client, sends a request to Temporal to execute an UntypedCloudOperationRunner Workflow. The contract of the Workflow looks something like this:
+@WorkflowInterface
+interface UntypedCloudOperationRunner {
+  /**
+   * Runs a cloud operation given an untyped payload.
+   *
+   * WorkflowResult is a thin wrapper around OutputType providing a standard contract for
+   * clients to determine if the CloudOperation was successful and fetching any errors.
+   */
+  @WorkflowMethod
+  fun <OutputType : CloudOperationOutput> run(stageContext: Map<String, Any?>, operationType: String): WorkflowResult<OutputType>
+}
+2. The Clouddriver Temporal worker is constantly polling Temporal for work. A worker will eventually see a task for an UntypedCloudOperationRunner Workflow and start executing it.
+
+Become a member
+3. Similar to before with resolution into AtomicOperations, Clouddriver does some pre-processing of the bag-of-fields in stageContext and resolves it to a strongly typed implementation of the CloudOperation Workflow interface based on the operationType input and the stageContext:
+
+interface CloudOperation<I : CloudOperationInput, O : CloudOperationOutput> {
+  @WorkflowMethod
+  fun operate(input: I, credentials: AccountCredentials<out Any>): O
+}
+4. Clouddriver starts a Child Workflow execution of the CloudOperation implementation it resolved. The child workflow will execute Activities which handle the actual cloud provider API calls to mutate infrastructure.
+
+5. Orca uses its Temporal Client to await completion of the UntypedCloudOperationRunner Workflow. Once it’s complete, Temporal notifies the client and sends the result and Orca can continue progressing the deployment.
+
+Press enter or click to view image in full size
+
+Sequence diagram of a Cloud Operation execution with Temporal
+Results and Lessons Learned from the Migration
+A shiny new architecture is great, but equally important is the non-glamorous work of refactoring legacy systems to fit the new architecture. How did we integrate Temporal into critical dependencies of all Netflix engineers transparently?
+
+The answer, of course, is a combination of abstraction and dynamic configuration. We built a CloudOperationRunner interface in Orca to encapsulate whether the Cloud Operation was being executed via the legacy path or Temporal. At runtime, Fast Properties (Netflix’s dynamic configuration system) determined which path a stage that needed to execute a Cloud Operation would take. We could set these properties quite granularly — by Stage type, cloud provider account, Spinnaker application, Cloud Operation type (createServerGroup), and cloud provider (either AWS or Titus in our case). The Spinnaker services themselves were the first to be deployed using Temporal, and within two quarters, all applications at Netflix were onboarded.
+
+Impact
+What did we have to show for it all? With Temporal as the orchestration engine for Cloud Operations, the percentage of deployments that failed due to transient Cloud Operation failures dropped from 4% to 0.0001%. For those keeping track at home, that’s a four and a half order of magnitude reduction. Virtually eliminating this failure mode for deployments was a huge win for developer productivity, especially for teams with long and complex deployment pipelines.
+
+Beyond the improvement in deployment success metrics, we saw a number of other benefits:
+
+Orca no longer needs to directly communicate with Clouddriver to start Cloud Operations or poll their status with Temporal as the intermediary. The services are less coupled, which is a win for maintainability.
+Speaking of maintainability, with Temporal doing the heavy lifting of orchestration and retries inside of Clouddriver, we got to remove a lot of the homegrown logic we’d built up over the years for the same purpose.
+Since Temporal manages execution state, Clouddriver instances became stateless and Cloud Operation execution can bounce between instances with impunity. We can treat Clouddriver instances more like cattle and enable things like Chaos Monkey for the service which we were previously prevented from doing.
+Migrating Cloud Operation steps into Activities was a forcing function to re-write the logic to be idempotent. Since Temporal retries activities by default, it’s generally recommended they be idempotent. This alone fixed a number of issues that existed previously when operations were retried in Clouddriver.
+We set the retry timeout for Activities in Clouddriver to be two hours by default. This gives us a long leash to fix-forward or rollback Clouddriver if we introduce a regression before customer deployments fail — to them, it might just look like a deployment is taking longer than usual.
+Cloud Operations are much easier to introspect than before. Temporal ships with a great UI to help visualize Workflow and Activity executions, which is a huge boon for debugging live Workflows executing in production. The Temporal SDKs and server also emit a lot of useful metrics.
+Press enter or click to view image in full size
+A Cloud Operation Workflow as seen from the Temporal UI. This operation executes 3 Activities: DescribeAutoScalingGroup, GetHookConfigurations, and ResizeServerGroup
+Execution of a resizeServerGroup Cloud Operation as seen from the Temporal UI. This operation executes 3 Activities: DescribeAutoScalingGroup, GetHookConfigurations, and ResizeServerGroup
+Lessons Learned
+With the benefit of hindsight, there are also some lessons we can share from this migration:
+
+1. Avoid unnecessary Child Workflows: Structuring Cloud Operations as an UntypedCloudOperationRunner Workflow that starts Child Workflows to actually execute the Cloud Operation’s logic was unnecessary and the indirection made troubleshooting more difficult. There are situations where Child Workflows are appropriate, but in this case we were using them as a tool for code organization, which is generally unnecessary. We could’ve achieved the same effect with class composition in the top-level parent Workflow.
+
+2. Use single argument objects: At first, we structured Workflow and Activity functions with variable arguments, much as you’d write normal functions. This can be problematic for Temporal because of Temporal’s determinism constraints. Adding or removing an argument from a function signature is not a backward-compatible change, and doing so can break long-running workflows — and it’s not immediately obvious in code review your change is problematic. The preferred pattern is to use a single serializable class to host all your arguments for Workflows and Activities — these can be more freely changed without breaking determinism.
+
+3. Separate business failures from workflow failures: We like the pattern of the WorkflowResult type that UntypedCloudOperationRunner returns in the interface above. It allows us to communicate business process failures without failing the Workflow itself and have more overall nuance in error handling. This is a pattern we’ve carried over to other Workflows we’ve implemented since.
+
+Temporal at Netflix Today
+Temporal adoption has skyrocketed at Netflix since its initial introduction for Spinnaker. Today, we have hundreds of use cases, and we’ve seen adoption double in the last year with no signs of slowing down.
+
+One major difference between initial adoption and today is that Netflix migrated from an on-prem Temporal deployment to using Temporal Cloud, which is Temporal’s SaaS offering of the Temporal server. This has let us scale Temporal adoption while running a lean team. We’ve also built up a robust internal platform around Temporal Cloud to integrate with Netflix’s internal ecosystem and make onboarding for our developers as easy as possible. Stay tuned for a future post digging into more specifics of our Netflix Temporal platform.
+
+Acknowledgement
+We all stand on the shoulders of giants in software. I want to call out that I’m retelling the work of my two stunning colleagues Chris Smalley and Rob Zienert in this post, who were the two aforementioned engineers who introduced Temporal and carried out the migration.
+
+Netflix Live Origin
+Netflix Technology Blog
+Netflix Technology Blog
+
+Follow
+14 min read
+·
+Dec 15, 2025
+109
+
+
+3
+
+
+
+
+
+Xiaomei Liu, Joseph Lynch, Chris Newton
+
+Introduction
+Behind the Streams: Building a Reliable Cloud Live Streaming Pipeline for Netflix introduced the architecture of the streaming pipeline. This blog post looks at the custom Origin Server we built for Live — the Netflix Live Origin. It sits at the demarcation point between the cloud live streaming pipelines on its upstream side and the distribution system, Open Connect, Netflix’s in-house Content Delivery Network (CDN), on its downstream side, and acts as a broker managing what content makes it out to Open Connect and ultimately to the client devices.
+
+Press enter or click to view image in full size
+
+Live Streaming Distribution and Origin Architecture
+Netflix Live Origin is a multi-tenant microservice operating on EC2 instances within the AWS cloud. We lean on standard HTTP protocol features to communicate with the Live Origin. The Packager pushes segments to it using PUT requests, which place a file into storage at the particular location named in the URL. The storage location corresponds to the URL that is used when the Open Connect side issues the corresponding GET request.
+
+Live Origin architecture is influenced by key technical decisions of the live streaming architecture. First, resilience is achieved through redundant regional live streaming pipelines, with failover orchestrated at the server-side to reduce client complexity. The implementation of epoch locking at the cloud encoder enables the origin to select a segment from either encoding pipeline. Second, Netflix adopted a manifest design with segment templates and constant segment duration to avoid frequent manifest refresh. The constant duration templates enable Origin to predict the segment publishing schedule.
+
+Multi-pipeline and multi-region aware origin
+Live streams inevitably contain defects due to the non-deterministic nature of live contribution feeds and strict real-time segment publishing timelines. Common defects include:
+
+Short segments: Missing video frames and audio samples.
+Missing segments: Entire segments are absent.
+Segment timing discontinuity: Issues with the Track Fragment Decode Time.
+Communicating segment discontinuity from the server to the client via a segment template-based manifest is impractical, and these defective segments can disrupt client streaming.
+
+The redundant cloud streaming pipelines operate independently, encompassing distinct cloud regions, contribution feeds, encoder, and packager deployments. This independence substantially mitigates the probability of simultaneous defective segments across the dual pipelines. Owing to its strategic placement within the distribution path, the live origin naturally emerges as a component capable of intelligent candidate selection.
+
+The Netflix Live Origin features multi-pipeline and multi-region awareness. When a segment is requested, the live origin checks candidates from each pipeline in a deterministic order, selecting the first valid one. Segment defects are detected via lightweight media inspection at the packager. This defect information is provided as metadata when the segment is published to the live origin. In the rare case of concurrent defects at the dual pipeline, the segment defects can be communicated downstream for intelligent client-side error concealment.
+
+Open Connect streaming optimization
+When the Live project started, Open Connect had become highly optimised for VOD content delivery — nginx had been chosen many years ago as the Web Server since it is highly capable in this role, and a number of enhancements had been added to it and to the underlying operating system (BSD). Unlike traditional CDNs, Open Connect is more of a distributed origin server — VOD assets are pre-positioned onto carefully selected server machines (OCAs, or Open Connect Appliances) rather than being filled on demand.
+
+Alongside the VOD delivery, an on-demand fill system has been used for non-VOD assets — this includes artwork and the downloadable portions of the clients, etc. These are also served out of the same nginx workers, albeit under a distinct server block, using a distinct set of hostnames.
+
+Live didn’t fit neatly into this ‘small object delivery’ model, so we extended the proxy-caching functionality of nginx to address Live-specific needs. We will touch on some of these here related to optimized interactions with the Origin Server. Look for a future blog post that will go into more details on the Open Connect side.
+
+The segment templates provided to clients are also provided to the OCAs as part of the Live Event Configuration data. Using the Availability Start Time and Initial Segment number, the OCA is able to determine the legitimate range of segments for each event at any point in time — requests for objects outside this range can be rejected, preventing unnecessary requests going up through the fill hierarchy to the origin. If a request makes it through to the origin, and the segment isn’t available yet, the origin server will return a 404 Status Code (indicating File Not Found) with the expiration policy of that error so that it can be cached within Open Connect until just before that segment is expected to be published.
+
+If the Live Origin knows when segments are being pushed to it, and knows what the live edge is — when a request is received for the immediately next object, rather than handing back another 404 error (which would go all the way back through Open Connect to the client), the Live Origin can ‘hold open’ the request, and service it once the segment has been published to it. By doing this, the degree of chatter within the network handling requests that arrive early has been significantly reduced. As part of this, millisecond grain caching was added to nginx to enhance the standard HTTP Cache Control, which only works at second granularity, a long time when segments are generated every 2 seconds.
+
+Streaming metadata enhancement
+The HTTP standard allows for the addition of request and response headers that can be used to provide additional information as files move between clients and servers. The HTTP headers provide notifications of events within the stream in a highly scalable way that is independently conveyed to client devices, regardless of their playback position within the stream.
+
+These notifications are provided to the origin by the live streaming pipeline and are inserted by the origin in the form of headers, appearing on the segments generated at that point in time (and persist to future segments — they are cumulative). Whenever a segment is received at an OCA, this notification information is extracted from the response headers and used to update an in-memory data structure, keyed by event ID; and whenever a segment is served from the OCA, the latest such notification data is attached to the response. This means that, given any flow of segments into an OCA, it will always have the most recent notification data, even if all clients requesting it are behind the live edge. In fact, the notification information can be conveyed on any response, not just those supplying new segments.
+
+Cache invalidation and origin mask
+An invalidation system has been available since the early days of the project. It can be used to “flush” all content associated with an event by altering the key used when looking up objects in cache — this is done by incorporating a version number into the cache key that can then be bumped on demand. This is used during pre-event testing so that the network can be returned to a pristine state for the test with minimal fuss.
+
+Each segment published by the Live Origin conveys the encoding pipeline it was generated by, as well as the region it was requested from. Any issues that are found after segments make their way into the network can be remedied by an enhanced invalidation system that takes such variants into account. It is possible to invalidate (that is, cause to be considered expired) segments in a range of segment numbers, but only if they were sourced from encoder A, or from Encoder A, but only if retrieved from region X.
+
+Become a member
+In combination with Open Connect’s enhanced cache invalidation, the Netflix Live Origin allows selective encoding pipeline masking to exclude a range of segments from a particular pipeline when serving segments to Open Connect. The enhanced cache invalidation and origin masking enable live streaming operations to hide known problematic segments (e.g., segments causing client playback errors) from streaming clients once the bad segments are detected, protecting millions of streaming clients during the DVR playback window.
+
+Origin storage architecture
+Our original storage architecture for the Live Origin was simple: just use AWS S3 like we do for SVOD. This served us well initially for our low-traffic events, but as we scaled up we discovered that Live streaming has unique latency and workload requirements that differ significantly from on-demand where we have significant time ahead-of-time to pre-position content. While S3 met its stated uptime guarantees, our strict 2-second retry budget inherent to Live events (where every write is critical) led us to explore optimizations specifically tailored for real-time delivery at scale. AWS S3 is an amazing object store, but our Live streaming requirements were closer to those of a global low-latency highly-available database. So, we went back to the drawing board and started from the requirements. The Origin required:
+
+[HA Writes] Extremely high write availability, ideally as close to full write availability within a single AWS region, with low second replication delay to other regions. Any failed write operation within 500ms is considered a bug that must be triaged and prevented from re-occurring.
+[Throughput] High write throughput, with hundreds of MiB replicating across regions
+[Large Partitions] Efficiently support O(MiB) writes that accumulate to O(10k) keys per partition with O(GiB) total size per event.
+[Strong Consistency] Within the same region, we needed read-your-write semantics to hit our <1s read delay requirements (must be able to read published segments)
+[Origin Storm] During worst-case load involving Open Connect edge cases, we may need to handle O(GiB) of read throughput without affecting writes.
+Fortunately, Netflix had previously invested in building a KeyValue Storage Abstraction that cleverly leveraged Apache Cassandra to provide chunked storage of MiB or even GiB values. This abstraction was initially built to support cloud saves of Game state. The Live use case would push the boundaries of this solution, however, in terms of availability for writes (#1), cumulative partition size (#3), and read throughput during Origin Storm (#5).
+
+High Availability for Writes of Large Payloads
+The KeyValue Payload Chunking and Compression Algorithm breaks O(MiB) work down so each part can be idempotently retried and hedged to maintain strict latency service level objectives, as well as spreading the data across the full cluster. When we combine this algorithm with Apache Cassandra’s local-quorum consistency model, which allows write availability even with an entire Availability Zone outage, plus a write-optimized Log-Structured Merge Tree (LSM) storage engine, we could meet the first four requirements. After iterating on the performance and availability of this solution, we were not only able to achieve the write availability required, but did so with a P99 tail latency that was similar to the status quo’s P50 average latency while also handling cross-region replication behind the scenes for the Origin. This new solution was significantly more expensive (as expected, databases backed by SSD cost more), but minimizing cost was not a key objective and low latency with high availability was:
+
+Press enter or click to view image in full size
+
+Storage System Write Performance
+High Availability Reads at Gbps Throughputs
+Now that we solved the write reliability problem, we had to handle the Origin Storm failure case, where potentially dozens of Open Connect top-tier caches could be requesting multiple O(MiB) video segments at once. Our back-of-the-envelope calculations showed worst-case read throughput in the O(100Gbps) range, which would normally be extremely expensive for a strongly-consistent storage engine like Apache Cassandra. With careful tuning of chunk access, we were able to respond to reads at network line rate (100Gbps) from Apache Cassandra, but we observed unacceptable performance and availability degradation on concurrent writes. To resolve this issue, we introduced write-through caching of chunks using our distributed caching system EVCache, which is based on Memcached. This allows almost all reads to be served from a highly scalable cache, allowing us to easily hit 200Gbps and beyond without affecting the write path, achieving read-write separation.
+
+Final Storage Architecture
+In the final storage architecture, the Live Origin writes and reads to KeyValue, which manages a write-through cache to EVCache (memcached) and implements a safe chunking protocol that spreads large values and partitions them out across the storage cluster (Apache Cassandra). This allows almost all read load to be handled from cache, with only misses hitting the storage. This combination of cache and highly available storage has met the demanding needs of our Live Origin for over a year now.
+
+Press enter or click to view image in full size
+
+Storage System High Level Architecture
+Delivering this consistent low latency for large writes with cross-region replication and consistent write-through caching to a distributed cache required solving numerous hard problems with novel techniques, which we plan to share in detail during a future post.
+
+Scalability and scalable architecture
+Netflix’s live streaming platform must handle a high volume of diverse stream renditions for each live event. This complexity stems from supporting various video encoding formats (each with multiple encoder ladders), numerous audio options (across languages, formats, and bitrates), and different content versions (e.g., with or without advertisements). The combination of these elements, alongside concurrent event support, leads to a significant number of unique stream renditions per live event. This, in turn, necessitates a high Requests Per Second (RPS) capacity from the multi-tenant live origin service to ensure publishing-side scalability.
+
+In addition, Netflix’s global reach presents distinct challenges to the live origin on the retrieval side. During the Tyson vs. Paul fight event in 2024, a historic peak of 65 million concurrent streams was observed. Consequently, a scalable architecture for live origin is essential for the success of large-scale live streaming.
+
+Scaling architecture
+We chose to build a highly scalable origin instead of relying on the traditional origin shields approach for better end-to-end cache consistency control and simpler system architecture. The live origin in this architecture directly connects with top-tier Open Connect nodes, which are geographically distributed across several sites. To minimize the load on the origin, only designated nodes per stream rendition at each site are permitted to directly fill from the origin.
+
+Press enter or click to view image in full size
+
+Netflix Live Origin Scalability Architecture
+While the origin service can autoscale horizontally using EC2 instances, there are other system resources that are not autoscalable, such as storage platform capacity and AWS to Open Connect backbone bandwidth capacity. Since in live streaming, not all requests to the live origin are of the same importance, the origin is designed to prioritize more critical requests over less critical requests when system resources are limited. The table below outlines the request categories, their identification, and protection methods.
+
+Press enter or click to view image in full size
+
+Publishing isolation
+Publishing traffic, unlike potentially surging CDN retrieval traffic, is predictable, making path isolation a highly effective solution. As shown in the scalability architecture diagram, the origin utilizes separate EC2 publishing and CDN stacks to protect the latency and failure-sensitive origin writes. In addition, the storage abstraction layer features distinct clusters for key-value (KV) read and KV write operations. Finally, the storage layer itself separates read (EVCache) and write (Cassandra) paths. This comprehensive path isolation facilitates independent cloud scaling of publishing and retrieval, and also prevents CDN-facing traffic surges from impacting the performance and reliability of origin publishing.
+
+Priority rate limiting
+Given Netflix’s scale, managing incoming requests during a traffic storm is challenging, especially considering non-autoscalable system resources. The Netflix Live Origin implemented priority-based rate limiting when the underlying system is under stress. This approach ensures that requests with greater user impact are prioritized to succeed, while requests with lower user impact are allowed to fail during times of stress in order to protect the streaming infrastructure and are permitted to retry later to succeed.
+
+Leveraging Netflix’s microservice platform priority rate limiting feature, the origin prioritizes live edge traffic over DVR traffic during periods of high load on the storage platform. The live edge vs. DVR traffic detection is based on the predictable segment template. The template is further cached in memory on the origin node to enable priority rate limiting without access to the datastore, which is valuable especially during periods of high datastore stress.
+
+To mitigate traffic surges, TTL cache control is used alongside priority rate limiting. When the low-priority traffic is impacted, the origin instructs Open Connect to slow down and cache identical requests for 5 seconds by setting a max-age = 5s and returns an HTTP 503 error code. This strategy effectively dampens traffic surges by preventing repeated requests to the origin within that 5-second window.
+
+The following diagrams illustrate origin priority rate limiting with simulated traffic. The nliveorigin_mp41 traffic is the low-priority traffic and is mixed with other high-priority traffic. In the first row: the 1st diagram shows the request RPS, the 2nd diagram shows the percentage of request failure. In the second row, the 1st diagram shows datastore resource utilization, and the 2nd diagram shows the origin retrieval P99 latency. The results clearly show that only the low-priority traffic (nliveorigin_mp41) is impacted at datastore high utilization, and the origin request latency is under control.
+
+Press enter or click to view image in full size
+
+Origin Priority Rate Limiting
+404 storm and cache optimization
+Publishing isolation and priority rate limiting successfully protect the live origin from DVR traffic storms. However, the traffic storm generated by requests for non-existent segments presents further challenges and opportunities for optimization.
+
+The live origin structures metadata hierarchically as event > stream rendition > segment, and the segment publishing template is maintained at the stream rendition level. This hierarchical organization allows the origin to preemptively reject requests with an HTTP 404(not found)/410(Gone) error, leveraging highly cacheable event and stream rendition level metadata, avoiding unnecessary queries to the segment level metadata:
+
+If the event is unknown, reject the request with 404
+If the event is known, but the segment request timing does not match the expected publishing timing, reject the request with 404 and cache control TTL matching the expected publishing time
+If the event is known, the requested segment is never generated or misses the retry deadline, reject the request with a 410 error, preventing the client from repeatedly requesting
+At the storage layer, metadata is stored separately from media data in the control plane datastore. Unlike the media datastore, the control plane datastore does not use a distributed cache to avoid cache inconsistency. Event and rendition level metadata benefits from a high cache hit ratio when in-memory caching is utilized at the live origin instance. During traffic storms involving non-existent segments, the cache hit ratio for control plane access easily exceeds 90%.
+
+The use of in-memory caching for metadata effectively handles 404 storms at the live origin without causing datastore stress. This metadata caching complements the storage system’s distributed media cache, providing a complete solution for traffic surge protection.
+
+Summary
+The Netflix Live Origin, built upon an optimized storage platform, is specifically designed for live streaming. It incorporates advanced media and segment publishing scheduling awareness and leverages enhanced intelligence to improve streaming quality, optimize scalability, and improve Open Connect live streaming operations.
+
+Acknowledgement
+Many teams and stunning colleagues contributed to the Netflix live origin. Special thanks to Flavio Ribeiro for advocacy and sponsorship of the live origin project; to Raj Ummadisetty, Prudhviraj Karumanchi for the storage platform; to Rosanna Lee, Hunter Ford, and Thiago Pontes for storage lifecycle management; to Ameya Vasani for e2e test framework; Thomas Symborski for orchestrator integration; to James Schek for Open Connect integration; to Kevin Wang for platform priority rate limit; to Di Li, Nathan Hubbard for origin scalability testing.
+
+AV1 — Now Powering 30% of Netflix Streaming
+Netflix Technology Blog
+Netflix Technology Blog
+
+Follow
+10 min read
+·
+Dec 2, 2025
+237
+
+
+6
+
+
+
+
+
+Liwei Guo, Zhi Li, Sheldon Radford, Jeff Watts
+
+Streaming video has become an integral part of our daily lives. At Netflix, our top priority is delivering the best possible entertainment experience to our members, regardless of their devices or network conditions. One of the key technologies enabling this is AV1, a modern, open video codec that is rapidly transforming both how we stream content and how users experience it. Today, AV1 powers approximately 30% of all Netflix viewing, marking a major milestone in our efforts to bring more efficient and higher-quality streaming to our members.
+
+In this post, we’ll revisit Netflix’s AV1 journey to date, highlight emerging use cases, and share adoption trends across the device ecosystem. Having witnessed AV1’s significant impact，and with AV2 on the horizon, we’re more excited than ever about how open codecs will continue to revolutionize streaming for everyone.
+
+AV1: A Modern, Open Codec
+Since entering the streaming business in 2007, Netflix has primarily relied on H.264/AVC as its streaming format. However, we quickly recognized that a modern, open codec would benefit not only Netflix, but the entire multimedia industry. In 2015, together with a group of like-minded industry leaders, Netflix co-founded the Alliance for Open Media (AOMedia) to develop and promote next generation, open source media technologies. The AV1 codec became the first major project of this collaboration, with ambitious goals: to deliver significant improvements in compression efficiency over state-of-the-art codecs, and to introduce rich features that enable new use cases. After three years of collaborative development, AV1 was officially released in 2018.
+
+Netflix’s AV1 Journey: From Android to TVs and Beyond
+Piloting on Android Mobile
+When we first set out to bring AV1 streaming to Netflix members, Android was the ideal starting point. Android’s flexibility allowed us to quickly integrate a software AV1 decoder using the efficient dav1d library, which was already optimized for ARM chipsets in mobile devices.
+
+AV1’s superior compression efficiency was especially valuable for mobile users, many of whom are mindful of their data usage and network conditions. By adopting AV1, we were able to deliver noticeably better video quality at lower bitrates. For members relying on cellular data, this meant crisper images with fewer compression artifacts, even when bandwidth was limited. Launching AV1 support on Android in 2020 marked a significant step forward for Netflix on mobile, making high-quality streaming more accessible and enjoyable for members everywhere.
+
+Front-and-Center for Netflix VOD Streaming
+The success of our AV1 launch on Android proved its value for Netflix streaming, motivating us to expand support to smart TVs and other large-screen devices, where most of our members watch their favorite shows.
+
+Smart TVs depend on hardware decoders for efficient high-quality playback. We worked closely with device manufacturers and SoC vendors to certify these devices, ensuring they are both conformant and performant. This collaborative effort enabled our AV1 streaming to TV devices in late 2021. Shortly thereafter, we expanded AV1 streaming to web browsers (in 2022) and continued to broaden device support. In 2023, this included Apple devices with the introduction of AV1 hardware support in the new M3 and A17 Pro chips.
+
+As more devices began shipping with AV1 hardware support, a rapidly growing share of our members could enjoy the benefits of this advanced codec. Combined with our investment in adding AV1 streams across the entire catalog, AV1 viewing share has been consistently increasing in recent years. Today, AV1 accounts for approximately 30% of all Netflix streaming, making it our second most-used codec — and it’s on track to become number one very soon. The payoff has been substantial.
+
+Elevating Streaming Experience Across the Board: Large-screen TVs and other devices demand higher bitrates to deliver stunning 4K, high frame rate (HFR) experiences. AV1’s superior compression efficiency has allowed us to provide these experiences using less data, making high-quality streaming more accessible and reliable. On average, AV1 streaming sessions achieve VMAF scores¹ that are 4.3 points higher than AVC and 0.9 points higher than HEVC sessions. At the same time, AV1 sessions use one-third less bandwidth than both AVC and HEVC, resulting in 45% fewer buffering interruptions. Moreover, Netflix’s diverse content catalog benefits universally from AV1, with improvements across all content types.
+Driving Network Efficiency Worldwide: Netflix streams are delivered through our own content delivery network (Open Connect), in partnership with local ISPs around the globe. With more than 300 million members, Netflix streaming constitutes a non-trivial portion of global internet traffic. Because AV1 is a more efficient codec, its streams are smaller in size (while providing even better visual quality). By shifting a substantial share of our streaming to AV1, we reduce overall internet bandwidth consumption, and lessen system and network load for both Netflix and our partners.
+Unlocking Advanced Experiences
+In addition to its superior compression efficiency, AV1 was designed to support a rich set of features. Once we established a robust framework for the continuous expansion of AV1 streaming, we quickly shifted our focus towards exploring AV1’s unique features to unlock even more advanced and immersive experiences for our members.
+
+High-Dynamic-Range(HDR)
+HDR brings enhanced detail, vivid colors, and greater clarity to images. As a premium streaming service, Netflix has been a pioneer in adopting HDR, offering HDR streaming since 2016. In March 2025, we launched AV1 HDR streaming. We chose HDR10+ as the HDR format for its use of dynamic metadata, which enabled us to adapt the tone mapping per device in a scene-dependent manner.
+
+As anticipated, the combination of AV1 and HDR10+ allows us to deliver images with greater detail, more vibrant colors, and an overall heightened sense of immersion for our members. At the moment, 85% of our HDR catalog (from the perspective of view-hours) has AV1-HDR10+ coverage, and this number is expected to reach 100% in the next couple of months.
+
+Press enter or click to view image in full size
+
+Photographs of devices displaying the same (cropped) frame with HDR10 metadata (left) and HDR10+ metadata (right). Notice the preservation of the flashlight detail in the HDR10+ capture, and the over-exposure of the region under the flashlight in the HDR10 one.
+Cinematic Film Grain
+Film grain is a hallmark of the cinematic experience, widely used in the movie industry to enhance a film’s depth, texture, and realism. However, because film grain is inherently random, faithfully representing it in digital video requires a significant amount of data. This presents a unique challenge for streaming: restricting the bitrate can result in grain that appears unnatural or distorted, while increasing the bitrate to accurately preserve cinematic grain almost inevitably leads to elevated rebuffering. The AV1 specification incorporates a unique solution called Film Grain Synthesis (FGS). Instead of encoding grain as part of every frame, the grain is stripped out before encoding and then resynthesized at the decoder using parameters sent in the bitstream, delivering a realistic cinematic film grain experience without the usual data costs.
+
+Become a member
+This approach represents a significant shift from traditional compression and streaming techniques. Our team invested substantial effort in fine-tuning the media processing pipeline, ensuring FGS delivers robust performance at scale. In July 2025, we successfully productized AV1 FGS, and the results were astonishing: AV1 with FGS could deliver videos with cinematic film grain at a bitrate well within the capabilities of typical household internet connections. For non-FGS AV1 encodings, even at much higher bitrate, they may not be able to achieve comparable quality.
+
+Press enter or click to view image in full size
+
+The same (cropped) frame from source (left), regular AV1 stream encoded at 8274kbps (middle) and AV1 FGS stream encoded at 2804 kbps (right). The AV1 FGS stream reduces the bitrate by 66% while delivering clearly better quality.
+Beyond VOD Streaming
+So far, our AV1 journey has been mainly on VOD, but we see significant opportunities for AV1 beyond traditional VOD streaming. On a mission to entertain the world, Netflix has constantly explored and established other ways to bring joy to our members, and we believe AV1 could contribute to the success of these new products.
+
+Live Streaming
+Debuting in 2023, live streaming has experienced rapid growth at Netflix, becoming a key part of our streaming offerings in just two short years. We are actively evaluating the use of AV1 in live streaming, as we believe it could help further scale Netflix’s live programming:
+
+Hyper-scale concurrent viewership: Live streaming at Netflix means delivering content to tens of millions of viewers simultaneously. AV1’s superior compression efficiency could significantly reduce the required bandwidth, enabling us to deliver high-quality live experiences to large audiences without compromising video quality.
+Customizable graphics overlay: for live sport events such as football, tennis and boxing, graphics overlays have become an integral part of the member experience — from embedding game statistics to delivering sponsorships. AV1 offers an opportunity to make the graphics highly customizable: layered coding is supported in AV1’s main profile, allowing encoding the main content in the base layer, and graphics in the enhancement layer, and easily swapping out one version of the enhancement layer with another. We envision that the use of AV1’s layered coding can greatly simplify the live streaming workflow and reduce delivery costs.
+Cloud Gaming
+Cloud gaming is a new Netflix offering that is currently in the beta phase and is available to members in select countries. The game engines run on cloud servers, while the rendered graphics are streamed directly to members’ devices. By removing barriers and transforming every Netflix-enabled device into a game console, Cloud gaming aims to deliver a seamless, “play anywhere” experience for our members. For a glimpse of this in action, watch as Co-CEO Greg Peters and CTO Elizabeth Stone play a round of Boggle Party — powered entirely by Netflix’s cloud gaming platform!
+
+Unlike traditional video streaming, cloud gaming requires that every player action is reflected instantly on the screen to ensure a responsive and immersive experience. This makes delivering high-quality video frames with extremely low latency, despite fluctuating network conditions, one of the biggest challenges in cloud gaming.
+
+Our team is actively working on productizing AV1 for cloud gaming. Given AV1’s high compression efficiency, we can reduce frame sizes, helping video frames get through even when network conditions become challenging. This positions AV1 as a promising technology for enabling a high-quality, low-latency gaming experience across a wide range of devices.
+
+A Device Ecosystem United for AV1
+Netflix is a streaming company, and we have worked diligently to create highly efficient and standards-conformant AV1 streams for our catalog. However, an equally, if not more, important factor in AV1’s success is the widespread support from device manufacturers. Throughout our AV1 journey, we have been impressed by the unprecedented pace at which the device ecosystem has embraced AV1.
+
+Just six months after the AV1 specification was finalized, the open-source AV1 decoder library sponsored by AOM, dav1d, was released. Small, performant, and highly resource-efficient, dav1d bridged the gap for early adopters like Netflix while hardware solutions were still in development. Continuous improvements to its performance and compatibility have made dav1d the preferred choice for a wide range of platforms and practical applications. Today, it serves as Android’s default software decoder. Additionally, it plays a key role in web browsers — for Netflix, it powers approximately 40% of our browser playback. This broad adoption has significantly expanded access to high-quality AV1 streaming, even in the absence of dedicated hardware decoders.
+
+Netflix maintains a close working relationship with device manufacturers and SoC vendors, and we have witnessed first-hand their enthusiasm for adopting AV1. To ensure optimal streaming performance, Netflix has a rigorous certification process to verify proper support for our streaming formats on devices. AV1 was added to this certification process in 2019, and since then, we have seen a steady increase in the number of devices with full AV1 decoding capabilities. Over the past five years (2021–2025), 88% of large-screen devices, including TVs, set-top boxes, and streaming sticks, submitted for Netflix certification have supported AV1, with the vast majority offering full 4K@60fps capability. Notably, since 2023, almost all devices we have received for certification are AV1-capable.
+
+We have also been impressed by the robustness of AV1 implementations across these devices. As mentioned earlier, FGS is an innovative tool that departs from traditional codec architectures and was not included in our initial full-scale AV1 streaming rollout. When we launched FGS this July, we worked closely with our partners to ensure broad device compatibility. We are pleased with the successful progress made, and AV1 with FGS is now supported across a significant and growing number of in-field devices.
+
+Looking Ahead: AV1 Today, AV2 Tomorrow
+As we reflect on our AV1 journey, it’s clear that the codec has already transformed the streaming experience for hundreds of millions of Netflix members worldwide. Thanks to industry-wide collaboration and rapid device adoption, AV1 is delivering higher quality, greater efficiency, and new cinematic features to more screens than ever before.
+
+Looking ahead, we are excited about the forthcoming release of AV2, announced by the Alliance for Open Media for the end of 2025. AV2 is poised to set a new benchmark for compression efficiency and streaming capabilities, building on the solid foundation laid by AV1. At Netflix, we remain committed to adopting the best open technologies to delight our members around the globe. While AV2 represents the future of streaming, AV1 is very much the present — serving as the backbone of our platform and powering exceptional entertainment experiences across a vast and ever-expanding ecosystem of devices.
+
+Acknowledgement
+The success of AV1 at Netflix is the result of the dedication, expertise, and collaboration of many teams across the company — including Encoding, Clients, Device Certification, Partner Engineering, Data Science & Engineering, Infra, Platform, etc.
+
+We would also like to thank Artem Danylenko, Aditya Mavlankar, Anne Aaron, Cyril Concolato, Allan Zhou and Anush Moorthy for their valuable comments and feedback on earlier drafts of this post.
+
+Footnotes
+These numbers represent a snapshot of data from November 13, 2025. Actual values may vary slightly from day to day and across different regions, depending on the mix of content, devices, and internet connectivity.
+
+AV1 — Now Powering 30% of Netflix Streaming
+Netflix Technology Blog
+Netflix Technology Blog
+
+Follow
+10 min read
+·
+Dec 2, 2025
+237
+
+
+6
+
+
+
+
+
+Liwei Guo, Zhi Li, Sheldon Radford, Jeff Watts
+
+Streaming video has become an integral part of our daily lives. At Netflix, our top priority is delivering the best possible entertainment experience to our members, regardless of their devices or network conditions. One of the key technologies enabling this is AV1, a modern, open video codec that is rapidly transforming both how we stream content and how users experience it. Today, AV1 powers approximately 30% of all Netflix viewing, marking a major milestone in our efforts to bring more efficient and higher-quality streaming to our members.
+
+In this post, we’ll revisit Netflix’s AV1 journey to date, highlight emerging use cases, and share adoption trends across the device ecosystem. Having witnessed AV1’s significant impact，and with AV2 on the horizon, we’re more excited than ever about how open codecs will continue to revolutionize streaming for everyone.
+
+AV1: A Modern, Open Codec
+Since entering the streaming business in 2007, Netflix has primarily relied on H.264/AVC as its streaming format. However, we quickly recognized that a modern, open codec would benefit not only Netflix, but the entire multimedia industry. In 2015, together with a group of like-minded industry leaders, Netflix co-founded the Alliance for Open Media (AOMedia) to develop and promote next generation, open source media technologies. The AV1 codec became the first major project of this collaboration, with ambitious goals: to deliver significant improvements in compression efficiency over state-of-the-art codecs, and to introduce rich features that enable new use cases. After three years of collaborative development, AV1 was officially released in 2018.
+
+Netflix’s AV1 Journey: From Android to TVs and Beyond
+Piloting on Android Mobile
+When we first set out to bring AV1 streaming to Netflix members, Android was the ideal starting point. Android’s flexibility allowed us to quickly integrate a software AV1 decoder using the efficient dav1d library, which was already optimized for ARM chipsets in mobile devices.
+
+AV1’s superior compression efficiency was especially valuable for mobile users, many of whom are mindful of their data usage and network conditions. By adopting AV1, we were able to deliver noticeably better video quality at lower bitrates. For members relying on cellular data, this meant crisper images with fewer compression artifacts, even when bandwidth was limited. Launching AV1 support on Android in 2020 marked a significant step forward for Netflix on mobile, making high-quality streaming more accessible and enjoyable for members everywhere.
+
+Front-and-Center for Netflix VOD Streaming
+The success of our AV1 launch on Android proved its value for Netflix streaming, motivating us to expand support to smart TVs and other large-screen devices, where most of our members watch their favorite shows.
+
+Smart TVs depend on hardware decoders for efficient high-quality playback. We worked closely with device manufacturers and SoC vendors to certify these devices, ensuring they are both conformant and performant. This collaborative effort enabled our AV1 streaming to TV devices in late 2021. Shortly thereafter, we expanded AV1 streaming to web browsers (in 2022) and continued to broaden device support. In 2023, this included Apple devices with the introduction of AV1 hardware support in the new M3 and A17 Pro chips.
+
+As more devices began shipping with AV1 hardware support, a rapidly growing share of our members could enjoy the benefits of this advanced codec. Combined with our investment in adding AV1 streams across the entire catalog, AV1 viewing share has been consistently increasing in recent years. Today, AV1 accounts for approximately 30% of all Netflix streaming, making it our second most-used codec — and it’s on track to become number one very soon. The payoff has been substantial.
+
+Elevating Streaming Experience Across the Board: Large-screen TVs and other devices demand higher bitrates to deliver stunning 4K, high frame rate (HFR) experiences. AV1’s superior compression efficiency has allowed us to provide these experiences using less data, making high-quality streaming more accessible and reliable. On average, AV1 streaming sessions achieve VMAF scores¹ that are 4.3 points higher than AVC and 0.9 points higher than HEVC sessions. At the same time, AV1 sessions use one-third less bandwidth than both AVC and HEVC, resulting in 45% fewer buffering interruptions. Moreover, Netflix’s diverse content catalog benefits universally from AV1, with improvements across all content types.
+Driving Network Efficiency Worldwide: Netflix streams are delivered through our own content delivery network (Open Connect), in partnership with local ISPs around the globe. With more than 300 million members, Netflix streaming constitutes a non-trivial portion of global internet traffic. Because AV1 is a more efficient codec, its streams are smaller in size (while providing even better visual quality). By shifting a substantial share of our streaming to AV1, we reduce overall internet bandwidth consumption, and lessen system and network load for both Netflix and our partners.
+Unlocking Advanced Experiences
+In addition to its superior compression efficiency, AV1 was designed to support a rich set of features. Once we established a robust framework for the continuous expansion of AV1 streaming, we quickly shifted our focus towards exploring AV1’s unique features to unlock even more advanced and immersive experiences for our members.
+
+High-Dynamic-Range(HDR)
+HDR brings enhanced detail, vivid colors, and greater clarity to images. As a premium streaming service, Netflix has been a pioneer in adopting HDR, offering HDR streaming since 2016. In March 2025, we launched AV1 HDR streaming. We chose HDR10+ as the HDR format for its use of dynamic metadata, which enabled us to adapt the tone mapping per device in a scene-dependent manner.
+
+As anticipated, the combination of AV1 and HDR10+ allows us to deliver images with greater detail, more vibrant colors, and an overall heightened sense of immersion for our members. At the moment, 85% of our HDR catalog (from the perspective of view-hours) has AV1-HDR10+ coverage, and this number is expected to reach 100% in the next couple of months.
+
+Press enter or click to view image in full size
+
+Photographs of devices displaying the same (cropped) frame with HDR10 metadata (left) and HDR10+ metadata (right). Notice the preservation of the flashlight detail in the HDR10+ capture, and the over-exposure of the region under the flashlight in the HDR10 one.
+Cinematic Film Grain
+Film grain is a hallmark of the cinematic experience, widely used in the movie industry to enhance a film’s depth, texture, and realism. However, because film grain is inherently random, faithfully representing it in digital video requires a significant amount of data. This presents a unique challenge for streaming: restricting the bitrate can result in grain that appears unnatural or distorted, while increasing the bitrate to accurately preserve cinematic grain almost inevitably leads to elevated rebuffering. The AV1 specification incorporates a unique solution called Film Grain Synthesis (FGS). Instead of encoding grain as part of every frame, the grain is stripped out before encoding and then resynthesized at the decoder using parameters sent in the bitstream, delivering a realistic cinematic film grain experience without the usual data costs.
+
+Become a member
+This approach represents a significant shift from traditional compression and streaming techniques. Our team invested substantial effort in fine-tuning the media processing pipeline, ensuring FGS delivers robust performance at scale. In July 2025, we successfully productized AV1 FGS, and the results were astonishing: AV1 with FGS could deliver videos with cinematic film grain at a bitrate well within the capabilities of typical household internet connections. For non-FGS AV1 encodings, even at much higher bitrate, they may not be able to achieve comparable quality.
+
+Press enter or click to view image in full size
+
+The same (cropped) frame from source (left), regular AV1 stream encoded at 8274kbps (middle) and AV1 FGS stream encoded at 2804 kbps (right). The AV1 FGS stream reduces the bitrate by 66% while delivering clearly better quality.
+Beyond VOD Streaming
+So far, our AV1 journey has been mainly on VOD, but we see significant opportunities for AV1 beyond traditional VOD streaming. On a mission to entertain the world, Netflix has constantly explored and established other ways to bring joy to our members, and we believe AV1 could contribute to the success of these new products.
+
+Live Streaming
+Debuting in 2023, live streaming has experienced rapid growth at Netflix, becoming a key part of our streaming offerings in just two short years. We are actively evaluating the use of AV1 in live streaming, as we believe it could help further scale Netflix’s live programming:
+
+Hyper-scale concurrent viewership: Live streaming at Netflix means delivering content to tens of millions of viewers simultaneously. AV1’s superior compression efficiency could significantly reduce the required bandwidth, enabling us to deliver high-quality live experiences to large audiences without compromising video quality.
+Customizable graphics overlay: for live sport events such as football, tennis and boxing, graphics overlays have become an integral part of the member experience — from embedding game statistics to delivering sponsorships. AV1 offers an opportunity to make the graphics highly customizable: layered coding is supported in AV1’s main profile, allowing encoding the main content in the base layer, and graphics in the enhancement layer, and easily swapping out one version of the enhancement layer with another. We envision that the use of AV1’s layered coding can greatly simplify the live streaming workflow and reduce delivery costs.
+Cloud Gaming
+Cloud gaming is a new Netflix offering that is currently in the beta phase and is available to members in select countries. The game engines run on cloud servers, while the rendered graphics are streamed directly to members’ devices. By removing barriers and transforming every Netflix-enabled device into a game console, Cloud gaming aims to deliver a seamless, “play anywhere” experience for our members. For a glimpse of this in action, watch as Co-CEO Greg Peters and CTO Elizabeth Stone play a round of Boggle Party — powered entirely by Netflix’s cloud gaming platform!
+
+Unlike traditional video streaming, cloud gaming requires that every player action is reflected instantly on the screen to ensure a responsive and immersive experience. This makes delivering high-quality video frames with extremely low latency, despite fluctuating network conditions, one of the biggest challenges in cloud gaming.
+
+Our team is actively working on productizing AV1 for cloud gaming. Given AV1’s high compression efficiency, we can reduce frame sizes, helping video frames get through even when network conditions become challenging. This positions AV1 as a promising technology for enabling a high-quality, low-latency gaming experience across a wide range of devices.
+
+A Device Ecosystem United for AV1
+Netflix is a streaming company, and we have worked diligently to create highly efficient and standards-conformant AV1 streams for our catalog. However, an equally, if not more, important factor in AV1’s success is the widespread support from device manufacturers. Throughout our AV1 journey, we have been impressed by the unprecedented pace at which the device ecosystem has embraced AV1.
+
+Just six months after the AV1 specification was finalized, the open-source AV1 decoder library sponsored by AOM, dav1d, was released. Small, performant, and highly resource-efficient, dav1d bridged the gap for early adopters like Netflix while hardware solutions were still in development. Continuous improvements to its performance and compatibility have made dav1d the preferred choice for a wide range of platforms and practical applications. Today, it serves as Android’s default software decoder. Additionally, it plays a key role in web browsers — for Netflix, it powers approximately 40% of our browser playback. This broad adoption has significantly expanded access to high-quality AV1 streaming, even in the absence of dedicated hardware decoders.
+
+Netflix maintains a close working relationship with device manufacturers and SoC vendors, and we have witnessed first-hand their enthusiasm for adopting AV1. To ensure optimal streaming performance, Netflix has a rigorous certification process to verify proper support for our streaming formats on devices. AV1 was added to this certification process in 2019, and since then, we have seen a steady increase in the number of devices with full AV1 decoding capabilities. Over the past five years (2021–2025), 88% of large-screen devices, including TVs, set-top boxes, and streaming sticks, submitted for Netflix certification have supported AV1, with the vast majority offering full 4K@60fps capability. Notably, since 2023, almost all devices we have received for certification are AV1-capable.
+
+We have also been impressed by the robustness of AV1 implementations across these devices. As mentioned earlier, FGS is an innovative tool that departs from traditional codec architectures and was not included in our initial full-scale AV1 streaming rollout. When we launched FGS this July, we worked closely with our partners to ensure broad device compatibility. We are pleased with the successful progress made, and AV1 with FGS is now supported across a significant and growing number of in-field devices.
+
+Looking Ahead: AV1 Today, AV2 Tomorrow
+As we reflect on our AV1 journey, it’s clear that the codec has already transformed the streaming experience for hundreds of millions of Netflix members worldwide. Thanks to industry-wide collaboration and rapid device adoption, AV1 is delivering higher quality, greater efficiency, and new cinematic features to more screens than ever before.
+
+Looking ahead, we are excited about the forthcoming release of AV2, announced by the Alliance for Open Media for the end of 2025. AV2 is poised to set a new benchmark for compression efficiency and streaming capabilities, building on the solid foundation laid by AV1. At Netflix, we remain committed to adopting the best open technologies to delight our members around the globe. While AV2 represents the future of streaming, AV1 is very much the present — serving as the backbone of our platform and powering exceptional entertainment experiences across a vast and ever-expanding ecosystem of devices.
+
+Acknowledgement
+The success of AV1 at Netflix is the result of the dedication, expertise, and collaboration of many teams across the company — including Encoding, Clients, Device Certification, Partner Engineering, Data Science & Engineering, Infra, Platform, etc.
+
+We would also like to thank Artem Danylenko, Aditya Mavlankar, Anne Aaron, Cyril Concolato, Allan Zhou and Anush Moorthy for their valuable comments and feedback on earlier drafts of this post.
+
+Footnotes
+These numbers represent a snapshot of data from November 13, 2025. Actual values may vary slightly from day to day and across different regions, depending on the mix of content, devices, and internet connectivity.
+
+Scaling Muse: How Netflix Powers Data-Driven Creative Insights at Trillion-Row Scale
+Netflix Technology Blog
+Netflix Technology Blog
+
+Follow
+9 min read
+·
+Sep 23, 2025
+307
+
+
+2
+
+
+
+
+
+By Andrew Pierce, Chris Thrailkill, Victor Chiapaikeo
+
+At Netflix, we prioritize getting timely data and insights into the hands of the people who can act on them. One of our key internal applications for this purpose is Muse. Muse’s ultimate goal is to help Netflix members discover content they’ll love by ensuring our promotional media is as effective and authentic as possible. It achieves this by equipping creative strategists and launch managers with data-driven insights showing which artwork or video clips resonate best with global or regional audiences and flagging outliers such as potentially misleading (clickbait-y) assets. These kinds of applications fall under Online Analytical Processing (OLAP), a category of systems designed for complex querying and data exploration. However, enabling Muse to support new, more advanced filtering and grouping capabilities while maintaining high performance and data accuracy has been a challenge. Previous posts have touched on artwork personalization and our impressions architecture. In this post, we’ll discuss some steps we’ve taken to evolve the Muse data serving layer to enable new capabilities while maintaining high performance and data accuracy.
+
+Press enter or click to view image in full size
+
+Muse application
+An Evolving Architecture
+Like many early analytics applications, Muse began as a simple dashboard powered by batch data pipelines (Spark¹) and a modest Druid² cluster. As the application evolved, so did user demands. Users wanted new features like outlier detection and notification delivery, media comparison and playback, and advanced filtering, all while requiring lower latency and supporting ever-growing datasets (in the order of trillions of rows a year). One of the most challenging requirements was enabling dynamic analysis of promotional media performance by “audience” affinities: internally defined, algorithmically inferred labels representing collections of viewers with similar tastes. Answering questions like “Does specific promotional media resonate more with Character Drama fans or Pop Culture enthusiasts?” required augmenting already voluminous impression and playback data. Supporting filtering and grouping by these many-to-many audience relationships led to a combinatorial explosion in data volume, pushing the limits of our original architecture.
+
+To address these complexities and support the evolving needs of our users, we undertook a significant evolution of Muse’s architecture. Today’s Muse is a React app that queries a GraphQL layer served with a set of Spring Boot GRPC microservices. In the remainder of this post, we’ll focus on steps we took to scale the data microservice, its backing ETL, and our Druid cluster. Specifically, we’ve changed the data model to rely on HyperLogLog (HLL) sketches, used Hollow for access to in-memory, precomputed aggregates, and taken a series of steps to tune Druid. To ensure the accuracy of these changes, we relied heavily on internal debugging tools to validate pre- and post-changes.
+
+Press enter or click to view image in full size
+
+Muse’s Current Architecture
+Moving to HyperLogLog (HLL) Sketches for Distinct Counts
+Some of the most important metrics we track are impressions, the number of times an asset is shown to a user within a time window, and qualified plays, which links a playback event with a minimum duration back to a specific impression. Calculating these metrics requires counting distinct users. However, performing distinct counts in distributed systems is resource-intensive and challenging. For instance, to determine how many unique profiles have ever seen a particular asset, we need to compare each new set of profile ids with those from all days before it, potentially spanning months or even years.
+
+For performance, we can trade accuracy. The Apache Datasketches library allows us to get distinct count estimates that are within a 1–2% error. This is tunable with a precision parameter called logK (0.8% in our case with logK of 17). We build sketches in two places:
+
+During Druid ingest: we use the HLLSketchBuild aggregator with Druid rollup set to true to reduce our data in preparation for fast distinct counting
+During our Spark ETL: we persist precomputed aggregates like all-time impressions per asset in the form of HLL sketches. Each day, we merge a new HLL sketch into the existing one using a combination of hll_union and hll_union_agg (functions added by our very own Ryan Berti)
+Press enter or click to view image in full size
+
+We use Datasketches in our ETL and serving systems
+HLL has been a huge performance boost for us both within the serving and ETL layer. Across our most common OLAP query patterns, we’ve seen latencies reduce by approx 50%. Nevertheless, running APPROX_COUNT_DISTINCT over large date ranges on the Druid cluster for very large titles exhausts limited threads, especially in high-concurrency situations. To further offload Druid query volume and preserve cluster threads, we’ve also relied extensively on the Hollow library.
+
+Hollow as a Read-Only Key Value Store for Precomputed Aggregates
+Our in-house Hollow³ infrastructure allows us to easily create Hollow feeds — essentially highly compressed and performant in-memory key/value stores — from Iceberg⁴ tables. In this setup, dedicated producer servers listen for changes to Iceberg tables, and when updates occur, they push the latest data to downstream consumers. On the consumer side, our Spring Boot applications listen to announcements from these producers and automatically refresh in-memory caches with the latest dataset.
+
+Become a member
+This architecture has enabled us to migrate several data access patterns from Druid to Hollow, specifically ones with a limited number of parameter combinations per title. One of these was fetching distinct filter dimensions. For example, while most Netflix-branded titles are released globally, licensed titles often have rights restrictions that limit their availability to specific countries and time windows. As a result, a particular licensed title might only be available to members in Germany and Luxembourg.
+
+Press enter or click to view image in full size
+
+Distinct countries queried from a Hollow feed for the assets for Manta Manta
+In the past, retrieving these distinct country values per asset required issuing a SELECT DISTINCT query to our Druid cluster. With Hollow, we maintain a feed of distinct dimension values, allowing us to perform stream operations like the one below directly on a cached dataset.
+
+/**
+ * Returns the possible filter values for a dimension such as countries
+ */
+public List<Dimension> getDimensions(long movieId, String dimensionId) {
+    // Access in-memory Hollow feed with near instant query time
+    Map<String, List<Dimension>> dimensions = dimensionsHollowConsumer.lookup(movieId);
+    return dimensions.getOrDefault(dimensionId, List.of()).stream()
+        .sorted(Comparator.comparing(Dimension::getName))
+        .toList();
+}
+Although it adds complexity to our service by requiring more intricate request routing and a higher memory footprint, pre-computed aggregates have given us greater stability and performance. In the case of fetching distinct dimensions, we’ve observed query times drop from hundreds of milliseconds to just tens of milliseconds. More importantly, this shift has offloaded high concurrency demands from our Druid cluster, resulting in more consistent query performance. In addition to this use case, cached pre-computed aggregates also power features such as retrieving recently launched titles, accessing all-time asset metrics, and serving various pieces of title metadata.
+
+Tuning Druid
+Even with the efficiencies gained from HLL sketches and Hollow feeds, ensuring that our Druid cluster operates performantly has been an ongoing challenge. Fortunately, at Netflix, we are in the company of multiple Apache Druid PMC members like Maytas Monsereenusorn and Jesse Tuğlu who have helped us wring out every ounce of performance. Some of the key optimizations we’ve implemented include:
+
+Increasing broker count relative to historical nodes: We aim for a broker-to-historical ratio close to the recommended 1:15, which helps improve query throughput.
+Tuning segment sizes: By targeting the 300–700 MB “sweet spot” for segment sizes, primarily using the tuningConfig.targetRowsPerSegment parameter during ingestion — we ensure that each segment a single historical thread scans is not overly large.
+Leveraging Druid lookups for data enrichment: Since joins can be prohibitively expensive in Druid, we use lookups at query time for any key column enrichment.
+Optimizing search predicates: We ensure that all search predicates operate on physical columns rather than virtual ones, creating necessary columns during ingestion with transformSpec.transforms.
+Filtering and slimming data sources at ingest: By applying filters within transformSpec.filter and removing all unused columns in dimensionsSpec.dimensions, we keep our data sources lean and improve the possibility of higher rollup yield.
+Use of multi-value dimensions: Exploiting the Druid multi-value dimension feature was key to overcoming the “many-to-many” combinatorial quandary when integrating audience filtering and grouping functionality mentioned in the “An Evolving Architecture” section above.
+Together, these optimizations, combined with previous ones, have decreased our p99 Druid latencies by roughly 50%.
+
+Validation & Rollout
+Rolling out these changes to our metrics system required a thorough validation and release strategy. Our approach prioritized both data integrity and user trust, leveraging a blend of automation, targeted tooling, and incremental exposure to production traffic. At the core of our strategy was a parallel stack deployment: both the legacy and new metric stacks operated side-by-side within the Muse Data microservice. This setup allowed us to validate data quality, monitor real-world performance, and mitigate risk by enabling seamless fallback at any stage.
+
+Press enter or click to view image in full size
+
+We adopted a two-pronged validation process:
+
+Automated Offline Validation: Using Jupyter Notebooks, we automated the sampling and comparison of key metrics across both the legacy and new stacks. Our sampling set included a representative mix: recently accessed titles, high-profile launches, and edge-case titles with unique handling requirements. This allowed us to catch subtle discrepancies in metrics early in the process. Iterative testing on this set guided fixes, such as tuning the HLL logK parameter and benchmarking end-to-end latency improvements.
+In-App Data Comparison Tooling: To facilitate rapid triage, we built a developer-facing comparison feature within our application that displays data from both the legacy and new metric stacks side by side. The tool automatically highlights any significant differences, making it easy to quickly spot and investigate discrepancies identified during offline validation or reported by users.
+We implemented several release best practices to mitigate risk and maintain stability:
+
+Staggered Implementation by Application Segment: We developed and deployed the new metric stack in stages, focusing on specific application segments. This meant building out support for asset types like artwork and video separately and then further dividing by CEE phase (Explore, Exploit). By implementing changes segment by segment, we were able to isolate issues early, validate each piece independently, and reduce overall risk during the migration.
+Shadow Testing (“Dark Launch”): Prior to exposing the new stack to end users, we mirrored production traffic asynchronously to the new implementation. This allowed us to validate real-world latency and catch potential faults in a live environment, without impacting the actual user experience.
+Granular Feature Flagging: We implemented fine-grained feature flags to control exposure within each segment. This allowed us to target specific user groups or titles and instantly roll back or adjust the rollout scope if any issues were detected, ensuring rapid mitigation with minimal disruption.
+Learnings and Next Steps
+Our journey with Muse tested the limits of several parts of the stack: the ETL layer, the Druid layer, and the data serving layer. While some choices, like leveraging Netflix’s in-house Hollow infrastructure, were influenced by available resources, simple principles like offloading query volume, pre-filtering of rows and columns before Druid rollup, and optimizing search predicates (along with a bit of HLL magic) went a long way in allowing us to support new capabilities while maintaining performance. Additionally, engineering best practices like producing side-by-side implementations and backwards-compatible changes enabled us to roll out revisions steadily while maintaining rigorous validation standards. Looking ahead, we’ll continue to build on this foundation by supporting a wider range of content types like Live and Games, incorporating synopsis data, deepening our understanding of how assets work together to influence member choosing, and incorporating new metrics to distinguish between “effective” and “authentic” promotional assets, in service of helping members find content that truly resonates with them.
+
+¹ Apache Spark is an open-source analytics engine for processing large-scale data, enabling tasks like batch processing, machine learning, and stream processing.
+
+² Apache Druid is a high-performance, real-time analytics database designed for quickly querying large volumes of data.
+
+³ Hollow is a Java library for efficient in-memory storage and access to moderately sized, read-only datasets, making it ideal for high-performance data retrieval.
+
+⁴ Apache Iceberg is an open-source table format designed for large-scale analytical datasets stored in data lakes. It provides a robust and reliable way to manage data in formats like Parquet or ORC within cloud object storage or distributed file systems.
+Unlocking Dynamic Pages: The Evolution of Netflix’s Client-Server GraphQL APIs
+Netflix Technology Blog
+Netflix Technology Blog
+
+Follow
+11 min read
+·
+Aug 27, 2025
+301
+
+
+10
+
+
+
+
+
+By Sreekanth Ramakrishnan, David Shin, Mehmet Yilmaz
+
+When a user opens the Netflix app, a flurry of activity happens behind the scenes. The app requests the homepage from a server, which assembles a personalized page using a combination of business rules, computations, and machine learning models.
+
+Press enter or click to view image in full size
+
+Figure 1. Device and server activity behind the scenes
+In the past, once the homepage was constructed, it would remain static and unchanged for the remainder of that user’s session, with some notable exceptions such as My List and Continue Watching. A few years ago, we began experimenting with making the experience more personalized for that precise moment in time, and we updated the page dynamically based on the user’s behavior during that session. For example, after viewing multiple comedy show trailers, a user would see an updated page that included relevant comedy titles.
+
+Enabling this experience required modifications to device call patterns, APIs, and backend page construction systems. However, as these changes were limited in nature, our systems were still largely operating with a static page paradigm. This imposed significant constraints on the nature and scope of page updates possible. To support more dynamic pages, our systems required much larger foundational investments.
+
+Since then, driven by evolving business needs, we have made significant progress toward this goal. In this blog post, we will share our work in GraphQL APIs and triggers. From the device perspective, these two work together to enable dynamic updates — APIs for fetching page data and subsequent updates and triggers to initiate those page updates.
+
+GraphQL APIs for Page Updates
+Supporting dynamic page updates naturally required focusing on GraphQL APIs utilized by Netflix devices. Our technical choices in the GraphQL space involved selecting appropriate operations and designing the schema.
+
+Our approach was fairly straightforward:
+
+The device sends a GraphQL query to retrieve the initial page data.
+A triggering event occurs, indicating that the page needs to be updated (more details on triggers will be provided later).
+The device sends a GraphQL mutation request to update the page.
+Press enter or click to view image in full size
+
+Figure 2. Sequence of GraphQL calls
+Specifically for step 3, we evaluated queries and subscriptions as alternative options. We ended up selecting mutations for the GraphQL operation for the reasons explained below.
+
+Mutations Over Queries
+As queries are generally used for read operations and mutations for modifying server data, GraphQL mutations were a better conceptual fit. Additionally, we found a compelling technical reason in favor of mutations as we examined GraphQL client caching behavior. For queries, GraphQL client libraries often cache data locally and use it to fulfill subsequent queries as a desirable optimization. Unfortunately, this caching behavior hindered our ability to fetch new page data using queries, requiring us to manage our queries carefully to avoid issues. With mutations, client libraries always fetched server data without issue, even for repeated identical calls.
+
+Mutations Over Subscriptions
+In contrast to queries, GraphQL subscriptions were conceptually well-suited for our use case. However, we decided against using subscriptions due to the practical considerations of cost and risk associated with Netflix’s GraphQL subscription infrastructure. At that time, subscriptions had limited adoption, primarily in a few studio content applications and none within the Netflix member space. A subscription-based solution would have demanded significant infrastructure investment to support the vast scale of the Netflix member streaming experience. While we considered this investment unnecessary at the time, we developed our mutations approach to be compatible with subscriptions, allowing for a seamless transition if our strategy evolves in the future.
+
+Schema Design
+With the GraphQL operation set, we turned our attention to the schema design. There, we encountered some technical challenges which we will illustrate next.
+
+First, consider the following schema in GraphQL with a basic page that contains a list of sections.
+
+type Page {
+  id: ID
+  timestamp: Long
+  sections: [Section]
+}
+
+type Section {
+  id: ID
+  title: String
+}
+Next, we have a query to fetch the initial page and a mutation to fetch the updated page.
+
+type Query {
+  getPage(pageType: String): Page // pageType = "home"
+}
+
+type Mutation {
+  updatePage(id: ID!): UpdatePageResult
+}
+
+type UpdatePageResult {
+  page: Page
+}
+Using the query to fetch the initial page, the device receives a response containing a page with two sections:
+
+{
+   id: 1234
+   timestamp: 1735763430000,
+   sections: [
+     {
+          id: 1,
+          title: "first section"
+     },
+     {
+          id: 2,
+          title: "second section"
+      }
+   ]
+}
+This page data is stored in the device’s local cache and propagated to the appropriate layers for rendering or other purposes.
+
+Later on, a triggering event occurs such as the user initiating a video playback, and the device needs to fetch a page update. It uses the mutation and fetches the updated page. This time, the server returns an updated page with a new timestamp as well as a new section in addition to the previous two sections.
+
+The mutation response is:
+
+{
+   id: 1234
+   timestamp: 1735770630000, // updated value
+   sections: [
+     {
+        id: 1,
+        title: "first section"
+     },
+     {
+        id: 3,
+        title: "new" // new section
+     },
+     {
+        id: 2,
+        title: "second section"
+     }
+  ]
+}
+For a scalar value such as the timestamp, the device fetches the new value and overwrites its locally cached value accordingly. However, updating a list of types, such as the list of sections, is much more complex.
+
+A simple approach would be for the device to fetch the new list of sections and replace its current list entirely, stomping over everything in the device client cache. The new list contains the previously fetched sections as well as the new one.
+
+This is problematic when the Section type becomes expensive to fetch. Since Section in practice includes tens of fields and nested fields, fetching all of them would not only result in a very large data payload but also necessitate the execution of costly server-side resolvers.
+
+To put this into perspective using a more extreme case, imagine that the device has a list of 100 Sections and one new Section is added during a page update. Fetching all 101 Sections becomes both prohibitively expensive and wasteful given that 100 Sections are unchanged and only 1 is new.
+
+The fundamental problem here is how we can update a list of complex types efficiently in GraphQL.
+
+Cache Normalization for Sections
+To help address the efficiency aspect, we worked with Netflix TV and mobile client engineers to explore GraphQL client cache normalization for Sections. Rather than storing the Sections and all of the corresponding data under the Page entry in the client cache, we stored separate entries for each Section using normalization ids and used references to those Sections in the Page entry. Here is a visual representation of this difference:
+
+Press enter or click to view image in full size
+
+Mutation API with Section Normalization
+With a solid grasp of GraphQL client normalization, we focused on designing a mutation schema that took advantage of Section normalization to enable devices to fetch the modified data efficiently. Returning to our page update example of inserting a new section in the middle of the list, specifically, we needed to be able to:
+
+Fetch the full payload of a newly inserted Section
+Skip fetching the full payloads of unchanged Sections
+Update the list of references to the Sections in the Page
+We can do this by adding a new field to the previous UpdatePageResult type that contains the newly inserted sections. [Note that for simplicity and ease of understanding, we will focus on insertions as the main type of page modification in this blog post. In practice, our schema is quite a bit more complex but supports a variety of page modifications.]
+
+type UpdatePageResult {
+  page: Page
+  insertedSections: [Section] // new field
+}
+Using a mutation query, the device fetches the page field of the UpdatePageResult but requests only the normalization ids for the sections. It also fetches the insertedSections field but this time with the full list of Section fields.
+
+Become a member
+Here is a sample mutation and response:
+
+mutation updatePage(pageId: 1234) {
+  page {
+    sections {
+      id // fetch normalized ids only
+    }
+  }
+  insertedSections {
+    id
+    title // fetch full data of new Sections
+  }
+}
+updatePageResult: {
+  page: {
+    sections: [
+      {
+         id: 1
+      },
+      {
+         id: 3 // newly inserted section id
+      },
+      {
+         id: 2
+      }
+    ]
+  },
+  insertedSections: [
+    {
+       id: 3, // newly inserted section id
+       title: "new"
+    }
+  ]
+}
+Afterward, a device’s internal GraphQL client cache is updated to look like this:
+
+{
+  "page:1234": {
+    "timestamp": 1735770630000,
+    "sections": [
+      "${section:1}", // Reference
+      "${section:3}", // Reference to new
+      "${section:2}"  // Reference
+    ]
+  },
+  "section:1": {
+    "id": 1,
+    "title": "first section"
+  },
+  "section:2": {
+    "id": 2,
+    "title": "second section"
+  },
+  "section:3": {
+    "id": 3,
+    "title": "new"
+  }
+}
+In practice, each GraphQL client had implementation differences for handling normalization but the concept remained largely the same. After several rounds of prototyping and successfully validating this approach with different Netflix device teams, we were able to design the mutation API to meet our needs.
+
+Triggers for Page Updates
+Now that we’ve explained the mechanics behind the GraphQL mutation schema, we will discuss when the device will use it to fetch a page update. For this, we introduce the concept of triggers. A trigger is an event that causes the device to ask the server for a page update. These include user-initiated actions as well as app-driven events such as expirations and server notifications.
+
+When a device initially requests the homepage during app start, the server returns a set of triggers for the page as part of the page payload. See the schema below which now has triggers added at the page level and the section level.
+
+type Page {
+   id: ID
+   timestamp: Long
+   sections: [Section]
+   triggers : [Trigger] // added 
+}
+
+type Section {
+   id: ID
+   title: String
+   triggers : [Trigger] // added
+}
+
+type PlaybackEndTrigger {
+ id: ID
+ action: Action
+}
+
+type ServerNotificationTrigger {
+ id: ID
+ serverNotificationMessage: String
+ action: Action
+}
+
+type AddToMyListTrigger {
+ id: ID
+ action: Action
+}
+
+union Trigger = PlaybackEndTrigger | ServerNotificationTrigger | AddToMyListTrigger
+
+union Action = UpdatePageAction | NewPageAction | ApplyPrefetchAction
+While the server determines which triggers to return, the client interprets the criteria for each trigger based on its specific GraphQL type. For instance, upon encountering the AddToMyListTrigger type, the client interprets this as an instruction to monitor when users add items to MyList.
+
+Press enter or click to view image in full size
+
+Unlike most triggers which rely on client-managed criteria, the ServerNotificationTrigger requires a special server-to-client notification. This is used in cases where the device cannot independently detect the triggering condition.
+
+As an example, when a user starts watching a new title on a TV, we want to update the “Continue Watching” section across all their active devices in addition to that specific TV. Server notifications are sent to those devices, which then update pages with corresponding triggers.
+
+Press enter or click to view image in full size
+
+Trigger Actions
+The trigger schema also includes an action field, which instructs the device on how it should respond when the triggering conditions are met. Some of these actions include:
+
+NewPage: Instructs the client to load an entirely new page.
+UpdatePage: Tells the client to refresh specific sections without reloading the entire page.
+ApplyPrefetchedData: Directs the client to use data that was prefetched in anticipation of an update instead of calling the server.
+NavigateToAppStore: Guides the client to open the App Store, which might be needed for actions like game downloads.
+OpenGame: Switches the client into a gaming mode when necessary.
+This flexible approach allows us to specify different client behavior based on the context as well as modify that behavior later on. For example, on the homepage, a “PlaybackEndTrigger” might result in a page update, but on a different page, it might result in a new page load using a different action.
+
+Handling the UpdatePageAction Type
+We will now look more closely at the `UpdatePageAction` type defined below. This action can be associated with any trigger, and when the trigger occurs, the client calls the server using the `updatePage` mutation, passing in the associated action id as a parameter to the mutation.
+
+type UpdatePageAction {
+   actionId: ID
+}
+
+mutation updatePage(pageId: String!, actionId: ID): UpdatePageResult // new actionId parameter
+The `actionId` is a token generated by the server and encoded with information about the associated context including the originating section and page. This allows the server to independently decide how to modify the page. Potential modifications include modifying a section to add or remove items, inserting a new section at a specific location, or removing a section from the page.
+
+UpdatePageAction and the UpdatePage Mutation
+Let’s tie this together using an example.
+
+First, the device fetches the following page payload from the server. It contains a single “Continue Watching” section with a single video and a `PlaybackEndTrigger`.
+
+{// original page response
+   "sections": [
+       {
+          "id": 1,
+          "title": "Continue Watching",
+          "videos": [
+            {
+               "id": "video1",
+               "title": "Stranger Things",
+               "duration": 50
+            }
+          ],
+          "triggers": [
+            {
+               "__typename": "PlaybackEndTrigger",
+               "id": "trigger1",
+               "action": {
+                  "__typename": "UpdatePageAction",
+                  "id": "encodedCwPlaybackActionId1"
+               }
+            }
+         ]
+      }
+   ]
+}
+The user then plays “Stranger Things” from the “Continue Watching” section. When the playback ends, it triggers the registered PlaybackEndTrigger and its associated UpdatePageAction. As a result, the client makes an updatePage mutation call and passes in the “encodedCwPlaybackActionId1” action id as a parameter.
+
+From this action ID, the server understands that a playback occurred from the “Continue Watching” row on this specific page. The server determines that the user might be interested in similar content. It calls backend services to understand that “Stranger Things” was played and then inserts a new “Because You Watched Stranger Things” section on the page. In the updatePage mutation response, the server returns the UpdatePageResult, complete with the new section ID inserted in the appropriate position and a fully populated new section as an insertSection modification.
+
+updatePageResult: {
+  page: {
+    sections: [
+    {
+         id: 1
+    },
+    {
+        id: 2 // newly inserted section
+    }
+    ]
+  },
+  insertedSections: [
+    {
+       id: 2, // newly inserted section
+       title: "Because You Watched Stranger Things"
+    }
+  ]
+}
+Upon receiving the response, the device renders the updated page to the member who now sees the new “Because You Watched Stranger Things” section with related titles.
+
+Conclusion
+For simplicity, this blog post focused on modifying the page by inserting new sections. In practice, however, our GraphQL schema is more complex and supports a variety of modifications though it uses the same fundamental concepts presented here. Beyond inserting sections, it supports reordering, removing, and replacing multiple sections with a broader set of triggers and actions. Altogether, this system offers significant flexibility in creating a dynamic member experience.
+
+It’s worth pointing out that a key aspect of this design is the server-driven approach to control the triggers, actions, and page modifications. This has streamlined device business logic by removing the need for bespoke implementations previously required for features like “Continue Watching” and “My List”. Moreover, this allows us to change the behavior of dynamic pages uniformly across all devices without additional device-specific changes or app updates.
+
+Our move from static to dynamic pages at Netflix represents just the beginning of a much larger journey. This flexible GraphQL mutation and triggers system is an important part of that path as it provides a solid foundation for us to innovate for years to come. We’re excited to keep evolving our platform, making it even more responsive and personalized for every Netflix member.
+
+Acknowledgment
+We would like to express our sincere gratitude to the following individuals for their contributions: Ara Avanesyan, Donnie DeBoer, Raymond Kim, Jay Phelps, Rohan Dhruva, Ragavika Tarigopula, Amir Raminfar, Suudhan Rangarajan, David Gevorkyan, Varun Khaitan.
+
+If you are interested in helping us solve these types of problems and helping entertain the world, please take a look at some of our open positions on the Netflix jobs page.
+
+

@@ -1,0 +1,7 @@
+dataset: stackoverflow_answers
+
+fields:
+  doc_id: Id
+  parent_id: ParentId
+  score: Score
+  content: Body
