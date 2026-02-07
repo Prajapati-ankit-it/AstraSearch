@@ -6,8 +6,11 @@ from pathlib import Path
 # Add pipeline to path for imports
 sys.path.append(str(Path(__file__).parent))
 
-from pipeline.ingestion.stackoverflow_reader import StackOverflowReader
-from pipeline.indexing.build_index import IndexBuilder
+from ingestion.stackoverflow_reader import StackOverflowReader
+from indexing.build_index import IndexBuilder
+from indexing.index_writer import IndexWriter
+
+logger = logging.getLogger(__name__)
 
 
 def setup_logging():
@@ -24,20 +27,19 @@ def setup_logging():
 def main():
     """Run the complete indexing pipeline."""
     setup_logging()
-    logger = logging.getLogger(__name__)
-    
-    # Define paths
-    base_dir = Path(__file__).parent.parent
-    config_path = base_dir / 'configs' / 'ingestion.yaml'
-    dataset_path = base_dir / 'data' / 'raw' / 'dataset.txt'
-    documents_path = base_dir / 'data' / 'processed' / 'documents.json'
-    index_dir = base_dir / 'index'
     
     logger.info("Starting indexing pipeline...")
     pipeline_start = time.time()
     
     try:
-        # Step 1: Extract documents
+        # Define paths
+        base_dir = Path(__file__).parent.parent
+        config_path = base_dir / 'configs' / 'ingestion.yaml'
+        dataset_path = base_dir / 'data' / 'raw' / 'dataset.txt'
+        documents_path = base_dir / 'data' / 'processed' / 'documents.json'
+        index_dir = base_dir / 'index'
+        
+        # Step 1: Extract documents from dataset
         logger.info("Step 1: Extracting documents from dataset...")
         reader = StackOverflowReader(str(config_path))
         
@@ -47,26 +49,31 @@ def main():
         # Save processed documents
         reader.save_documents(documents, str(documents_path))
         
-        # Step 2: Build index
+        # Step 2: Build inverted index (finalize happens internally)
         logger.info("Step 2: Building inverted index...")
         index_builder = IndexBuilder(str(index_dir))
-        stats = index_builder.build_from_documents(str(documents_path))
         
-        # Pipeline completion
+        # Build index - this calls finalize() internally
+        index_builder.build_from_documents(str(documents_path))
+        
+        # Step 3: Write index + stats using the index object only
+        logger.info("Step 3: Writing index and statistics...")
+        index_writer = IndexWriter(str(index_dir))
+        
+        # Single source of truth: InvertedIndex instance
+        index_writer.write_all(index_builder.index)
+        
+        # Pipeline completion summary using index as source of truth
         pipeline_end = time.time()
         total_time = pipeline_end - pipeline_start
         
-        # Print final statistics
         logger.info("=" * 50)
         logger.info("PIPELINE COMPLETION SUMMARY")
         logger.info("=" * 50)
         logger.info(f"Total pipeline time: {total_time:.2f} seconds")
-        logger.info(f"Documents processed: {stats['documents_indexed']}")
-        logger.info(f"Vocabulary size: {stats['vocabulary_size']}")
-        logger.info(f"Total postings: {stats['total_postings']}")
-        logger.info(f"Indexing time: {stats['indexing_time_seconds']:.2f} seconds")
-        logger.info(f"Average processing per document: {stats['processing_time_per_doc_ms']:.2f} ms")
-        logger.info(f"Documents saved to: {documents_path}")
+        logger.info(f"Documents processed: {index_builder.index.total_documents}")
+        logger.info(f"Average document length: {index_builder.index.avg_doc_length:.2f}")
+        logger.info(f"Vocabulary size: {len(index_builder.index.get_vocabulary())}")
         logger.info(f"Index saved to: {index_dir}")
         logger.info("=" * 50)
         

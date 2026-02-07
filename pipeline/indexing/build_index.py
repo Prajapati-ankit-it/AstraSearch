@@ -5,9 +5,9 @@ from pathlib import Path
 from typing import List, Dict
 
 from .inverted_index import InvertedIndex
-from ..processing.cleaner import TextCleaner
-from ..processing.normalizer import TextNormalizer
-from ..processing.tokenizer import Tokenizer
+from pipeline.processing.cleaner import TextCleaner
+from pipeline.processing.normalizer import TextNormalizer
+from pipeline.processing.tokenizer import Tokenizer
 
 logger = logging.getLogger(__name__)
 
@@ -54,12 +54,23 @@ class IndexBuilder:
             # Finalize index to compute corpus statistics
             self.index.finalize()
             
+            # Validate corpus statistics before proceeding
+            if self.index.avg_doc_length <= 0:
+                raise RuntimeError(f"CRITICAL: avg_doc_length={self.index.avg_doc_length} <= 0 - pipeline bug detected")
+            
             # Get final statistics
             corpus_stats = self.index.get_corpus_stats()
             vocabulary = self.index.get_vocabulary()
             
             end_time = time.time()
             indexing_time = end_time - start_time
+            
+            # Mandatory debug log for BM25 validation
+            logger.info(
+                f"BM25 STATS | docs={self.index.total_documents}, "
+                f"avg_len={self.index.avg_doc_length:.2f}, "
+                f"total_tokens={sum(self.index.document_lengths.values())}"
+            )
             
             logger.info(f"Index built successfully in {indexing_time:.2f} seconds")
             logger.info(f"Vocabulary size: {len(vocabulary)}")

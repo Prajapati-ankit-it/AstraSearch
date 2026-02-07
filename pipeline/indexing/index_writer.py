@@ -3,53 +3,67 @@ import logging
 from pathlib import Path
 from typing import Dict
 
+from .inverted_index import InvertedIndex
+
 logger = logging.getLogger(__name__)
 
 
 class IndexWriter:
-    """Write inverted index to disk."""
+    """Responsible only for persisting index artifacts."""
     
     def __init__(self, index_dir: str):
         self.index_dir = Path(index_dir)
-        self.index_dir.mkdir(parents=True, exist_ok=True)
     
-    def write_index(self, index_data: Dict, stats: Dict) -> None:
-        """Write inverted index and statistics to disk."""
+    def write_index(self, index: InvertedIndex) -> None:
+        """Write inverted index to disk."""
+        index_path = self.index_dir / 'inverted_index.json'
+        
         try:
-            # Write inverted index
-            index_path = self.index_dir / 'inverted_index.json'
             with open(index_path, 'w', encoding='utf-8') as f:
-                json.dump(index_data, f, ensure_ascii=False, indent=2)
+                json.dump(index.index, f, ensure_ascii=False, indent=2)
             
             logger.info(f"Written inverted index to {index_path}")
             
-            # Write statistics
-            stats_path = self.index_dir / 'stats.json'
+        except Exception as e:
+            logger.error(f"Failed to write index: {e}")
+            raise
+    
+    def write_stats(self, index: InvertedIndex) -> None:
+        """Write corpus statistics to disk."""
+        stats_path = self.index_dir / 'stats.json'
+        
+        try:
+            # Validate finalization before writing
+            if index.avg_doc_length <= 0:
+                raise RuntimeError(f"Index must be finalized before writing stats (avg_doc_length={index.avg_doc_length})")
+            
+            # Get stats directly from index - no construction or defaults
+            stats = index.get_corpus_stats()
+            
+            # Required logging before writing
+            logger.info(
+                f"WRITING FINAL STATS | docs={index.total_documents}, "
+                f"avg_len={index.avg_doc_length:.2f}, "
+                f"tokens={sum(index.document_lengths.values())}"
+            )
+            
             with open(stats_path, 'w', encoding='utf-8') as f:
                 json.dump(stats, f, ensure_ascii=False, indent=2)
             
             logger.info(f"Written index statistics to {stats_path}")
             
         except Exception as e:
-            logger.error(f"Failed to write index: {e}")
+            logger.error(f"Failed to write stats: {e}")
             raise
     
-    def read_index(self) -> Dict:
-        """Read inverted index from disk."""
-        try:
-            index_path = self.index_dir / 'inverted_index.json'
-            with open(index_path, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except Exception as e:
-            logger.error(f"Failed to read index: {e}")
-            raise
-    
-    def read_stats(self) -> Dict:
-        """Read index statistics from disk."""
-        try:
-            stats_path = self.index_dir / 'stats.json'
-            with open(stats_path, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except Exception as e:
-            logger.error(f"Failed to read stats: {e}")
-            raise
+    def write_all(self, index: InvertedIndex) -> None:
+        """Write both index and statistics to disk."""
+        logger.info("Persisting index artifacts...")
+        
+        # Write index first
+        self.write_index(index)
+        
+        # Write stats with validation
+        self.write_stats(index)
+        
+        logger.info("Index artifacts written successfully")
