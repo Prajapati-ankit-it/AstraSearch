@@ -39,7 +39,11 @@ export class BM25Scorer {
       }
 
       const df = termData.df;
-      const idf = this.computeIDF(stats.total_documents, df);
+      const idf = idfCache.get(term);
+      if (!idf) {
+        continue; // Term not in IDF cache (shouldn't happen)
+      }
+
       const bm25Component = this.computeBM25Component(tf, docLength, stats.avg_doc_length);
       
       totalScore += idf * bm25Component;

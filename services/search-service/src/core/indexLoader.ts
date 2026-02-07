@@ -29,14 +29,15 @@ export class IndexLoader {
       this.corpusStats = JSON.parse(statsData);
 
       // Validate corpus statistics
-      this.validateCorpusStats();
-
       // Load documents
       const documentsData = await fs.readFile(documentsPath, 'utf-8');
       const documents: Document[] = JSON.parse(documentsData);
 
       // Create document map for quick lookup
       this.documents = new Map(documents.map(doc => [doc.id, doc]));
+
+      // Validate corpus statistics after documents are loaded
+      this.validateCorpusStats();
 
       this.loaded = true;
 
@@ -67,6 +68,14 @@ export class IndexLoader {
 
     if (!this.corpusStats.document_lengths || Object.keys(this.corpusStats.document_lengths).length === 0) {
       throw new Error('Document lengths not found in corpus stats');
+    }
+
+    // Validate that document_lengths covers all loaded documents
+    const loadedDocCount = this.documents.size;
+    const docLengthsCount = Object.keys(this.corpusStats.document_lengths).length;
+    
+    if (docLengthsCount !== loadedDocCount) {
+      throw new Error(`Document lengths mismatch: ${docLengthsCount} entries in stats vs ${loadedDocCount} loaded documents`);
     }
 
     logger.info('Corpus statistics validation passed');
