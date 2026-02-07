@@ -8,6 +8,7 @@ export const config = {
   nodeEnv: process.env.NODE_ENV || 'development',
   indexPath: process.env.INDEX_PATH || '../../index/inverted_index.json',
   documentsPath: process.env.DOCUMENTS_PATH || '../../data/processed/documents.json',
+  statsPath: process.env.STATS_PATH || '../../index/stats.json',
   cacheTtl: parseInt(process.env.CACHE_TTL || '300000'), // 5 minutes
   logLevel: process.env.LOG_LEVEL || 'info',
   search: {
