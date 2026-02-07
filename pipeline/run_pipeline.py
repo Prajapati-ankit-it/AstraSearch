@@ -3,12 +3,12 @@ import sys
 import time
 from pathlib import Path
 
-# Add pipeline to path for imports
-sys.path.append(str(Path(__file__).parent))
+# Add pipeline to path for imports - insert at position 0 to avoid shadowing
+sys.path.insert(0, str(Path(__file__).parent))
 
-from ingestion.stackoverflow_reader import StackOverflowReader
-from indexing.build_index import IndexBuilder
-from indexing.index_writer import IndexWriter
+from pipeline.ingestion.stackoverflow_reader import StackOverflowReader
+from pipeline.indexing.build_index import IndexBuilder
+from pipeline.indexing.index_writer import IndexWriter
 
 logger = logging.getLogger(__name__)
 
