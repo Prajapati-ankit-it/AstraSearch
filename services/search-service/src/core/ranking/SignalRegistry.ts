@@ -3,6 +3,7 @@ import { RankingSignal } from './RankingSignal';
 export class SignalRegistry {
   private static instance: SignalRegistry;
   private signals: RankingSignal[] = [];
+  private signalMap: Map<string, RankingSignal> = new Map();
 
   private constructor() {}
 
@@ -14,13 +15,13 @@ export class SignalRegistry {
   }
 
   register(signal: RankingSignal): void {
-    // Check for duplicate signal names to prevent double registration
-    const existingSignal = this.signals.find(s => s.name === signal.name);
-    if (existingSignal) {
+    // O(1) lookup for duplicate prevention
+    if (this.signalMap.has(signal.name)) {
       return; // Skip duplicate registration
     }
     
     this.signals.push(signal);
+    this.signalMap.set(signal.name, signal);
   }
 
   getActiveSignals(): RankingSignal[] {
@@ -29,5 +30,28 @@ export class SignalRegistry {
 
   clear(): void {
     this.signals = [];
+    this.signalMap.clear();
+  }
+
+  // Optional: Explicit replace behavior
+  replace(signal: RankingSignal): void {
+    const existingIndex = this.signals.findIndex(s => s.name === signal.name);
+    if (existingIndex >= 0) {
+      this.signals[existingIndex] = signal;
+    } else {
+      this.signals.push(signal);
+    }
+    this.signalMap.set(signal.name, signal);
+  }
+
+  // Optional: Explicit unregister behavior  
+  unregister(signalName: string): boolean {
+    const index = this.signals.findIndex(s => s.name === signalName);
+    if (index >= 0) {
+      this.signals.splice(index, 1);
+      this.signalMap.delete(signalName);
+      return true;
+    }
+    return false;
   }
 }
