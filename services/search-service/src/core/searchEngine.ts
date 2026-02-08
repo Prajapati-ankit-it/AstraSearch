@@ -5,6 +5,10 @@ import { BM25Scorer } from './bm25';
 import { QueryCache } from '../cache/queryCache';
 import { logger } from '../utils/logger';
 import { config } from '../config/config';
+import { Ranker, RankedDocument } from './ranking/Ranker';
+import { RankingContext } from './ranking/RankingContext';
+import { SearchDocument } from './ranking/RankingSignal';
+import { registerSignals } from './ranking/registerSignals';
 
 export class SearchEngine {
   private indexLoader: IndexLoader;
@@ -17,7 +21,9 @@ export class SearchEngine {
 
   async initialize(): Promise<void> {
     await this.indexLoader.loadIndex();
-    logger.info('Search engine initialized with BM25 scoring');
+    // Register ranking signals (framework initialization)
+    registerSignals();
+    logger.info('Search engine initialized with BM25 scoring and ranking framework');
   }
 
   async search(query: string, limit: number = 10, offset: number = 0): Promise<SearchResponse> {
@@ -97,27 +103,39 @@ export class SearchEngine {
 
     logger.debug(`Scored ${docScores.size} documents with BM25`);
 
-    // Convert scores to sorted array
-    const sortedResults = Array.from(docScores.entries())
-      .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
+    // Create ranking context
+    const rankingContext: RankingContext = {
+      corpusStats,
+      queryTerms: uniqueTerms,
+      query,
+      candidateCount: candidateDocs.size
+    };
+
+    // Apply ranking signals
+    const rankedDocuments: RankedDocument[] = [];
+    for (const [docId, bm25Score] of docScores) {
+      const document = documents.get(docId);
+      if (!document) {
+        logger.warn(`Document ${docId} not found in documents map`);
+        continue;
+      }
+
+      const ranked = Ranker.rank(docId, bm25Score, document as SearchDocument, query, rankingContext);
+      rankedDocuments.push(ranked);
+    }
+
+    // Sort by final score
+    const sortedResults = rankedDocuments
+      .sort((a, b) => b.finalScore - a.finalScore)
       .slice(0, limit + offset);
 
     // Convert to SearchResult format
     const searchResults: SearchResult[] = sortedResults
-      .map(([docId, score]) => {
-        const doc = documents.get(docId);
-        if (!doc) {
-          logger.warn(`Document ${docId} not found in documents map`);
-          return null;
-        }
-
-        return {
-          id: doc.answer_id,
-          solution: doc.solution,
-          score: Math.round(score * 100) / 100 // Round to 2 decimal places
-        };
-      })
-      .filter((result): result is SearchResult => result !== null);
+      .map(ranked => ({
+        id: ranked.document.answer_id,
+        solution: ranked.document.solution,
+        score: Math.round(ranked.finalScore * 100) / 100 // Round to 2 decimal places
+      }));
 
     return searchResults;
   }
