@@ -9,6 +9,7 @@ import { Ranker, RankedDocument } from './ranking/Ranker';
 import { RankingContext } from './ranking/RankingContext';
 import { SearchDocument } from './ranking/RankingSignal';
 import { registerSignals } from './ranking/registerSignals';
+import { SignalRegistry } from './ranking/SignalRegistry';
 
 export class SearchEngine {
   private indexLoader: IndexLoader;
@@ -128,6 +129,11 @@ export class SearchEngine {
     const sortedResults = rankedDocuments
       .sort((a, b) => b.finalScore - a.finalScore)
       .slice(0, limit + offset);
+
+    // Log ranking completion (once per query)
+    logger.debug(
+      `Ranking applied | signals=${SignalRegistry.getInstance().getActiveSignals().length}`
+    );
 
     // Convert to SearchResult format
     const searchResults: SearchResult[] = sortedResults

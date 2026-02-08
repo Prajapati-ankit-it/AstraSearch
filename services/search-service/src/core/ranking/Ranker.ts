@@ -36,10 +36,6 @@ export class Ranker {
 
     const finalScore = bm25Score + signalScore;
 
-    logger.debug(
-      `Ranking applied | signals=${activeSignals.length}`
-    );
-
     return {
       docId,
       bm25Score,

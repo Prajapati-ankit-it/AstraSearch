@@ -2,7 +2,8 @@ import { Document } from '../../types/search.types';
 import { RankingContext } from './RankingContext';
 
 export interface SearchDocument extends Document {
-  [key: string]: any;
+  fields?: Record<string, string>;
+  signals?: Record<string, number>;
 }
 
 export interface RankingSignal {

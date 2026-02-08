@@ -4,18 +4,21 @@ import { RankingContext } from '../RankingContext';
 /**
  * Example signal that favors shorter documents
  * This is for demonstration only - not meant for production use
+ * 
+ * NOTE: This signal is commented out in registerSignals.ts
+ * It demonstrates the proper dataset-agnostic pattern
  */
 export class DocumentLengthSignal implements RankingSignal {
   readonly name = 'document_length';
   readonly weight = 0.1; // Small weight to avoid overwhelming BM25
 
   score(doc: SearchDocument, query: string, context: RankingContext): number {
-    // Return 0 if document doesn't have length info
-    if (!doc.solution || typeof doc.solution !== 'string') {
+    // Return 0 if document doesn't have body field
+    if (!doc.fields?.body || typeof doc.fields.body !== 'string') {
       return 0;
     }
 
-    const docLength = doc.solution.length;
+    const docLength = doc.fields.body.length;
     const avgLength = context.corpusStats.avg_doc_length;
 
     // Simple scoring: shorter documents get higher scores
