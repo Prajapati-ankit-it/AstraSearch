@@ -7,10 +7,12 @@ import { DocumentLengthSignal } from './examples/DocumentLengthSignal';
  * To add new signals:
  * 1. Create a class implementing RankingSignal interface
  * 2. Import it here
- * 3. Register it with the registry
+ * 3. Register it with registry
  * 
  * The framework will automatically apply all registered signals
  * during ranking without requiring any changes to searchEngine.ts
+ * 
+ * NOTE: Registration is idempotent - duplicate signals are ignored
  */
 
 export function registerSignals(): void {

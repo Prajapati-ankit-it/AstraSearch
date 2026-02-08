@@ -14,6 +14,12 @@ export class SignalRegistry {
   }
 
   register(signal: RankingSignal): void {
+    // Check for duplicate signal names to prevent double registration
+    const existingSignal = this.signals.find(s => s.name === signal.name);
+    if (existingSignal) {
+      return; // Skip duplicate registration
+    }
+    
     this.signals.push(signal);
   }
 

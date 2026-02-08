@@ -112,18 +112,22 @@ export class SearchEngine {
       candidateCount: candidateDocs.size
     };
 
-    // Apply ranking signals
-    const rankedDocuments: RankedDocument[] = [];
+    // Apply ranking signals using optimized batch processing
+    const documentsForRanking = new Map<number, { bm25Score: number; document: SearchDocument }>();
+    
     for (const [docId, bm25Score] of docScores) {
       const document = documents.get(docId);
       if (!document) {
         logger.warn(`Document ${docId} not found in documents map`);
         continue;
       }
-
-      const ranked = Ranker.rank(docId, bm25Score, document as SearchDocument, query, rankingContext);
-      rankedDocuments.push(ranked);
+      documentsForRanking.set(docId, { 
+        bm25Score, 
+        document: document as SearchDocument 
+      });
     }
+
+    const rankedDocuments = Ranker.rankMultiple(documentsForRanking, query, rankingContext);
 
     // Sort by final score
     const sortedResults = rankedDocuments

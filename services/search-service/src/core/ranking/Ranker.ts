@@ -26,6 +26,13 @@ export class Ranker {
     for (const signal of activeSignals) {
       try {
         const score = signal.score(document, query, context);
+        
+        // Validate signal score is finite
+        if (!Number.isFinite(score)) {
+          logger.warn(`Signal ${signal.name} returned non-finite score: ${score} for document ${docId}, treating as 0`);
+          continue; // Skip this signal
+        }
+        
         signalScore += score * signal.weight;
       } catch (error) {
         // Signals must never crash ranking
