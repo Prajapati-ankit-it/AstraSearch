@@ -5,3 +5,5 @@ fields:
   parent_id: ParentId
   score: Score
   content: Body
+  user_login: OwnerUserId
+  created_at: CreationDate
