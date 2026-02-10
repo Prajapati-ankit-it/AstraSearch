@@ -23,11 +23,14 @@ class IndexBuilder:
         self.tokenizer = Tokenizer(remove_stopwords=True)
     
     def process_document(self, doc: Dict) -> List[str]:
-        """Process a single document and return tokens."""
-        # Clean the solution text
-        cleaned_text = self.cleaner.clean(doc.get('solution', ''))
+        """Process a single SearchDocument and return tokens."""
+        # Extract text content from SearchDocument contract
+        text_content = doc.get('text', '')
         
-        # Normalize the text
+        # Clean text content
+        cleaned_text = self.cleaner.clean(text_content)
+        
+        # Normalize text
         normalized_text = self.normalizer.normalize(cleaned_text)
         
         # Tokenize

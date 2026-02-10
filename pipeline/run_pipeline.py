@@ -35,13 +35,13 @@ def main():
         # Define paths
         base_dir = Path(__file__).parent.parent
         config_path = base_dir / 'configs' / 'ingestion.yaml'
-        dataset_path = base_dir / 'data' / 'raw' / 'dataset.txt'
+        dataset_path = base_dir / 'data' / 'raw' / 'dataset.csv'
         documents_path = base_dir / 'data' / 'processed' / 'documents.json'
         index_dir = base_dir / 'index'
         
         # Step 1: Extract documents from dataset
         logger.info("Step 1: Extracting documents from dataset...")
-        reader = StackOverflowReader(str(config_path))
+        reader = StackOverflowReader()
         
         documents = list(reader.read_documents(str(dataset_path), max_rows=20000))
         logger.info(f"Extracted {len(documents)} documents")
