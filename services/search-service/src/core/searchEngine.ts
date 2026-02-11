@@ -7,7 +7,6 @@ import { logger } from '../utils/logger';
 import { config } from '../config/config';
 import { Ranker, RankedDocument } from './ranking/Ranker';
 import { RankingContext } from './ranking/RankingContext';
-import { SearchDocument } from './ranking/RankingSignal';
 import { registerSignals } from './ranking/registerSignals';
 import { SignalRegistry } from './ranking/SignalRegistry';
 
@@ -123,7 +122,7 @@ export class SearchEngine {
       }
       documentsForRanking.set(docId, { 
         bm25Score, 
-        document: document as Document 
+        document: document 
       });
     }
 

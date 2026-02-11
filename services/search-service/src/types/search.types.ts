@@ -28,8 +28,8 @@ export interface CorpusStats {
 }
 
 export interface SearchResult {
-  id: string; // Returns answer_id (string) for API consistency
-  solution: string; // Cleaned answer content
+  id: string; // Returns canonical document id
+  solution: string; // Document text content
   score: number; // BM25 relevance score
 }
 

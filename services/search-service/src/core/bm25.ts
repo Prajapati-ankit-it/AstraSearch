@@ -22,8 +22,8 @@ export class BM25Scorer {
     let totalScore = 0;
     const docLength = stats.document_lengths[docId];
 
-    if (!docLength) {
-      logger.debug(`Document ${docId} not found in corpus stats`);
+    if (!Number.isFinite(docLength)) {
+      logger.debug(`Document ${docId} has invalid length: ${docLength}`);
       return 0;
     }
 
@@ -72,6 +72,7 @@ export class BM25Scorer {
 
   /**
    * Get candidate documents for a query with progressive intersection pruning
+   * Preserves OR semantics while using intersection as optimization
    */
   static getCandidateDocuments(
     queryTerms: string[],
@@ -82,7 +83,7 @@ export class BM25Scorer {
     const usableTerms = queryTerms.filter(term => {
       const termData = index[term];
       if (!termData) return false;
-
+      
       // Skip extremely common terms (df / total_docs > 0.7)
       const dfRatio = termData.df / stats.total_documents;
       return dfRatio <= 0.7;
@@ -93,30 +94,34 @@ export class BM25Scorer {
       return this.getUnionCandidates(queryTerms, index);
     }
 
-    // Step B: Sort terms by increasing document frequency
+    // Step B: Compute union first (baseline OR behavior)
+    const unionCandidates = this.getUnionCandidates(usableTerms, index);
+
+    // Step C: Sort terms by increasing document frequency for intersection optimization
     usableTerms.sort((a, b) => index[a].df - index[b].df);
 
-    // Step C: Start with smallest posting set
+    // Step D: Compute intersection subset (optimization seed)
     const smallestTerm = usableTerms[0];
-    let candidates = new Set<string>(Object.keys(index[smallestTerm].postings));
+    let intersectionCandidates = new Set<string>(Object.keys(index[smallestTerm].postings));
 
-    // Step D: Intersect progressively
+    // Step E: Intersect progressively
     for (let i = 1; i < usableTerms.length; i++) {
       const term = usableTerms[i];
-
-      candidates = this.intersectWithPostings(
-        candidates,
+      
+      intersectionCandidates = this.intersectWithPostings(
+        intersectionCandidates,
         index[term].postings
       );
-
+      
       // Early termination if intersection becomes empty
-      if (candidates.size === 0) {
-        // Step E: Fallback to union of original terms
-        return this.getUnionCandidates(queryTerms, index);
+      if (intersectionCandidates.size === 0) {
+        break; // No need to continue, union will be used
       }
     }
 
-    return candidates;
+    // Step F: Return union (preserves OR semantics)
+    // Intersection docs will naturally score higher due to term frequency
+    return unionCandidates;
   }
 
   /**
