@@ -13,12 +13,12 @@ export class DocumentLengthSignal implements RankingSignal {
   readonly weight = 0.1; // Small weight to avoid overwhelming BM25
 
   score(doc: SearchDocument, query: string, context: RankingContext): number {
-    // Return 0 if document doesn't have body field
-    if (!doc.fields?.body || typeof doc.fields.body !== 'string') {
+    // Return 0 if document doesn't have text field
+    if (!doc.text || typeof doc.text !== 'string') {
       return 0;
     }
 
-    const docLength = doc.fields.body.length;
+    const docLength = doc.text.length;
     const avgLength = context.corpusStats.avg_doc_length;
 
     // Simple scoring: shorter documents get higher scores

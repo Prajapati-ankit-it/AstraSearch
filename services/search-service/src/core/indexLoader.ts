@@ -6,7 +6,7 @@ import { config } from '../config/config';
 
 export class IndexLoader {
   private index: InvertedIndex | null = null;
-  private documents: Map<number, Document> = new Map();
+  private documents: Map<string, Document> = new Map();
   private corpusStats: CorpusStats | null = null;
   private loaded = false;
 
@@ -95,14 +95,14 @@ export class IndexLoader {
     return this.corpusStats;
   }
 
-  getDocument(id: number): Document | undefined {
+  getDocument(id: string): Document | undefined {
     if (!this.loaded) {
       throw new Error('Index not loaded. Call loadIndex() first.');
     }
     return this.documents.get(id);
   }
 
-  getAllDocuments(): Map<number, Document> {
+  getAllDocuments(): Map<string, Document> {
     if (!this.loaded) {
       throw new Error('Index not loaded. Call loadIndex() first.');
     }

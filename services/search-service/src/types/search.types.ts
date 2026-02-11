@@ -1,9 +1,15 @@
 export interface Document {
-  id: number; // Internal sequential ID (for indexing)
-  answer_id: string; // Original StackOverflow answer ID
-  question_id: string; // Original StackOverflow question ID
-  score: number; // Original StackOverflow answer score
-  solution: string; // Cleaned answer content
+  id: string; // Document ID (e.g., "stackoverflow:92")
+  text: string; // Document content
+  metadata: {
+    source: string;
+    question_id?: string;
+    created_at?: string;
+    user_login?: string;
+  };
+  signals: {
+    popularity: number;
+  };
 }
 
 export interface TermPostings {
@@ -22,8 +28,8 @@ export interface CorpusStats {
 }
 
 export interface SearchResult {
-  id: string; // Returns answer_id (string) for API consistency
-  solution: string; // Cleaned answer content
+  id: string; // Returns canonical document id
+  solution: string; // Document text content
   score: number; // BM25 relevance score
 }
 

@@ -13,17 +13,17 @@ export class BM25Scorer {
    * IDF(t) = log(1 + (N - df + 0.5) / (df + 0.5))
    */
   static scoreDocument(
-    docId: number,
+    docId: string,
     queryTerms: string[],
     idfCache: Map<string, number>,
     stats: CorpusStats,
     index: InvertedIndex
   ): number {
     let totalScore = 0;
-    const docLength = stats.document_lengths[docId.toString()];
-    
-    if (!docLength) {
-      logger.debug(`Document ${docId} not found in corpus stats`);
+    const docLength = stats.document_lengths[docId];
+
+    if (!Number.isFinite(docLength)) {
+      logger.debug(`Document ${docId} has invalid length: ${docLength}`);
       return 0;
     }
 
@@ -33,19 +33,19 @@ export class BM25Scorer {
         continue; // Term not in corpus
       }
 
-      const tf = termData.postings[docId.toString()];
+      const tf = termData.postings[docId];
       if (!tf) {
         continue; // Term not in this document
       }
 
       const df = termData.df;
       const idf = idfCache.get(term);
-      if (!idf) {
+      if (idf === undefined) {
         continue; // Term not in IDF cache (shouldn't happen)
       }
 
       const bm25Component = this.computeBM25Component(tf, docLength, stats.avg_doc_length);
-      
+
       totalScore += idf * bm25Component;
     }
 
@@ -71,25 +71,54 @@ export class BM25Scorer {
   }
 
   /**
-   * Get candidate documents for a query (union of all postings)
+   * Get candidate documents for a query
+   * Preserves OR semantics with simple union approach
    */
-  static getCandidateDocuments(queryTerms: string[], index: InvertedIndex): Set<number> {
-    const candidates = new Set<number>();
+  static getCandidateDocuments(
+    queryTerms: string[],
+    index: InvertedIndex,
+    stats: CorpusStats
+  ): Set<string> {
+    return this.getUnionCandidates(queryTerms, index);
+  }
+
+  /**
+   * Helper: Get union of all postings (fallback behavior)
+   */
+  private static getUnionCandidates(queryTerms: string[], index: InvertedIndex): Set<string> {
+    const candidates = new Set<string>();
 
     for (const term of queryTerms) {
       const termData = index[term];
-      if (!termData) {
-        continue;
-      }
+      if (!termData) continue;
 
-      // Add all document IDs from this term's postings
       for (const docIdStr of Object.keys(termData.postings)) {
-        candidates.add(parseInt(docIdStr, 10));
+        candidates.add(docIdStr);
       }
     }
 
     return candidates;
   }
+
+  /**
+   * Helper: Intersect current candidates with postings object directly
+   * Avoids creating intermediate Set for postings
+   */
+  private static intersectWithPostings(
+    current: Set<string>,
+    postings: { [docId: string]: number }
+  ): Set<string> {
+    const result = new Set<string>();
+
+    for (const docId of current) {
+      if (postings[docId] !== undefined) {
+        result.add(docId);
+      }
+    }
+
+    return result;
+  }
+
 
   /**
    * Compute IDF cache for query terms (once per query)
@@ -112,13 +141,13 @@ export class BM25Scorer {
    * Score multiple documents for a query
    */
   static scoreDocuments(
-    docIds: number[],
+    docIds: string[],
     queryTerms: string[],
     index: InvertedIndex,
     stats: CorpusStats,
     idfCache: Map<string, number>
-  ): Map<number, number> {
-    const scores = new Map<number, number>();
+  ): Map<string, number> {
+    const scores = new Map<string, number>();
 
     for (const docId of docIds) {
       const score = this.scoreDocument(docId, queryTerms, idfCache, stats, index);
