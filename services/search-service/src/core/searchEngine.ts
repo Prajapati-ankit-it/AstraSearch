@@ -1,4 +1,4 @@
-import { SearchResult, SearchResponse } from '../types/search.types';
+import { SearchResult, SearchResponse, Document } from '../types/search.types';
 import { IndexLoader } from './indexLoader';
 import { Tokenizer } from './tokenizer';
 import { BM25Scorer } from './bm25';
@@ -83,15 +83,15 @@ export class SearchEngine {
     // Compute IDF cache once per query
     const idfCache = BM25Scorer.computeIDFCache(uniqueTerms, index, corpusStats);
 
-    // Get candidate documents (union of all postings)
-    const candidateDocs = BM25Scorer.getCandidateDocuments(uniqueTerms, index);
+    // Get candidate documents with progressive intersection pruning
+    const candidateDocs = BM25Scorer.getCandidateDocuments(uniqueTerms, index, corpusStats);
     
     if (candidateDocs.size === 0) {
       logger.debug('No candidate documents found');
       return [];
     }
 
-    logger.debug(`Found ${candidateDocs.size} candidate documents`);
+    logger.debug(`Candidate documents after pruning: ${candidateDocs.size}`);
 
     // Score documents using BM25 with precomputed IDF
     const docScores = BM25Scorer.scoreDocuments(
@@ -113,7 +113,7 @@ export class SearchEngine {
     };
 
     // Apply ranking signals using optimized batch processing
-    const documentsForRanking = new Map<number, { bm25Score: number; document: SearchDocument }>();
+    const documentsForRanking = new Map<string, { bm25Score: number; document: Document }>();
     
     for (const [docId, bm25Score] of docScores) {
       const document = documents.get(docId);
@@ -123,7 +123,7 @@ export class SearchEngine {
       }
       documentsForRanking.set(docId, { 
         bm25Score, 
-        document: document as SearchDocument 
+        document: document as Document 
       });
     }
 
@@ -142,8 +142,8 @@ export class SearchEngine {
     // Convert to SearchResult format
     const searchResults: SearchResult[] = sortedResults
       .map(ranked => ({
-        id: ranked.document.answer_id,
-        solution: ranked.document.solution,
+        id: ranked.document.id,
+        solution: ranked.document.text,
         score: Math.round(ranked.finalScore * 100) / 100 // Round to 2 decimal places
       }));
 

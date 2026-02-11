@@ -13,15 +13,15 @@ export class BM25Scorer {
    * IDF(t) = log(1 + (N - df + 0.5) / (df + 0.5))
    */
   static scoreDocument(
-    docId: number,
+    docId: string,
     queryTerms: string[],
     idfCache: Map<string, number>,
     stats: CorpusStats,
     index: InvertedIndex
   ): number {
     let totalScore = 0;
-    const docLength = stats.document_lengths[docId.toString()];
-    
+    const docLength = stats.document_lengths[docId];
+
     if (!docLength) {
       logger.debug(`Document ${docId} not found in corpus stats`);
       return 0;
@@ -33,7 +33,7 @@ export class BM25Scorer {
         continue; // Term not in corpus
       }
 
-      const tf = termData.postings[docId.toString()];
+      const tf = termData.postings[docId];
       if (!tf) {
         continue; // Term not in this document
       }
@@ -45,7 +45,7 @@ export class BM25Scorer {
       }
 
       const bm25Component = this.computeBM25Component(tf, docLength, stats.avg_doc_length);
-      
+
       totalScore += idf * bm25Component;
     }
 
@@ -71,25 +71,91 @@ export class BM25Scorer {
   }
 
   /**
-   * Get candidate documents for a query (union of all postings)
+   * Get candidate documents for a query with progressive intersection pruning
    */
-  static getCandidateDocuments(queryTerms: string[], index: InvertedIndex): Set<number> {
-    const candidates = new Set<number>();
-
-    for (const term of queryTerms) {
+  static getCandidateDocuments(
+    queryTerms: string[],
+    index: InvertedIndex,
+    stats: CorpusStats
+  ): Set<string> {
+    // Step A: Filter usable terms (ignore terms not in index or too common)
+    const usableTerms = queryTerms.filter(term => {
       const termData = index[term];
-      if (!termData) {
-        continue;
-      }
+      if (!termData) return false;
 
-      // Add all document IDs from this term's postings
-      for (const docIdStr of Object.keys(termData.postings)) {
-        candidates.add(parseInt(docIdStr, 10));
+      // Skip extremely common terms (df / total_docs > 0.7)
+      const dfRatio = termData.df / stats.total_documents;
+      return dfRatio <= 0.7;
+    });
+
+    if (usableTerms.length === 0) {
+      // Fallback: use all original terms with union
+      return this.getUnionCandidates(queryTerms, index);
+    }
+
+    // Step B: Sort terms by increasing document frequency
+    usableTerms.sort((a, b) => index[a].df - index[b].df);
+
+    // Step C: Start with smallest posting set
+    const smallestTerm = usableTerms[0];
+    let candidates = new Set<string>(Object.keys(index[smallestTerm].postings));
+
+    // Step D: Intersect progressively
+    for (let i = 1; i < usableTerms.length; i++) {
+      const term = usableTerms[i];
+
+      candidates = this.intersectWithPostings(
+        candidates,
+        index[term].postings
+      );
+
+      // Early termination if intersection becomes empty
+      if (candidates.size === 0) {
+        // Step E: Fallback to union of original terms
+        return this.getUnionCandidates(queryTerms, index);
       }
     }
 
     return candidates;
   }
+
+  /**
+   * Helper: Get union of all postings (fallback behavior)
+   */
+  private static getUnionCandidates(queryTerms: string[], index: InvertedIndex): Set<string> {
+    const candidates = new Set<string>();
+
+    for (const term of queryTerms) {
+      const termData = index[term];
+      if (!termData) continue;
+
+      for (const docIdStr of Object.keys(termData.postings)) {
+        candidates.add(docIdStr);
+      }
+    }
+
+    return candidates;
+  }
+
+  /**
+   * Helper: Intersect current candidates with postings object directly
+   * Avoids creating intermediate Set for postings
+   */
+  private static intersectWithPostings(
+    current: Set<string>,
+    postings: { [docId: string]: number }
+  ): Set<string> {
+    const result = new Set<string>();
+
+    for (const docId of current) {
+      if (postings[docId] !== undefined) {
+        result.add(docId);
+      }
+    }
+
+    return result;
+  }
+
 
   /**
    * Compute IDF cache for query terms (once per query)
@@ -112,13 +178,13 @@ export class BM25Scorer {
    * Score multiple documents for a query
    */
   static scoreDocuments(
-    docIds: number[],
+    docIds: string[],
     queryTerms: string[],
     index: InvertedIndex,
     stats: CorpusStats,
     idfCache: Map<string, number>
-  ): Map<number, number> {
-    const scores = new Map<number, number>();
+  ): Map<string, number> {
+    const scores = new Map<string, number>();
 
     for (const docId of docIds) {
       const score = this.scoreDocument(docId, queryTerms, idfCache, stats, index);

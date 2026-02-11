@@ -1,22 +1,22 @@
-import { RankingSignal, SearchDocument } from './RankingSignal';
+import { Document } from '../../types/search.types';
 import { RankingContext } from './RankingContext';
 import { SignalRegistry } from './SignalRegistry';
 import { logger } from '../../utils/logger';
 
 export interface RankedDocument {
-  docId: number;
+  docId: string;
   bm25Score: number;
   finalScore: number;
-  document: SearchDocument;
+  document: Document;
 }
 
 export class Ranker {
   private static readonly registry = SignalRegistry.getInstance();
 
   static rank(
-    docId: number,
+    docId: string,
     bm25Score: number,
-    document: SearchDocument,
+    document: Document,
     query: string,
     context: RankingContext
   ): RankedDocument {
@@ -52,7 +52,7 @@ export class Ranker {
   }
 
   static rankMultiple(
-    documents: Map<number, { bm25Score: number; document: SearchDocument }>,
+    documents: Map<string, { bm25Score: number; document: Document }>,
     query: string,
     context: RankingContext
   ): RankedDocument[] {
