@@ -40,7 +40,7 @@ export class BM25Scorer {
 
       const df = termData.df;
       const idf = idfCache.get(term);
-      if (!idf) {
+      if (idf === undefined) {
         continue; // Term not in IDF cache (shouldn't happen)
       }
 
@@ -71,57 +71,15 @@ export class BM25Scorer {
   }
 
   /**
-   * Get candidate documents for a query with progressive intersection pruning
-   * Preserves OR semantics while using intersection as optimization
+   * Get candidate documents for a query
+   * Preserves OR semantics with simple union approach
    */
   static getCandidateDocuments(
     queryTerms: string[],
     index: InvertedIndex,
     stats: CorpusStats
   ): Set<string> {
-    // Step A: Filter usable terms (ignore terms not in index or too common)
-    const usableTerms = queryTerms.filter(term => {
-      const termData = index[term];
-      if (!termData) return false;
-      
-      // Skip extremely common terms (df / total_docs > 0.7)
-      const dfRatio = termData.df / stats.total_documents;
-      return dfRatio <= 0.7;
-    });
-
-    if (usableTerms.length === 0) {
-      // Fallback: use all original terms with union
-      return this.getUnionCandidates(queryTerms, index);
-    }
-
-    // Step B: Compute union first (baseline OR behavior)
-    const unionCandidates = this.getUnionCandidates(usableTerms, index);
-
-    // Step C: Sort terms by increasing document frequency for intersection optimization
-    usableTerms.sort((a, b) => index[a].df - index[b].df);
-
-    // Step D: Compute intersection subset (optimization seed)
-    const smallestTerm = usableTerms[0];
-    let intersectionCandidates = new Set<string>(Object.keys(index[smallestTerm].postings));
-
-    // Step E: Intersect progressively
-    for (let i = 1; i < usableTerms.length; i++) {
-      const term = usableTerms[i];
-      
-      intersectionCandidates = this.intersectWithPostings(
-        intersectionCandidates,
-        index[term].postings
-      );
-      
-      // Early termination if intersection becomes empty
-      if (intersectionCandidates.size === 0) {
-        break; // No need to continue, union will be used
-      }
-    }
-
-    // Step F: Return union (preserves OR semantics)
-    // Intersection docs will naturally score higher due to term frequency
-    return unionCandidates;
+    return this.getUnionCandidates(queryTerms, index);
   }
 
   /**
