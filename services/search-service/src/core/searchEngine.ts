@@ -9,6 +9,7 @@ import { Ranker, RankedDocument } from './ranking/Ranker';
 import { RankingContext } from './ranking/RankingContext';
 import { registerSignals } from './ranking/registerSignals';
 import { SignalRegistry } from './ranking/SignalRegistry';
+import { QueryNormalizer } from './query/QueryNormalizer';
 
 export class SearchEngine {
   private indexLoader: IndexLoader;
@@ -30,13 +31,16 @@ export class SearchEngine {
     const startTime = Date.now();
 
     try {
-      // Check cache first
-      const cacheKey = `${query}:${limit}:${offset}`;
+      // Normalize query for consistent processing and caching
+      const normalizedQuery = QueryNormalizer.normalize(query);
+      
+      // Check cache first (use normalized query for cache key)
+      const cacheKey = `${normalizedQuery}:${limit}:${offset}`;
       let results = this.queryCache.get(cacheKey);
 
       if (!results) {
         // Perform search
-        results = await this.performSearch(query, limit, offset);
+        results = await this.performSearch(normalizedQuery, query, limit, offset);
         
         // Cache results
         this.queryCache.set(cacheKey, results);
@@ -57,13 +61,13 @@ export class SearchEngine {
     }
   }
 
-  private async performSearch(query: string, limit: number, offset: number): Promise<SearchResult[]> {
-    if (!query.trim()) {
+  private async performSearch(normalizedQuery: string, originalQuery: string, limit: number, offset: number): Promise<SearchResult[]> {
+    if (!normalizedQuery.trim()) {
       return [];
     }
 
     // Tokenize query
-    const terms = Tokenizer.tokenize(query);
+    const terms = Tokenizer.tokenize(normalizedQuery);
     
     if (terms.length === 0) {
       return [];
@@ -107,7 +111,7 @@ export class SearchEngine {
     const rankingContext: RankingContext = {
       corpusStats,
       queryTerms: uniqueTerms,
-      query,
+      query: originalQuery,
       candidateCount: candidateDocs.size
     };
 
@@ -126,7 +130,7 @@ export class SearchEngine {
       });
     }
 
-    const rankedDocuments = Ranker.rankMultiple(documentsForRanking, query, rankingContext);
+    const rankedDocuments = Ranker.rankMultiple(documentsForRanking, originalQuery, rankingContext);
 
     // Sort by final score
     const sortedResults = rankedDocuments
