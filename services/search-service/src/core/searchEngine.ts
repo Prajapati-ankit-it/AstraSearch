@@ -10,6 +10,7 @@ import { RankingContext } from './ranking/RankingContext';
 import { registerSignals } from './ranking/registerSignals';
 import { SignalRegistry } from './ranking/SignalRegistry';
 import { QueryNormalizer } from './query/QueryNormalizer';
+import { SynonymExpander } from './query/SynonymExpander';
 
 export class SearchEngine {
   private indexLoader: IndexLoader;
@@ -73,17 +74,22 @@ export class SearchEngine {
       return [];
     }
 
-    logger.debug(`Search terms: [${terms.join(', ')}]`);
+    logger.debug(`Original search terms: [${terms.join(', ')}]`);
+
+    // Synonym expansion is query-time only.
+    // Index remains untouched.
+    // Expansion is non-recursive and capped.
+    const expandedTerms = SynonymExpander.expand(terms);
+    
+    // Get unique terms from expanded set
+    const uniqueTerms = [...new Set(expandedTerms)];
+
+    logger.debug(`Expanded search terms: [${expandedTerms.join(', ')}]`);
 
     // Get index, documents, and corpus stats
     const index = this.indexLoader.getIndex();
     const documents = this.indexLoader.getAllDocuments();
     const corpusStats = this.indexLoader.getCorpusStats();
-
-    // Get unique terms
-    const uniqueTerms = [...new Set(terms)];
-
-    // Compute IDF cache once per query
     const idfCache = BM25Scorer.computeIDFCache(uniqueTerms, index, corpusStats);
 
     // Get candidate documents with progressive intersection pruning
