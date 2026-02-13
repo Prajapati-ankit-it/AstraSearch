@@ -68,28 +68,34 @@ export class SearchEngine {
     }
 
     // Tokenize query
-    const terms = Tokenizer.tokenize(normalizedQuery);
+    const originalTerms = Tokenizer.tokenize(normalizedQuery);
     
-    if (terms.length === 0) {
+    if (originalTerms.length === 0) {
       return [];
     }
 
-    logger.debug(`Original search terms: [${terms.join(', ')}]`);
+    logger.debug(`Original search terms: [${originalTerms.join(', ')}]`);
 
     // Synonym expansion is query-time only.
     // Index remains untouched.
     // Expansion is non-recursive and capped.
-    const expandedTerms = SynonymExpander.expand(terms);
-    
-    // Get unique terms from expanded set
-    const uniqueTerms = [...new Set(expandedTerms)];
+    const retrievalTerms = SynonymExpander.expand(originalTerms);
 
-    logger.debug(`Expanded search terms: [${expandedTerms.join(', ')}]`);
+    // Create ranking context with original user terms only
+    const rankingContext: RankingContext = {
+      corpusStats: this.indexLoader.getCorpusStats(),
+      queryTerms: originalTerms,
+      query: originalQuery,
+      candidateCount: 0 // Will be set after candidate retrieval
+    };
 
     // Get index, documents, and corpus stats
     const index = this.indexLoader.getIndex();
     const documents = this.indexLoader.getAllDocuments();
     const corpusStats = this.indexLoader.getCorpusStats();
+    
+    // Get unique terms from retrieval terms for BM25 processing
+    const uniqueTerms = [...new Set(retrievalTerms)];
     const idfCache = BM25Scorer.computeIDFCache(uniqueTerms, index, corpusStats);
 
     // Get candidate documents with progressive intersection pruning
@@ -100,6 +106,11 @@ export class SearchEngine {
       return [];
     }
 
+    // Update ranking context with candidate count
+    const updatedRankingContext = {
+      ...rankingContext,
+      candidateCount: candidateDocs.size
+    };
     logger.debug(`Candidate documents after pruning: ${candidateDocs.size}`);
 
     // Score documents using BM25 with precomputed IDF
@@ -112,14 +123,6 @@ export class SearchEngine {
     );
 
     logger.debug(`Scored ${docScores.size} documents with BM25`);
-
-    // Create ranking context
-    const rankingContext: RankingContext = {
-      corpusStats,
-      queryTerms: uniqueTerms,
-      query: originalQuery,
-      candidateCount: candidateDocs.size
-    };
 
     // Apply ranking signals using optimized batch processing
     const documentsForRanking = new Map<string, { bm25Score: number; document: Document }>();
@@ -136,7 +139,7 @@ export class SearchEngine {
       });
     }
 
-    const rankedDocuments = Ranker.rankMultiple(documentsForRanking, originalQuery, rankingContext);
+    const rankedDocuments = Ranker.rankMultiple(documentsForRanking, originalQuery, updatedRankingContext);
 
     // Sort by final score
     const sortedResults = rankedDocuments

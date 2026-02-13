@@ -6,77 +6,29 @@
  * 
  * Rules:
  * - Keep mappings explicit and directional
+ * - Only true equivalence (abbreviations, exact terms)
+ * - No concept expansion or ecosystem mappings
  * - No bidirectional auto-generation
- * - No recursive expansion
- * - Focus on technical/programming terms
  */
 
 export const SYNONYM_MAP: Record<string, string[]> = {
-  // JavaScript/Programming Language
+  // Programming Language Abbreviations
   js: ['javascript'],
-  javascript: ['js'],
   ts: ['typescript'],
-  typescript: ['ts'],
   py: ['python'],
-  python: ['py'],
-  java: ['jvm'],
-  jvm: ['java'],
   
-  // Async/Programming Concepts
-  promise: ['thenable', 'async'],
-  async: ['promise'],
-  thenable: ['promise'],
-  callback: ['cb'],
-  cb: ['callback'],
-  
-  // Database
+  // Technical Term Equivalents
   db: ['database'],
-  database: ['db'],
-  sql: ['query'],
-  query: ['sql'],
-  
-  // Web/API
-  api: ['endpoint', 'service'],
-  endpoint: ['api'],
-  service: ['api'],
-  http: ['request', 'response'],
-  request: ['http'],
-  response: ['http'],
-  
-  // Development Tools
-  git: ['commit', 'push', 'pull'],
-  npm: ['package', 'install'],
-  docker: ['container'],
-  container: ['docker'],
-  
-  // Code Quality
-  test: ['testing', 'unit'],
-  testing: ['test'],
-  unit: ['test'],
-  bug: ['error', 'issue'],
-  error: ['bug'],
-  issue: ['bug'],
-  
-  // Data Structures
+  callback: ['cb'],
   array: ['list'],
-  list: ['array'],
-  map: ['dict', 'dictionary'],
+  map: ['dict'],
   dict: ['map'],
-  dictionary: ['map'],
   
-  // Frontend
+  // Common Abbreviations
+  api: ['endpoint'],
   css: ['style'],
-  style: ['css'],
   html: ['markup'],
-  markup: ['html'],
-  dom: ['element'],
-  element: ['dom'],
-  
-  // Backend
-  server: ['backend'],
-  backend: ['server'],
-  client: ['frontend'],
-  frontend: ['client']
+  dom: ['element']
 };
 
 /**
@@ -86,13 +38,4 @@ export const SYNONYM_MAP: Record<string, string[]> = {
  */
 export function getSynonyms(term: string): string[] {
   return SYNONYM_MAP[term] || [];
-}
-
-/**
- * Check if a term has synonyms
- * @param term - The term to check
- * @returns True if term has synonyms, false otherwise
- */
-export function hasSynonyms(term: string): boolean {
-  return term in SYNONYM_MAP;
 }
