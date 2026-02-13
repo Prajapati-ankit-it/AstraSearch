@@ -12,26 +12,27 @@ export class Tokenizer {
     'me', 'mine', 'our', 'us', 'ours', 'him', 'his', 'her', 'hers'
   ]);
 
-  // Pattern to split on underscores, whitespace, and common punctuation
-  private static readonly SPLIT_PATTERN = /[\s,_;:.'"`~!@#$%^&*()+=\-\[\]{}\\|<>?/]+/;
-  
-  // Pattern to remove remaining punctuation from tokens
-  private static readonly PUNCTUATION_PATTERN = /[^\w\s]/g;
+  // Pattern to split on whitespace only (input is already normalized)
+  private static readonly SPLIT_PATTERN = /\s+/;
 
+  /**
+   * Tokenize pre-normalized text into terms
+   * 
+   * Tokenizer expects pre-normalized input.
+   * Do not perform normalization here.
+   * 
+   * @param text - Pre-normalized text input
+   * @param removeStopwords - Whether to filter stopwords
+   * @returns Array of tokens
+   */
   static tokenize(text: string, removeStopwords: boolean = true): string[] {
     if (!text) {
       return [];
     }
 
     try {
-      // Convert to lowercase
-      let normalized = text.toLowerCase();
-      
-      // Remove punctuation characters (except underscores which are handled by split)
-      normalized = normalized.replace(Tokenizer.PUNCTUATION_PATTERN, '');
-      
-      // Split on underscores, whitespace, and common punctuation
-      let tokens = normalized.split(Tokenizer.SPLIT_PATTERN);
+      // Split on whitespace (input is already normalized)
+      let tokens = text.split(Tokenizer.SPLIT_PATTERN);
       
       // Filter out empty strings and optionally stopwords
       const filteredTokens = tokens

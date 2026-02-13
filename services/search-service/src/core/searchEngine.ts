@@ -34,7 +34,7 @@ export class SearchEngine {
       // Normalize query for consistent processing and caching
       const normalizedQuery = QueryNormalizer.normalize(query);
       
-      // Check cache first (use normalized query for cache key)
+      // Cache key uses normalized query to ensure deterministic retrieval.
       const cacheKey = `${normalizedQuery}:${limit}:${offset}`;
       let results = this.queryCache.get(cacheKey);
 
