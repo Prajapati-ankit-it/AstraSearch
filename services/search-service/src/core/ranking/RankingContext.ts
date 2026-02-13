@@ -1,8 +1,8 @@
 import { CorpusStats } from '../../types/search.types';
 
 export interface RankingContext {
-  corpusStats: CorpusStats;
-  queryTerms: string[];
-  query: string;
-  candidateCount: number;
+  readonly corpusStats: CorpusStats;
+  readonly queryTerms: string[];
+  readonly query: string;
+  readonly candidateCount: number;
 }

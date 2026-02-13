@@ -68,12 +68,15 @@ export class SearchEngine {
     }
 
     // Tokenize query
-    const originalTerms = Tokenizer.tokenize(normalizedQuery);
+    const terms = Tokenizer.tokenize(normalizedQuery);
     
-    if (originalTerms.length === 0) {
+    if (terms.length === 0) {
       return [];
     }
 
+    // Deduplicate original terms before expansion
+    const originalTerms = [...new Set(terms)];
+    
     logger.debug(`Original search terms: [${originalTerms.join(', ')}]`);
 
     // Synonym expansion is query-time only.
@@ -86,16 +89,8 @@ export class SearchEngine {
     const documents = this.indexLoader.getAllDocuments();
     const corpusStats = this.indexLoader.getCorpusStats();
     
-    // Create ranking context with original user terms only
-    let rankingContext: RankingContext = {
-      corpusStats,
-      queryTerms: originalTerms,
-      query: originalQuery,
-      candidateCount: 0 // Will be set after candidate retrieval
-    };
-
     // Get unique terms from retrieval terms for BM25 processing
-    const uniqueTerms = [...new Set(retrievalTerms)];
+    const uniqueTerms = retrievalTerms;
     const idfCache = BM25Scorer.computeIDFCache(uniqueTerms, index, corpusStats);
 
     // Get candidate documents with progressive intersection pruning
@@ -106,8 +101,15 @@ export class SearchEngine {
       return [];
     }
 
-    // Update ranking context with candidate count
-    rankingContext.candidateCount = candidateDocs.size;
+    // Create ranking context with original user terms only
+    // Ranking signals operate on original user intent.
+    // Synonym-expanded terms are used for retrieval only.
+    const rankingContext: RankingContext = {
+      corpusStats,
+      queryTerms: originalTerms,
+      query: originalQuery,
+      candidateCount: candidateDocs.size
+    };
     logger.debug(`Candidate documents after pruning: ${candidateDocs.size}`);
 
     // Score documents using BM25 with precomputed IDF

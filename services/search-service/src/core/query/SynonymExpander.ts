@@ -37,13 +37,13 @@ export class SynonymExpander {
       return [];
     }
 
-    // Track unique original tokens to enforce invariant
-    const uniqueOriginalCount = new Set(tokens).size;
+    // Deduplicate original tokens first
+    const uniqueOriginalTokens = new Set(tokens);
     
-    // Use Set for automatic deduplication and O(1) lookups
-    const expanded = new Set<string>(tokens);
+    // Initialize Set with unique originals
+    const expanded = new Set<string>(uniqueOriginalTokens);
 
-    for (const token of tokens) {
+    for (const token of uniqueOriginalTokens) {
       // Safety check: don't expand if we've hit the limit
       if (expanded.size >= MAX_EXPANSION_LIMIT) {
         logger.debug(`Synonym expansion hit limit (${MAX_EXPANSION_LIMIT}) for tokens: [${tokens.join(', ')}]`);
@@ -63,19 +63,19 @@ export class SynonymExpander {
       }
     }
 
-    const result = Array.from(expanded);
-    
-    // Enforce invariant: original tokens are never dropped
-    const finalUniqueCount = new Set(result).size;
-    if (finalUniqueCount < uniqueOriginalCount) {
-      logger.error(`Invariant violation: original tokens dropped. Original: ${uniqueOriginalCount}, Final: ${finalUniqueCount}`);
-      // Fallback to original tokens to preserve intent
-      return tokens;
+    // Enforce invariant: all original tokens must be present
+    const allOriginalPresent = [...uniqueOriginalTokens].every(t => expanded.has(t));
+    if (!allOriginalPresent) {
+      logger.error("Synonym invariant violated — falling back to original tokens.");
+      return [...uniqueOriginalTokens];
     }
 
-    const addedCount = result.length - tokens.length;
+    const result = Array.from(expanded);
+    
+    // Correct addedCount calculation
+    const addedCount = expanded.size - uniqueOriginalTokens.size;
     if (addedCount > 0) {
-      logger.debug(`Synonym expansion: [${tokens.join(', ')}] -> [${result.join(', ')}] (${addedCount} additions)`);
+      logger.debug(`Synonym expansion: [${[...uniqueOriginalTokens].join(', ')}] -> [${result.join(', ')}] (${addedCount} additions)`);
     }
 
     return result;

@@ -19,10 +19,7 @@ export const SYNONYM_MAP: Record<string, string[]> = {
   
   // Technical Term Equivalents
   db: ['database'],
-  callback: ['cb'],
-  
-  // Common Abbreviations
-  api: ['endpoint']
+  cb: ['callback']
 };
 
 /**
