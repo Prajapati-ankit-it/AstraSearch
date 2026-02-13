@@ -84,7 +84,8 @@ class IndexBuilder:
                 'total_documents': corpus_stats['total_documents'],
                 'vocabulary_size': len(vocabulary),
                 'avg_doc_length': corpus_stats['avg_doc_length'],
-                'total_postings': sum(len(stats['postings']) for stats in self.index.save_to_dict()['index'].values())
+                'total_postings': sum(len(stats['postings']) for stats in self.index.save_to_dict()['index'].values()),
+                'normalization_version': 'v1_ascii_nfkc'  # Track normalization version
             }
             
         except Exception as e:
