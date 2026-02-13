@@ -10,31 +10,27 @@
  * 
  * QueryNormalizer matches TextNormalizer behavior exactly (HTML cleaning not needed for queries)
  * 
- * Normalization rule: Keep only a-z, 0-9, and whitespace
- * This ensures identical behavior across Python and Node.js environments
+ * Normalization Standard (v1_ascii_nfkc):
+ * - NFKC Unicode normalization
+ * - Lowercase
+ * - Keep only [a-z0-9\s] (English-only normalization v1)
+ * - Collapse whitespace
+ * 
+ * Non-ASCII characters are removed intentionally.
+ * Future multilingual support requires normalization v2.
  */
 
 // Precompiled regex patterns for performance
 // Explicit ASCII-safe normalization to match Python behavior
-const PUNCTUATION_PATTERN = /[^a-z0-9\s]/g;
+const DISALLOWED_CHAR_PATTERN = /[^a-z0-9\s]/g;
 const WHITESPACE_PATTERN = /\s+/g;
+
+// Normalization version constant for compatibility checking
+export const NORMALIZATION_VERSION = "v1_ascii_nfkc";
 
 export class QueryNormalizer {
   /**
-   * Normalize query text to match indexing behavior exactly
-   * 
-   * Performs:
-   * - Unicode normalization (NFKC)
-   * - Lowercasing
-   * - Punctuation handling (replace with space) - explicit ASCII-safe rule
-   * - Whitespace normalization
-   * 
-   * @param query - Raw query string
-   * @returns Normalized query string
-   */
-
-  /**
- * Normalization Standard (v1)
+ * Normalization Standard (v1_ascii_nfkc)
  * Must match Python indexing exactly.
  *
  * - NFKC
@@ -44,20 +40,41 @@ export class QueryNormalizer {
  *
  * If Python normalizer changes, this must change.
  */
+  /**
+   * Normalize query text to match indexing behavior exactly
+   * 
+   * Performs:
+   * - Unicode normalization (NFKC)
+   * - Lowercasing
+   * - Disallowed character handling (replace with space) - explicit ASCII-safe rule
+   * - Whitespace normalization
+   * 
+   * @param query - Raw query string
+   * @returns Normalized query string
+   */
+
   static normalize(query: string): string {
     if (!query) {
       return "";
     }
 
+    let normalized: string;
+    
     try {
       // Unicode normalization (NFKC) - matches Python indexing
-      let normalized = query.normalize('NFKC');
-      
+      normalized = query.normalize('NFKC');
+    } catch (error) {
+      // Continue with original text if NFKC fails
+      normalized = query;
+    }
+    
+    // Always apply lowercasing and ASCII filtering
+    try {
       // Convert to lowercase
       normalized = normalized.toLowerCase();
       
-      // Replace punctuation with space (explicit ASCII-safe rule to match Python)
-      normalized = normalized.replace(PUNCTUATION_PATTERN, ' ');
+      // Replace disallowed characters with space (explicit ASCII-safe rule to match Python)
+      normalized = normalized.replace(DISALLOWED_CHAR_PATTERN, ' ');
       
       // Collapse multiple spaces and trim edges
       normalized = normalized.replace(WHITESPACE_PATTERN, ' ').trim();

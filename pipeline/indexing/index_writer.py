@@ -45,6 +45,9 @@ class IndexWriter:
             # Get stats directly from index - no construction or defaults
             stats = index.get_corpus_stats()
             
+            # Add normalization version for compatibility checking
+            stats['normalization_version'] = 'v1_ascii_nfkc'
+            
             # Required logging before writing
             logger.info(
                 f"WRITING FINAL STATS | docs={index.total_documents}, "
