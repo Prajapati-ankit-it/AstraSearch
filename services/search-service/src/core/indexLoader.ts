@@ -3,6 +3,7 @@ import * as path from 'path';
 import { InvertedIndex, Document, CorpusStats } from '../types/search.types';
 import { logger } from '../utils/logger';
 import { config } from '../config/config';
+import { NORMALIZATION_VERSION } from './query/QueryNormalizer';
 
 export class IndexLoader {
   private index: InvertedIndex | null = null;
@@ -58,6 +59,21 @@ export class IndexLoader {
       throw new Error('Corpus stats not loaded');
     }
 
+    // Check normalization version compatibility
+    const indexNormalizationVersion = (this.corpusStats as any).normalization_version;
+    if (!indexNormalizationVersion) {
+      logger.warn('Index missing normalization version - assuming legacy compatibility');
+    } else if (indexNormalizationVersion !== NORMALIZATION_VERSION) {
+      const errorMessage = `
+                          Normalization version mismatch.
+                          Index built with: ${indexNormalizationVersion}
+                          Query layer expects: ${NORMALIZATION_VERSION}
+                          Full re-index required.
+                          `;
+      logger.error(errorMessage);
+      throw new Error(errorMessage);
+    }
+
     if (this.corpusStats.total_documents <= 0) {
       throw new Error(`Invalid total_documents: ${this.corpusStats.total_documents}. Must be > 0.`);
     }
@@ -73,7 +89,7 @@ export class IndexLoader {
     // Validate that document_lengths covers all loaded documents
     const loadedDocCount = this.documents.size;
     const docLengthsCount = Object.keys(this.corpusStats.document_lengths).length;
-    
+
     if (docLengthsCount !== loadedDocCount) {
       throw new Error(`Document lengths mismatch: ${docLengthsCount} entries in stats vs ${loadedDocCount} loaded documents`);
     }
@@ -117,7 +133,7 @@ export class IndexLoader {
     if (!this.loaded) {
       throw new Error('Index not loaded. Call loadIndex() first.');
     }
-    
+
     return {
       vocabularySize: Object.keys(this.index!).length,
       documentsLoaded: this.documents.size,

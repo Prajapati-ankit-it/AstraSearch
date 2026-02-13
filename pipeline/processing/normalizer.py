@@ -1,35 +1,54 @@
 import re
 import logging
+import unicodedata
 from typing import Optional
 
 logger = logging.getLogger(__name__)
 
+"""
+Normalization Standard (v1_ascii_nfkc):
+- NFKC Unicode normalization
+- Lowercase
+- Keep only: a-z, 0-9, whitespace
+- Collapse whitespace
+
+IMPORTANT:
+Query layer must mirror this logic exactly.
+"""
 
 class TextNormalizer:
-    """Normalize text by lowercasing, removing punctuation, and cleaning whitespace."""
+    """Normalize text by Unicode normalization, lowercasing, removing punctuation, and cleaning whitespace."""
     
     def __init__(self):
-        # Pattern to match punctuation (keep alphanumeric, spaces, and underscores)
-        self.punctuation_pattern = re.compile(r'[^\w\s_]')
+        # Pattern to match disallowed characters (keep only a-z, 0-9, and whitespace)
+        # Explicit ASCII-safe normalization to match Node.js behavior
+        self.disallowed_char_pattern = re.compile(r'[^a-z0-9\s]')
         self.whitespace_pattern = re.compile(r'\s+')
     
     def normalize(self, text: Optional[str]) -> str:
-        """Normalize text by lowercasing, removing punctuation, and cleaning whitespace."""
+        """Normalize text by Unicode normalization, lowercasing, removing punctuation, and cleaning whitespace."""
         if not text:
             return ""
         
         try:
+            # Unicode normalization (NFKC) - makes indexing canonical
+            normalized = unicodedata.normalize("NFKC", text)
+        except (UnicodeError, ValueError):
+            # Continue with original text if NFKC fails
+            normalized = text
+        
+        # Always apply lowercasing and ASCII filtering
+        try:
             # Convert to lowercase
-            normalized = text.lower()
+            normalized = normalized.lower()
             
-            # Remove punctuation
-            normalized = self.punctuation_pattern.sub(' ', normalized)
+            # Remove disallowed characters (explicit ASCII-safe rule)
+            normalized = self.disallowed_char_pattern.sub(' ', normalized)
             
             # Normalize whitespace
             normalized = self.whitespace_pattern.sub(' ', normalized).strip()
             
             return normalized
-            
         except Exception as e:
             logger.warning(f"Error normalizing text: {e}")
             return text if text else ""
