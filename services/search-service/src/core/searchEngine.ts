@@ -10,6 +10,7 @@ import { RankingContext } from './ranking/RankingContext';
 import { registerSignals } from './ranking/registerSignals';
 import { SignalRegistry } from './ranking/SignalRegistry';
 import { QueryNormalizer } from './query/QueryNormalizer';
+import { SynonymExpander } from './query/SynonymExpander';
 
 export class SearchEngine {
   private indexLoader: IndexLoader;
@@ -73,17 +74,23 @@ export class SearchEngine {
       return [];
     }
 
-    logger.debug(`Search terms: [${terms.join(', ')}]`);
+    // Deduplicate original terms before expansion
+    const originalTerms = [...new Set(terms)];
+    
+    logger.debug(`Original search terms: [${originalTerms.join(', ')}]`);
+
+    // Synonym expansion is query-time only.
+    // Index remains untouched.
+    // Expansion is non-recursive and capped.
+    const retrievalTerms = SynonymExpander.expand(originalTerms);
 
     // Get index, documents, and corpus stats
     const index = this.indexLoader.getIndex();
     const documents = this.indexLoader.getAllDocuments();
     const corpusStats = this.indexLoader.getCorpusStats();
-
-    // Get unique terms
-    const uniqueTerms = [...new Set(terms)];
-
-    // Compute IDF cache once per query
+    
+    // Get unique terms from retrieval terms for BM25 processing
+    const uniqueTerms = retrievalTerms;
     const idfCache = BM25Scorer.computeIDFCache(uniqueTerms, index, corpusStats);
 
     // Get candidate documents with progressive intersection pruning
@@ -94,6 +101,15 @@ export class SearchEngine {
       return [];
     }
 
+    // Create ranking context with original user terms only
+    // Ranking signals operate on original user intent.
+    // Synonym-expanded terms are used for retrieval only.
+    const rankingContext: RankingContext = {
+      corpusStats,
+      queryTerms: originalTerms,
+      query: originalQuery,
+      candidateCount: candidateDocs.size
+    };
     logger.debug(`Candidate documents after pruning: ${candidateDocs.size}`);
 
     // Score documents using BM25 with precomputed IDF
@@ -106,14 +122,6 @@ export class SearchEngine {
     );
 
     logger.debug(`Scored ${docScores.size} documents with BM25`);
-
-    // Create ranking context
-    const rankingContext: RankingContext = {
-      corpusStats,
-      queryTerms: uniqueTerms,
-      query: originalQuery,
-      candidateCount: candidateDocs.size
-    };
 
     // Apply ranking signals using optimized batch processing
     const documentsForRanking = new Map<string, { bm25Score: number; document: Document }>();
