@@ -20,15 +20,9 @@ export const SYNONYM_MAP: Record<string, string[]> = {
   // Technical Term Equivalents
   db: ['database'],
   callback: ['cb'],
-  array: ['list'],
-  map: ['dict'],
-  dict: ['map'],
   
   // Common Abbreviations
-  api: ['endpoint'],
-  css: ['style'],
-  html: ['markup'],
-  dom: ['element']
+  api: ['endpoint']
 };
 
 /**

@@ -81,19 +81,19 @@ export class SearchEngine {
     // Expansion is non-recursive and capped.
     const retrievalTerms = SynonymExpander.expand(originalTerms);
 
-    // Create ranking context with original user terms only
-    const rankingContext: RankingContext = {
-      corpusStats: this.indexLoader.getCorpusStats(),
-      queryTerms: originalTerms,
-      query: originalQuery,
-      candidateCount: 0 // Will be set after candidate retrieval
-    };
-
     // Get index, documents, and corpus stats
     const index = this.indexLoader.getIndex();
     const documents = this.indexLoader.getAllDocuments();
     const corpusStats = this.indexLoader.getCorpusStats();
     
+    // Create ranking context with original user terms only
+    let rankingContext: RankingContext = {
+      corpusStats,
+      queryTerms: originalTerms,
+      query: originalQuery,
+      candidateCount: 0 // Will be set after candidate retrieval
+    };
+
     // Get unique terms from retrieval terms for BM25 processing
     const uniqueTerms = [...new Set(retrievalTerms)];
     const idfCache = BM25Scorer.computeIDFCache(uniqueTerms, index, corpusStats);
@@ -107,10 +107,7 @@ export class SearchEngine {
     }
 
     // Update ranking context with candidate count
-    const updatedRankingContext = {
-      ...rankingContext,
-      candidateCount: candidateDocs.size
-    };
+    rankingContext.candidateCount = candidateDocs.size;
     logger.debug(`Candidate documents after pruning: ${candidateDocs.size}`);
 
     // Score documents using BM25 with precomputed IDF
@@ -139,7 +136,7 @@ export class SearchEngine {
       });
     }
 
-    const rankedDocuments = Ranker.rankMultiple(documentsForRanking, originalQuery, updatedRankingContext);
+    const rankedDocuments = Ranker.rankMultiple(documentsForRanking, originalQuery, rankingContext);
 
     // Sort by final score
     const sortedResults = rankedDocuments

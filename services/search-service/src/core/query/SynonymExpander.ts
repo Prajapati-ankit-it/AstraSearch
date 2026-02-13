@@ -37,6 +37,9 @@ export class SynonymExpander {
       return [];
     }
 
+    // Track unique original tokens to enforce invariant
+    const uniqueOriginalCount = new Set(tokens).size;
+    
     // Use Set for automatic deduplication and O(1) lookups
     const expanded = new Set<string>(tokens);
 
@@ -60,8 +63,16 @@ export class SynonymExpander {
       }
     }
 
-    const result = Array.from(expanded).slice(0, MAX_EXPANSION_LIMIT);
+    const result = Array.from(expanded);
     
+    // Enforce invariant: original tokens are never dropped
+    const finalUniqueCount = new Set(result).size;
+    if (finalUniqueCount < uniqueOriginalCount) {
+      logger.error(`Invariant violation: original tokens dropped. Original: ${uniqueOriginalCount}, Final: ${finalUniqueCount}`);
+      // Fallback to original tokens to preserve intent
+      return tokens;
+    }
+
     const addedCount = result.length - tokens.length;
     if (addedCount > 0) {
       logger.debug(`Synonym expansion: [${tokens.join(', ')}] -> [${result.join(', ')}] (${addedCount} additions)`);
