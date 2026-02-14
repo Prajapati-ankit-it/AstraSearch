@@ -82,7 +82,7 @@ export class SearchEngine {
       terms
     );
 
-    // Deduplicate only for retrieval
+    // Deduplicate for retrieval and ranking (intent uses raw terms)
     const originalTerms = [...new Set(terms)];
 
     logger.debug(`Original search terms: [${originalTerms.join(', ')}]`);
