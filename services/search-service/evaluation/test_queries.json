@@ -20,7 +20,7 @@
     "relevantDocIds": ["stackoverflow:92318", "stackoverflow:52946"]
   },
   {
-  "query": "react hooks",
-  "relevantDocIds": ["stackoverflow:123456", "stackoverflow:789012"]
-}
+    "query": "react hooks",
+    "relevantDocIds": ["stackoverflow:123456", "stackoverflow:789012"]
+  }
 ]
