@@ -5,8 +5,6 @@
  * Binary relevance (1 or 0), O(k) complexity, no side effects.
  */
 
-import { EvaluationResult } from './types';
-
 /**
  * Compute precision at K
  * Fraction of retrieved documents that are relevant
