@@ -71,10 +71,10 @@ export function ndcgAtK(
     }
   }
 
-  // Compute IDCG (ideal DCG)
-  const idealRelevance = Array.from(relevantSet).map(() => 1).sort(() => -1);
+  // Compute IDCG (ideal DCG) for binary relevance
+  const idealCount = Math.min(k, relevantSet.size);
   let idcg = 0;
-  for (let i = 0; i < Math.min(k, idealRelevance.length); i++) {
+  for (let i = 0; i < idealCount; i++) {
     idcg += 1 / Math.log2(i + 2);
   }
 
