@@ -13,9 +13,8 @@ import * as path from 'path';
 
 export class EvaluationRunner {
   private searchEngine: SearchEngine;
-  private readonly K = 10; // Standard evaluation cutoff
 
-  constructor(searchEngine: SearchEngine) {
+  constructor(searchEngine: SearchEngine, private readonly cutoffK: number = 10) {
     this.searchEngine = searchEngine;
   }
 
@@ -45,16 +44,16 @@ export class EvaluationRunner {
    */
   private async evaluateQuery(query: EvaluationQuery): Promise<EvaluationResult> {
     // Call search engine as black box client
-    const searchResponse = await this.searchEngine.search(query.query, this.K, 0);
+    const searchResponse = await this.searchEngine.search(query.query, this.cutoffK, 0);
     
     // Extract returned document IDs
     const retrievedIds = searchResponse.results.map(result => result.id);
     const relevantSet = new Set(query.relevantDocIds);
 
     // Compute metrics
-    const precision = precisionAtK(retrievedIds, relevantSet, this.K);
-    const recall = recallAtK(retrievedIds, relevantSet, this.K);
-    const ndcg = ndcgAtK(retrievedIds, relevantSet, this.K);
+    const precision = precisionAtK(retrievedIds, relevantSet, this.cutoffK);
+    const recall = recallAtK(retrievedIds, relevantSet, this.cutoffK);
+    const ndcg = ndcgAtK(retrievedIds, relevantSet, this.cutoffK);
 
     return {
       query: query.query,
@@ -97,9 +96,9 @@ export class EvaluationRunner {
   printSummary(summary: EvaluationSummary): void {
     console.log('\n=== Search Engine Evaluation Results ===');
     console.log(`Total Queries: ${summary.totalQueries}`);
-    console.log(`Average Precision@${this.K}: ${summary.averagePrecisionAtK.toFixed(3)}`);
-    console.log(`Average Recall@${this.K}: ${summary.averageRecallAtK.toFixed(3)}`);
-    console.log(`Average NDCG@${this.K}: ${summary.averageNdcgAtK.toFixed(3)}`);
+    console.log(`Average Precision@${this.cutoffK}: ${summary.averagePrecisionAtK.toFixed(3)}`);
+    console.log(`Average Recall@${this.cutoffK}: ${summary.averageRecallAtK.toFixed(3)}`);
+    console.log(`Average NDCG@${this.cutoffK}: ${summary.averageNdcgAtK.toFixed(3)}`);
     console.log('=====================================\n');
   }
 }

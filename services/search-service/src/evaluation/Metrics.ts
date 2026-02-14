@@ -14,15 +14,16 @@ export function precisionAtK(
   relevantSet: Set<string>,
   k: number
 ): number {
-  if (k === 0 || retrievedIds.length === 0) {
+  if (k <= 0 || !Number.isFinite(k) || retrievedIds.length === 0) {
     return 0;
   }
 
+  const cutoff = Math.floor(k);
   const relevantRetrieved = retrievedIds
-    .slice(0, k)
+    .slice(0, cutoff)
     .filter(id => relevantSet.has(id)).length;
 
-  return relevantRetrieved / Math.min(k, retrievedIds.length);
+  return relevantRetrieved / Math.min(cutoff, retrievedIds.length);
 }
 
 /**
@@ -34,12 +35,13 @@ export function recallAtK(
   relevantSet: Set<string>,
   k: number
 ): number {
-  if (relevantSet.size === 0) {
+  if (k <= 0 || !Number.isFinite(k) || relevantSet.size === 0) {
     return 0;
   }
 
+  const cutoff = Math.floor(k);
   const relevantRetrieved = retrievedIds
-    .slice(0, k)
+    .slice(0, cutoff)
     .filter(id => relevantSet.has(id)).length;
 
   return relevantRetrieved / relevantSet.size;
@@ -54,11 +56,12 @@ export function ndcgAtK(
   relevantSet: Set<string>,
   k: number
 ): number {
-  if (k === 0 || retrievedIds.length === 0) {
+  if (k <= 0 || !Number.isFinite(k) || retrievedIds.length === 0) {
     return 0;
   }
 
-  const kSlice = retrievedIds.slice(0, k);
+  const cutoff = Math.floor(k);
+  const kSlice = retrievedIds.slice(0, cutoff);
   
   // Compute DCG
   let dcg = 0;
@@ -70,7 +73,7 @@ export function ndcgAtK(
   }
 
   // Compute IDCG (ideal DCG) for binary relevance
-  const idealCount = Math.min(k, relevantSet.size);
+  const idealCount = Math.min(cutoff, relevantSet.size);
   let idcg = 0;
   for (let i = 0; i < idealCount; i++) {
     idcg += 1 / Math.log2(i + 2);
