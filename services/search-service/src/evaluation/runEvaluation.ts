@@ -23,5 +23,8 @@ async function main(): Promise<void> {
 
 // Run evaluation if this file is executed directly
 if (require.main === module) {
-  main().catch(console.error);
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
 }
