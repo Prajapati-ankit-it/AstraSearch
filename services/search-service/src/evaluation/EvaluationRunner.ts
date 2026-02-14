@@ -25,9 +25,34 @@ export class EvaluationRunner {
   async runEvaluation(): Promise<EvaluationSummary> {
     // Load test queries from file
     const queriesPath = path.join(__dirname, '..', '..', 'evaluation', 'test_queries.json');
-    const queryData = await fs.readFile(queriesPath, 'utf-8');
-    const queries: EvaluationQuery[] = JSON.parse(queryData);
+    let queries: EvaluationQuery[];
 
+    try {
+      const queryData = await fs.readFile(queriesPath, 'utf-8');
+      const parsed = JSON.parse(queryData);
+
+      if (!Array.isArray(parsed)) {
+        throw new Error('Parsed test queries JSON is not an array');
+      }
+
+      for (const [index, item] of parsed.entries()) {
+        if (typeof item !== 'object' || item === null) {
+          throw new Error(`Query at index ${index} is not a valid object`);
+        }
+        const candidate: any = item;
+        if (typeof candidate.query !== 'string') {
+          throw new Error(`Query at index ${index} is missing a valid 'query' string field`);
+        }
+        if (!Array.isArray(candidate.relevantDocIds)) {
+          throw new Error(`Query at index ${index} is missing a valid 'relevantDocIds' array field`);
+        }
+      }
+
+      queries = parsed as EvaluationQuery[];
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(`Failed to load evaluation queries from ${queriesPath}: ${message}`);
+    }
     const results: EvaluationResult[] = [];
 
     // Evaluate each query
