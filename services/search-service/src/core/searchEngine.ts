@@ -5,12 +5,13 @@ import { BM25Scorer } from './bm25';
 import { QueryCache } from '../cache/queryCache';
 import { logger } from '../utils/logger';
 import { config } from '../config/config';
-import { Ranker, RankedDocument } from './ranking/Ranker';
+import { Ranker } from './ranking/Ranker';
 import { RankingContext } from './ranking/RankingContext';
 import { registerSignals } from './ranking/registerSignals';
 import { SignalRegistry } from './ranking/SignalRegistry';
 import { QueryNormalizer } from './query/QueryNormalizer';
 import { SynonymExpander } from './query/SynonymExpander';
+import { QueryIntentAnalyzer } from './query/QueryIntent';
 
 export class SearchEngine {
   private indexLoader: IndexLoader;
@@ -34,7 +35,7 @@ export class SearchEngine {
     try {
       // Normalize query for consistent processing and caching
       const normalizedQuery = QueryNormalizer.normalize(query);
-      
+
       // Cache key uses normalized query to ensure deterministic retrieval.
       const cacheKey = `${normalizedQuery}:${limit}:${offset}`;
       let results = this.queryCache.get(cacheKey);
@@ -42,7 +43,7 @@ export class SearchEngine {
       if (!results) {
         // Perform search
         results = await this.performSearch(normalizedQuery, query, limit, offset);
-        
+
         // Cache results
         this.queryCache.set(cacheKey, results);
       }
@@ -69,15 +70,23 @@ export class SearchEngine {
 
     // Tokenize query
     const terms = Tokenizer.tokenize(normalizedQuery);
-    
+
     if (terms.length === 0) {
       return [];
     }
 
-    // Deduplicate original terms before expansion
+    // Compute intent using raw terms (no deduplication)
+    const queryIntent = QueryIntentAnalyzer.analyze(
+      originalQuery,
+      normalizedQuery,
+      terms
+    );
+
+    // Deduplicate for retrieval and ranking (intent uses raw terms)
     const originalTerms = [...new Set(terms)];
-    
+
     logger.debug(`Original search terms: [${originalTerms.join(', ')}]`);
+    logger.debug(`Query intent: single=${queryIntent.isSingleTerm}, multi=${queryIntent.isMultiTerm}, short=${queryIntent.isVeryShort}, phrase=${queryIntent.isPhraseLike}`);
 
     // Synonym expansion is query-time only.
     // Index remains untouched.
@@ -88,14 +97,14 @@ export class SearchEngine {
     const index = this.indexLoader.getIndex();
     const documents = this.indexLoader.getAllDocuments();
     const corpusStats = this.indexLoader.getCorpusStats();
-    
+
     // Get unique terms from retrieval terms for BM25 processing
     const uniqueTerms = retrievalTerms;
     const idfCache = BM25Scorer.computeIDFCache(uniqueTerms, index, corpusStats);
 
     // Get candidate documents with progressive intersection pruning
     const candidateDocs = BM25Scorer.getCandidateDocuments(uniqueTerms, index, corpusStats);
-    
+
     if (candidateDocs.size === 0) {
       logger.debug('No candidate documents found');
       return [];
@@ -108,7 +117,8 @@ export class SearchEngine {
       corpusStats,
       queryTerms: originalTerms,
       query: originalQuery,
-      candidateCount: candidateDocs.size
+      candidateCount: candidateDocs.size,
+      intent: queryIntent
     };
     logger.debug(`Candidate documents after pruning: ${candidateDocs.size}`);
 
@@ -125,16 +135,16 @@ export class SearchEngine {
 
     // Apply ranking signals using optimized batch processing
     const documentsForRanking = new Map<string, { bm25Score: number; document: Document }>();
-    
+
     for (const [docId, bm25Score] of docScores) {
       const document = documents.get(docId);
       if (!document) {
         logger.warn(`Document ${docId} not found in documents map`);
         continue;
       }
-      documentsForRanking.set(docId, { 
-        bm25Score, 
-        document: document 
+      documentsForRanking.set(docId, {
+        bm25Score,
+        document: document
       });
     }
 
