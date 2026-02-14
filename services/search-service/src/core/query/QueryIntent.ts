@@ -23,7 +23,11 @@ export interface QueryIntent {
  * - No behavioral changes
  */
 export class QueryIntentAnalyzer {
-  static analyze(originalQuery: string, normalizedQuery: string, tokens: string[]) {
+  static analyze(
+    originalQuery: string,
+    normalizedQuery: string,
+    tokens: string[]
+  ): QueryIntent {
     const termCount = tokens.length;
 
     const isSingleTerm = termCount === 1;

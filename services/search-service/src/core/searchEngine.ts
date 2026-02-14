@@ -75,15 +75,15 @@ export class SearchEngine {
       return [];
     }
 
-    // Deduplicate original terms before expansion
-    const originalTerms = [...new Set(terms)];
-
-    // Analyze query intent for structural metadata
+    // Compute intent using raw terms (no deduplication)
     const queryIntent = QueryIntentAnalyzer.analyze(
       originalQuery,
       normalizedQuery,
-      originalTerms
+      terms
     );
+
+    // Deduplicate only for retrieval
+    const originalTerms = [...new Set(terms)];
 
     logger.debug(`Original search terms: [${originalTerms.join(', ')}]`);
     logger.debug(`Query intent: single=${queryIntent.isSingleTerm}, multi=${queryIntent.isMultiTerm}, short=${queryIntent.isVeryShort}, phrase=${queryIntent.isPhraseLike}`);
