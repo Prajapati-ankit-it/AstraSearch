@@ -1,0 +1,26 @@
+[
+  {
+    "query": "js promise",
+    "relevantDocIds": ["stackoverflow:197166", "stackoverflow:307224"]
+  },
+  {
+    "query": "javascript tutorial", 
+    "relevantDocIds": ["stackoverflow:109597", "stackoverflow:275223", "stackoverflow:299256"]
+  },
+  {
+    "query": "database connection",
+    "relevantDocIds": ["stackoverflow:120543", "stackoverflow:228596"]
+  },
+  {
+    "query": "callback function",
+    "relevantDocIds": ["stackoverflow:48585", "stackoverflow:166502"]
+  },
+  {
+    "query": "python list",
+    "relevantDocIds": ["stackoverflow:92318", "stackoverflow:52946"]
+  },
+  {
+    "query": "react hooks",
+    "relevantDocIds": ["stackoverflow:123456", "stackoverflow:789012"]
+  }
+]
