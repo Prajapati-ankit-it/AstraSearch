@@ -2,6 +2,7 @@ import { SignalRegistry } from './SignalRegistry';
 import { DocumentLengthSignal } from './examples/DocumentLengthSignal';
 import { PhraseBoostSignal } from './signals/PhraseBoostSignal';
 import { TermCoverageSignal } from './signals/TermCoverageSignal';
+import { ProximityBoostSignal } from './signals/ProximityBoostSignal';
 
 /**
  * Register all ranking signals here
@@ -28,6 +29,9 @@ export function registerSignals(): void {
 
   // Coverage complements BM25 by rewarding breadth of term match
   registry.register(new TermCoverageSignal());
+
+  // Proximity boost rewards documents where query terms appear close together
+  registry.register(new ProximityBoostSignal());
 
   // Future signals can be registered here:
   // registry.register(new PopularitySignal());

@@ -4,7 +4,7 @@ import { QueryIntent } from '../query/QueryIntent';
 /**
  * RankingContext provides structured metadata for ranking signals.
  * 
- * CONTRACT & SEMANTICS:
+ * NORMALIZATION CONTRACT:
  * 
  * query:
  *   Raw user input as received by the search endpoint.
@@ -19,6 +19,17 @@ import { QueryIntent } from '../query/QueryIntent';
  *   Deduplicated tokens derived from normalizedQuery after tokenization.
  *   Used by signals that operate on individual terms rather than full phrases.
  *   May have stopwords removed depending on tokenizer configuration.
+ * 
+ * doc.text (from SearchDocument):
+ *   Canonical normalized ingestion text.
+ *   Ingestion applies: NFKC Unicode normalization → lowercase → ASCII filtering → whitespace normalization.
+ *   Ranking signals must never re-normalize document text.
+ * 
+ * SYMMETRY REQUIREMENT:
+ * Ranking signals must use pre-normalized content without re-normalization.
+ * Normalization exists in exactly one place: ingestion pipeline + QueryNormalizer.
+ * 
+ * CONTRACT & SEMANTICS:
  * 
  * intent:
  *   Structural query metadata (single-term, multi-term, very short, phrase-like).
