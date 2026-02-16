@@ -28,7 +28,6 @@
 import { RankingSignal, SearchDocument } from '../RankingSignal';
 import { RankingContext } from '../RankingContext';
 import { logger } from '../../../utils/logger';
-import { config } from '../../../config/config';
 
 /**
  * Global weight for proximity boost signal.
