@@ -59,7 +59,6 @@ export class ProximityBoostSignal implements RankingSignal {
     }
 
     // Performance guard: skip proximity calculation for large candidate sets
-    // Note: Only log once per query to avoid performance issues with per-document logging
     if (context.candidateCount > config.proximityScanThreshold) {
       return 0;
     }
