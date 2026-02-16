@@ -147,16 +147,8 @@ export class ProximityBoostSignal implements RankingSignal {
   }
 
   private windowCoversAllTerms(termCounts: Map<string, number>, requiredTerms: Set<string>): boolean {
-    if (termCounts.size !== requiredTerms.size) {
-      return false;
-    }
-    
-    for (const term of requiredTerms) {
-      if (!termCounts.has(term)) {
-        return false;
-      }
-    }
-    
-    return true;
+    // termCounts only populated from requiredTerms.
+    // Equal sizes imply full coverage.
+    return termCounts.size === requiredTerms.size;
   }
 }

@@ -17,5 +17,5 @@ export const config = {
     defaultOffset: 0
   },
   phraseScanThreshold: parseInt(process.env.PHRASE_SCAN_THRESHOLD || '2000'),
-  proximityScanThreshold: parseInt(process.env.PROXIMITY_SCAN_THRESHOLD || '3000')
+  proximityScanThreshold: parseInt(process.env.PROXIMITY_SCAN_THRESHOLD || '2000')
 };
