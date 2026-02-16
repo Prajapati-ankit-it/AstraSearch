@@ -1,5 +1,6 @@
 import { SignalRegistry } from './SignalRegistry';
 import { DocumentLengthSignal } from './examples/DocumentLengthSignal';
+import { PhraseBoostSignal } from './signals/PhraseBoostSignal';
 
 /**
  * Register all ranking signals here
@@ -20,6 +21,9 @@ export function registerSignals(): void {
 
   // Example: Register document length signal (commented out for initial state)
   // registry.register(new DocumentLengthSignal());
+
+  // Register phrase boost signal
+  registry.register(new PhraseBoostSignal());
 
   // Future signals can be registered here:
   // registry.register(new PopularitySignal());

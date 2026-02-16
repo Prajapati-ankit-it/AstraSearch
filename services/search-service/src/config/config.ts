@@ -15,5 +15,6 @@ export const config = {
     defaultLimit: 10,
     maxLimit: 100,
     defaultOffset: 0
-  }
+  },
+  phraseScanThreshold: parseInt(process.env.PHRASE_SCAN_THRESHOLD || '2000')
 };
