@@ -3,11 +3,25 @@
  * 
  * Boosts documents that contain normalized contiguous query terms.
  * Only applies to multi-term queries that are not very short.
+ * 
+ * SEMANTICS & DESIGN:
+ * - Phrase boost operates on normalizedQuery to maintain symmetry with indexed documents
+ * - Stopwords are preserved intentionally to prefer exact user phrasing
+ * - This signal prefers exact contiguous phrasing over term-level matching
+ * - BM25 handles core term-level relevance independently
+ * - PhraseBoost is a secondary refinement layer that rewards precise phrase matches
+ * 
+ * PERFORMANCE:
+ * - Guard prevents O(N × text length) scanning under high candidate load
+ * - Introduces controlled ranking degradation for scalability
+ * - This is a deliberate tradeoff between precision and performance
+ * 
+ * Weight must be tuned empirically using evaluation framework.
  */
-
 import { RankingSignal, SearchDocument } from '../RankingSignal';
 import { RankingContext } from '../RankingContext';
 import { logger } from '../../../utils/logger';
+import { config } from '../../../config/config';
 
 /**
  * Global weight for the phrase boost signal.
@@ -26,7 +40,8 @@ export class PhraseBoostSignal implements RankingSignal {
   readonly weight = PHRASE_BOOST_WEIGHT;
 
   // Performance guard: prevent expensive phrase scanning on large candidate sets
-  private readonly PHRASE_SCAN_THRESHOLD = 2000;
+  // This avoids O(N × text length) scanning and introduces controlled ranking degradation
+  private readonly PHRASE_SCAN_THRESHOLD = config.phraseScanThreshold;
 
   score(doc: SearchDocument, query: string, context: RankingContext): number {
     // Apply only for multi-term queries that are not very short
@@ -41,7 +56,7 @@ export class PhraseBoostSignal implements RankingSignal {
 
     // Performance guard: skip phrase scanning for large candidate sets
     if (context.candidateCount > this.PHRASE_SCAN_THRESHOLD) {
-      logger.debug(`Phrase boost skipped: candidateCount ${context.candidateCount} exceeds threshold ${this.PHRASE_SCAN_THRESHOLD}`);
+      logger.info(`Phrase boost guard triggered: candidateCount=${context.candidateCount}, threshold=${this.PHRASE_SCAN_THRESHOLD}, query="${context.query}"`);
       return 0;
     }
 
