@@ -7,6 +7,7 @@
 
 import { RankingSignal, SearchDocument } from '../RankingSignal';
 import { RankingContext } from '../RankingContext';
+import { logger } from '../../../utils/logger';
 
 /**
  * Global weight for the phrase boost signal.
@@ -21,7 +22,7 @@ import { RankingContext } from '../RankingContext';
 const PHRASE_BOOST_WEIGHT = 0.3;
 
 export class PhraseBoostSignal implements RankingSignal {
-  readonly name = 'phraseBoost';
+  readonly name = 'phrase_boost';
   readonly weight = PHRASE_BOOST_WEIGHT;
 
   // Performance guard: prevent expensive phrase scanning on large candidate sets
@@ -33,13 +34,20 @@ export class PhraseBoostSignal implements RankingSignal {
       return 0;
     }
 
-    // Performance guard: skip phrase scanning for large candidate sets
-    if (context.candidateCount > this.PHRASE_SCAN_THRESHOLD) {
+    // Defensive safety: ensure document text exists and is string
+    if (!doc.text || typeof doc.text !== 'string') {
       return 0;
     }
 
-    // Use normalized query terms to form phrase
-    const phrase = context.queryTerms.join(' ');
+    // Performance guard: skip phrase scanning for large candidate sets
+    if (context.candidateCount > this.PHRASE_SCAN_THRESHOLD) {
+      logger.debug(`Phrase boost skipped: candidateCount ${context.candidateCount} exceeds threshold ${this.PHRASE_SCAN_THRESHOLD}`);
+      return 0;
+    }
+
+    // Use normalized full query string for phrase matching
+    // Preserves stopwords and true contiguous semantics
+    const phrase = query;
 
     // Check if normalized contiguous query terms exist in document text
     return doc.text.includes(phrase) ? 1 : 0;
