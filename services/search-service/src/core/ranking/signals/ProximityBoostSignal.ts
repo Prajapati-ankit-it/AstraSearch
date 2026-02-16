@@ -62,7 +62,7 @@ export class ProximityBoostSignal implements RankingSignal {
 
     // Performance guard: skip proximity calculation for large candidate sets
     if (context.candidateCount > this.PROXIMITY_SCAN_THRESHOLD) {
-      logger.debug(`Proximity boost skipped: candidateCount ${context.candidateCount} exceeds threshold ${this.PROXIMITY_SCAN_THRESHOLD}, query="${context.query}"`);
+      logger.info(`Proximity boost skipped: candidateCount ${context.candidateCount} exceeds threshold ${this.PROXIMITY_SCAN_THRESHOLD}, query="${context.query}"`);
       return 0;
     }
 
