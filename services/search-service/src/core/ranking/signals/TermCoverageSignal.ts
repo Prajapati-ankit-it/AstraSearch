@@ -49,6 +49,9 @@ export class TermCoverageSignal implements RankingSignal {
       return 0;
     }
 
+    // NOTE: doc.text is already normalized during ingestion pipeline
+    // Ingestion applies: NFKC Unicode normalization → lowercase → ASCII filtering → whitespace normalization
+    // Ranking layer must NOT re-normalize to maintain single-source-of-truth
     // Tokenize document text ONCE for O(L + M) complexity
     const docTokens = new Set(
       doc.text.split(/\s+/).filter(Boolean)
