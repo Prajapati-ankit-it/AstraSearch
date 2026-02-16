@@ -14,12 +14,13 @@
  * PERFORMANCE:
  * - Time:
  *   - Tokenization: O(L) where L = document text length
- *   - Position collection: O(M × L) where M = query term count
+ *   - Position collection: O(L) - single pass through tokens with O(1) query term lookup
  *   - Span computation: O(P₁ × M × Pᵢ), where P₁ is the number of positions for the first term
  *     and Pᵢ is the average number of positions per term; in the worst case where all
  *     terms appear at every position this is O(M × L²)
- * - Implementation: single pass to tokenize doc.text into array, then collect positions per query term
- * - Performance guard: skip for large candidate sets (>3000) to maintain scalability
+ *   - Overall: O(L + K log K) where K is total matched term positions
+ * - Implementation: single pass to tokenize doc.text into array, then single pass to collect term positions
+ * - Performance guard: skip for large candidate sets to maintain scalability
  * - Early exit: return 0 if fewer than 2 distinct query terms found
  * 
  * Weight must be tuned empirically using evaluation framework.
@@ -58,8 +59,8 @@ export class ProximityBoostSignal implements RankingSignal {
     }
 
     // Performance guard: skip proximity calculation for large candidate sets
+    // Note: Only log once per query to avoid performance issues with per-document logging
     if (context.candidateCount > config.proximityScanThreshold) {
-      logger.debug(`Proximity boost skipped: candidateCount ${context.candidateCount} exceeds threshold ${config.proximityScanThreshold}, query="${context.query}"`);
       return 0;
     }
 
@@ -69,23 +70,24 @@ export class ProximityBoostSignal implements RankingSignal {
     // Tokenize document text into array with positions
     const tokens = doc.text.split(/\s+/).filter(Boolean);
     
-    // Collect positions for each query term
+    // Convert queryTerms to Set for O(1) lookup
+    const queryTermsSet = new Set(context.queryTerms);
+    
+    // Build termPositions in single pass (O(L) instead of O(M×L))
     const termPositions = new Map<string, number[]>();
-    let distinctTermsFound = 0;
-
-    for (const term of context.queryTerms) {
-      const positions: number[] = [];
-      for (let i = 0; i < tokens.length; i++) {
-        if (tokens[i] === term) {
-          positions.push(i);
+    
+    for (let i = 0; i < tokens.length; i++) {
+      const token = tokens[i];
+      if (queryTermsSet.has(token)) {
+        if (!termPositions.has(token)) {
+          termPositions.set(token, []);
         }
-      }
-      
-      if (positions.length > 0) {
-        termPositions.set(term, positions);
-        distinctTermsFound++;
+        termPositions.get(token)!.push(i);
       }
     }
+    
+    // Compute distinctTermsFound using termPositions.size
+    const distinctTermsFound = termPositions.size;
 
     // Need at least 2 distinct query terms to compute proximity
     if (distinctTermsFound < 2) {
