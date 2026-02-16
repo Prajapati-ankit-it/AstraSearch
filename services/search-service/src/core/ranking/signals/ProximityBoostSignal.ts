@@ -140,7 +140,7 @@ export class ProximityBoostSignal implements RankingSignal {
     // For queries with N distinct terms, the minimum achievable span is (N - 1):
     //   - terms = 2, min span = 1 (adjacent positions) → score = 1 / (1 + 1) ≈ 0.5
     //   - terms = 3, min span = 2 (e.g., positions 0,1,2) → score = 1 / (1 + 2) ≈ 0.33
-    // span = 2 → score ≈ 0.33
+    //   - terms = 2, span = 4 (e.g., positions 0 and 4) → score = 1 / (1 + 4) = 0.2 (farther apart = weaker boost)
     const proximityScore = 1 / (1 + minSpan);
 
     return proximityScore;
