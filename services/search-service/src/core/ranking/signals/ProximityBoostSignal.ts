@@ -135,9 +135,9 @@ export class ProximityBoostSignal implements RankingSignal {
     }
 
     // Compute proximity score: closer terms = higher score
-    // span = 0 (same position) → score = 1.0
-    // span = 1 (adjacent) → score = 0.5
-    // span = 2 → score = 0.33
+    // Note: for distinct query terms, the minimum achievable span is 1 (adjacent positions).
+    // span = 1 (adjacent) → score ≈ 0.5
+    // span = 2 → score ≈ 0.33
     const proximityScore = 1 / (1 + minSpan);
 
     return proximityScore;
