@@ -1,0 +1,65 @@
+/**
+ * Term Coverage Signal
+ * 
+ * Boosts documents that match more distinct original query terms.
+ * Only applies to queries with 2 or more terms.
+ * 
+ * SEMANTICS & DESIGN:
+ * - Coverage complements BM25 by rewarding breadth of term match
+ * - Uses original deduplicated queryTerms (not synonym-expanded terms)
+ * - Simple coverage ratio: matchedTerms / totalQueryTerms
+ * - Provides stability to ranking alongside BM25 term-level scoring
+ * - Maintains strict separation from retrieval and normalization logic
+ * 
+ * PERFORMANCE:
+ * - O(n × m) where n = document text length, m = query terms count
+ * - No additional guards needed for typical query sizes
+ * - Simple string.includes() checks for each term
+ * 
+ * Weight must be tuned empirically using evaluation framework.
+ */
+
+import { RankingSignal, SearchDocument } from '../RankingSignal';
+import { RankingContext } from '../RankingContext';
+
+/**
+ * Global weight for term coverage signal.
+ *
+ * Rationale:
+ * - Coverage matches should meaningfully improve ranking when they occur,
+ *   but must not dominate core relevance signals.
+ * - A value of 0.4 keeps this signal as a secondary boost that
+ *   complements BM25 without overwhelming term-level relevance.
+ * - Coverage provides breadth dimension to BM25's depth scoring.
+ */
+const TERM_COVERAGE_WEIGHT = 0.4;
+
+export class TermCoverageSignal implements RankingSignal {
+  readonly name = 'term_coverage';
+  readonly weight = TERM_COVERAGE_WEIGHT;
+
+  score(doc: SearchDocument, query: string, context: RankingContext): number {
+    // Apply only to queries with 2 or more terms
+    if (context.queryTerms.length < 2) {
+      return 0;
+    }
+
+    // Defensive safety: ensure document text exists and is string
+    if (!doc.text || typeof doc.text !== 'string') {
+      return 0;
+    }
+
+    // Count distinct query terms that appear in document text
+    let matchedTerms = 0;
+    const totalQueryTerms = context.queryTerms.length;
+
+    for (const term of context.queryTerms) {
+      if (doc.text.includes(term)) {
+        matchedTerms++;
+      }
+    }
+
+    // Return coverage ratio (0 to 1)
+    return matchedTerms / totalQueryTerms;
+  }
+}
