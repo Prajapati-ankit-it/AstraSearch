@@ -41,9 +41,6 @@ export class ProximityBoostSignal implements RankingSignal {
   readonly name = 'proximity_boost';
   readonly weight = PROXIMITY_WEIGHT;
 
-  // Performance guard: prevent expensive proximity calculation on large candidate sets
-  private readonly PROXIMITY_SCAN_THRESHOLD = 3000;
-
   score(doc: SearchDocument, query: string, context: RankingContext): number {
     // Apply only to queries with 2 or more terms
     if (context.queryTerms.length < 2) {
@@ -56,8 +53,8 @@ export class ProximityBoostSignal implements RankingSignal {
     }
 
     // Performance guard: skip proximity calculation for large candidate sets
-    if (context.candidateCount > this.PROXIMITY_SCAN_THRESHOLD) {
-      logger.debug(`Proximity boost skipped: candidateCount ${context.candidateCount} exceeds threshold ${this.PROXIMITY_SCAN_THRESHOLD}, query="${context.query}"`);
+    if (context.candidateCount > config.proximityScanThreshold) {
+      logger.debug(`Proximity boost skipped: candidateCount ${context.candidateCount} exceeds threshold ${config.proximityScanThreshold}, query="${context.query}"`);
       return 0;
     }
 
@@ -90,43 +87,48 @@ export class ProximityBoostSignal implements RankingSignal {
       return 0;
     }
 
-    // Compute minimal span covering all matched query terms
-    let minSpan = Infinity;
-    
-    // For each combination of positions (one from each term), compute span
-    const termNames = Array.from(termPositions.keys());
-    const allPositions = termNames.map(term => termPositions.get(term)!);
-    
-    // Find minimal span by considering all combinations
-    // For efficiency, we'll use a greedy approach: try each position of first term
-    for (const firstPos of allPositions[0]) {
-      let currentMin = firstPos;
-      let currentMax = firstPos;
-      
-      // Expand span to include at least one position from each other term
-      for (let i = 1; i < allPositions.length; i++) {
-        const positions = allPositions[i];
-        // Find position closest to current span
-        let closestPos = positions[0];
-        let minDistance = Math.abs(closestPos - currentMin);
-        
-        for (const pos of positions) {
-          const distance = Math.min(
-            Math.abs(pos - currentMin),
-            Math.abs(pos - currentMax)
-          );
-          if (distance < minDistance) {
-            minDistance = distance;
-            closestPos = pos;
-          }
-        }
-        
-        currentMin = Math.min(currentMin, closestPos);
-        currentMax = Math.max(currentMax, closestPos);
+    // Compute minimal span covering all matched query terms using sliding window
+    // Build flattened array of all term positions
+    const allPositions: Array<{term: string, pos: number}> = [];
+    for (const [term, positions] of termPositions.entries()) {
+      for (const pos of positions) {
+        allPositions.push({ term, pos });
       }
-      
-      const span = currentMax - currentMin;
-      minSpan = Math.min(minSpan, span);
+    }
+
+    // Sort positions by position
+    allPositions.sort((a, b) => a.pos - b.pos);
+
+    // Use sliding window to find minimal span covering all terms
+    let minSpan = Infinity;
+    const requiredTerms = new Set(termPositions.keys());
+    const termCounts = new Map<string, number>();
+
+    let left = 0;
+    for (let right = 0; right < allPositions.length; right++) {
+      const rightItem = allPositions[right];
+      termCounts.set(rightItem.term, (termCounts.get(rightItem.term) || 0) + 1);
+
+      // Check if window covers all required terms
+      while (this.windowCoversAllTerms(termCounts, requiredTerms)) {
+        const currentSpan = rightItem.pos - allPositions[left].pos;
+        minSpan = Math.min(minSpan, currentSpan);
+
+        // Shrink window from left
+        const leftItem = allPositions[left];
+        const leftCount = termCounts.get(leftItem.term)!;
+        if (leftCount === 1) {
+          termCounts.delete(leftItem.term);
+        } else {
+          termCounts.set(leftItem.term, leftCount - 1);
+        }
+        left++;
+      }
+    }
+
+    // If no valid window found, return 0
+    if (minSpan === Infinity) {
+      return 0;
     }
 
     // Compute proximity score: closer terms = higher score
@@ -136,5 +138,19 @@ export class ProximityBoostSignal implements RankingSignal {
     const proximityScore = 1 / (1 + minSpan);
 
     return proximityScore;
+  }
+
+  private windowCoversAllTerms(termCounts: Map<string, number>, requiredTerms: Set<string>): boolean {
+    if (termCounts.size !== requiredTerms.size) {
+      return false;
+    }
+    
+    for (const term of requiredTerms) {
+      if (!termCounts.has(term)) {
+        return false;
+      }
+    }
+    
+    return true;
   }
 }
