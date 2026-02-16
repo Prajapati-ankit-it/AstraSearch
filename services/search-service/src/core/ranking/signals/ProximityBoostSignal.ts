@@ -12,7 +12,12 @@
  * - Maintains strict separation from indexing and retrieval logic
  * 
  * PERFORMANCE:
- * - Time: O(L + M) where L = document text length (tokenization) and M = query term count
+ * - Time:
+ *   - Tokenization: O(L) where L = document text length
+ *   - Position collection: O(M × L) where M = query term count
+ *   - Span computation: O(P₁ × M × Pᵢ), where P₁ is the number of positions for the first term
+ *     and Pᵢ is the average number of positions per term; in the worst case where all
+ *     terms appear at every position this is O(M × L²)
  * - Implementation: single pass to tokenize doc.text into array, then collect positions per query term
  * - Performance guard: skip for large candidate sets (>3000) to maintain scalability
  * - Early exit: return 0 if fewer than 2 distinct query terms found
