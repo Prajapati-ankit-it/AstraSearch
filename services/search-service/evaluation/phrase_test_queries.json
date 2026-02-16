@@ -1,0 +1,14 @@
+[
+  {
+    "query": "javascript tutorial",
+    "relevantDocIds": ["stackoverflow:109597", "stackoverflow:275223"]
+  },
+  {
+    "query": "database connection",
+    "relevantDocIds": ["stackoverflow:120543", "stackoverflow:228596"]
+  },
+  {
+    "query": "callback function",
+    "relevantDocIds": ["stackoverflow:48585", "stackoverflow:166502"]
+  }
+]
