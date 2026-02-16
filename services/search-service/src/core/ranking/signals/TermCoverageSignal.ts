@@ -39,23 +39,32 @@ export class TermCoverageSignal implements RankingSignal {
   readonly weight = TERM_COVERAGE_WEIGHT;
 
   score(doc: SearchDocument, query: string, context: RankingContext): number {
+    // Defensive check: ensure document text exists and is string
+    if (!doc.text || typeof doc.text !== 'string') {
+      return 0;
+    }
+
     // Apply only to queries with 2 or more terms
     if (context.queryTerms.length < 2) {
       return 0;
     }
 
-    // Defensive safety: ensure document text exists and is string
-    if (!doc.text || typeof doc.text !== 'string') {
-      return 0;
-    }
+    // Tokenize document text ONCE for O(L + M) complexity
+    const docTokens = new Set(
+      doc.text.split(/\s+/).filter(Boolean)
+    );
 
-    // Count distinct query terms that appear in document text
+    // Count distinct query terms that appear as full tokens in document
     let matchedTerms = 0;
     const totalQueryTerms = context.queryTerms.length;
 
     for (const term of context.queryTerms) {
-      if (doc.text.includes(term)) {
+      if (docTokens.has(term)) {
         matchedTerms++;
+        // Early exit: all terms matched
+        if (matchedTerms === totalQueryTerms) {
+          break;
+        }
       }
     }
 
