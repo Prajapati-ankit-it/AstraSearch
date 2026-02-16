@@ -117,6 +117,7 @@ export class SearchEngine {
       corpusStats,
       queryTerms: originalTerms,
       query: originalQuery,
+      normalizedQuery: normalizedQuery,
       candidateCount: candidateDocs.size,
       intent: queryIntent
     };

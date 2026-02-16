@@ -45,9 +45,9 @@ export class PhraseBoostSignal implements RankingSignal {
       return 0;
     }
 
-    // Use normalized full query string for phrase matching
-    // Preserves stopwords and true contiguous semantics
-    const phrase = query;
+    // Use normalized query string for phrase matching
+    // Preserves normalization symmetry with indexed documents
+    const phrase = context.normalizedQuery;
 
     // Check if normalized contiguous query terms exist in document text
     return doc.text.includes(phrase) ? 1 : 0;

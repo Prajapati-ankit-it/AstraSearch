@@ -5,6 +5,7 @@ export interface RankingContext {
   readonly corpusStats: CorpusStats;
   readonly queryTerms: string[];
   readonly query: string;
+  readonly normalizedQuery: string;
   readonly candidateCount: number;
   readonly intent: QueryIntent;
 }
