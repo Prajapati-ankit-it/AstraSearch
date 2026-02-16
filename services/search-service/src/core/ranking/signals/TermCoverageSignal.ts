@@ -12,9 +12,9 @@
  * - Maintains strict separation from retrieval and normalization logic
  * 
  * PERFORMANCE:
- * - O(n × m) where n = document text length, m = query terms count
- * - No additional guards needed for typical query sizes
- * - Simple string.includes() checks for each term
+ * - Time: O(L + m) where L = document text length (tokenization) and m = query term count
+ * - Implementation: single pass to tokenize doc.text into a Set, then Set.has() per query term
+ * - Early-exit once all distinct query terms are matched; no additional guards needed for typical query sizes
  * 
  * Weight must be tuned empirically using evaluation framework.
  */
