@@ -3,6 +3,25 @@ import { PHRASE_SIGNAL_NAME } from './signals/PhraseBoostSignal';
 import { PROXIMITY_SIGNAL_NAME } from './signals/ProximityBoostSignal';
 
 /**
+ * Query-length-aware dampening multipliers.
+ * 
+ * Rationale:
+ * - Structural signals (phrase, proximity, coverage) become less discriminative for longer queries
+ * - Short queries (1 term): structural signals irrelevant (0.0x)
+ * - Medium queries (2-3 terms): full strength (1.0x) - optimal for structural signals
+ * - Long queries (4-6 terms): slight dampening (0.8x) - structural signals less discriminative
+ * - Very long queries (7+ terms): stronger dampening (0.6x) - structural signals noisy
+ * 
+ * This preserves recall while reducing structural signal noise for complex queries.
+ */
+const QUERY_LENGTH_MULTIPLIERS = {
+  SINGLE_TERM: 0.0,    // termCount <= 1
+  MEDIUM_QUERY: 1.0,   // termCount 2-3
+  LONG_QUERY: 0.8,     // termCount 4-6
+  VERY_LONG_QUERY: 0.6  // termCount >= 7
+} as const;
+
+/**
  * Intent-aware weight modulation.
  *
  * The adjuster currently applies a simple, condition-based amplification.
@@ -31,20 +50,50 @@ const PHRASE_LIKE_PROXIMITY_MULTIPLIER = 1.3;
 
 export class IntentWeightAdjuster {
 
+  /**
+   * Computes query-length-aware dampening multiplier.
+   * 
+   * Structural signals become less discriminative for longer queries.
+   * This preserves recall while reducing structural signal noise.
+   * 
+   * @param termCount Number of terms in the query
+   * @returns Dampening multiplier for structural signals
+   */
+  private static getQueryLengthMultiplier(termCount: number): number {
+    if (termCount <= 1) {
+      return QUERY_LENGTH_MULTIPLIERS.SINGLE_TERM;
+    }
+    if (termCount <= 3) {
+      return QUERY_LENGTH_MULTIPLIERS.MEDIUM_QUERY;
+    }
+    if (termCount <= 6) {
+      return QUERY_LENGTH_MULTIPLIERS.LONG_QUERY;
+    }
+    return QUERY_LENGTH_MULTIPLIERS.VERY_LONG_QUERY;
+  }
+
   static adjust(signalName: string, baseWeight: number, intent: QueryIntent): number {
+
+    let weight = baseWeight;
 
     // Phrase-like queries take highest priority
     if (intent.isPhraseLike) {
       if (signalName === PHRASE_SIGNAL_NAME) {
-        return baseWeight * PHRASE_LIKE_PHRASE_MULTIPLIER;
+        weight = baseWeight * PHRASE_LIKE_PHRASE_MULTIPLIER;
       }
       if (signalName === PROXIMITY_SIGNAL_NAME) {
-        return baseWeight * PHRASE_LIKE_PROXIMITY_MULTIPLIER;
+        weight = baseWeight * PHRASE_LIKE_PROXIMITY_MULTIPLIER;
       }
-      return baseWeight;
     }
 
-    // No stacking. Other intents currently do not adjust weight.
-    return baseWeight;
+    // Apply query-length dampening to structural signals only
+    if (signalName === PHRASE_SIGNAL_NAME || 
+        signalName === PROXIMITY_SIGNAL_NAME || 
+        signalName === 'term_coverage') {
+      const lengthMultiplier = this.getQueryLengthMultiplier(intent.termCount);
+      weight *= lengthMultiplier;
+    }
+
+    return weight;
   }
 }
