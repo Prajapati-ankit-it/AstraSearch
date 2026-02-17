@@ -7,9 +7,13 @@
  * SEMANTICS & DESIGN:
  * - Exact match provides highest precision signal
  * - Compares normalized document text to normalized query for exact equality
- * - Orthogonal to phrase and proximity signals
- * - No recall impact - only exact matches receive boost
+ * - Composes with phrase and proximity signals; exact matches may also trigger those signals when conditions overlap, by design
  * - Maintains strict separation from indexing and retrieval logic
+ * 
+ * DESIGN NOTE:
+ * Exact match represents the strongest structural alignment between query and document.
+ * When it occurs, other structural signals such as phrase and proximity may also fire.
+ * This additive behavior is intentional and reflects multiple independent evidences of high relevance.
  * 
  * PERFORMANCE:
  * - Time: O(1) per document - simple string comparison
