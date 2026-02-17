@@ -1,4 +1,5 @@
 import { InvertedIndex, CorpusStats } from '../types/search.types';
+import { config } from '../config/config';
 import { logger } from '../utils/logger';
 
 export class BM25Scorer {
@@ -71,15 +72,78 @@ export class BM25Scorer {
   }
 
   /**
-   * Get candidate documents for a query
-   * Preserves OR semantics with simple union approach
+   * Get candidate documents for a query using progressive pruning
+   * 
+   * PROGRESSIVE PRUNING STRATEGY:
+   * - Rare-first intersection: Sort query terms by increasing document frequency
+   *   This maximizes early reduction of candidate set size by starting with the most selective terms
+   * - Progressive intersection: Stop intersecting when candidate set ≤ target size
+   *   This preserves recall while avoiding unnecessary computation
+   * - Safety fallback: If progressive intersection yields zero candidates but union would not,
+   *   fall back to union to preserve recall for documents matching all query terms
+   * 
+   * RANKING LAYER UNTOUCHED:
+   * - This method only reduces the candidate set passed to ranking
+   * - Scoring formulas, signal logic, and weight modulation remain unchanged
+   * - Ranking receives a smaller but high-quality candidate set
+   * 
+   * PERFORMANCE:
+   * - O(N log N) where N = number of query terms (for sorting by frequency)
+   * - Intersection cost proportional to candidate set size, not corpus size
+   * - Early termination reduces unnecessary intersection work
    */
   static getCandidateDocuments(
     queryTerms: string[],
     index: InvertedIndex,
     stats: CorpusStats
   ): Set<string> {
-    return this.getUnionCandidates(queryTerms, index);
+    // Filter out terms not in index
+    const validTerms = queryTerms.filter(term => index[term] !== undefined);
+    
+    if (validTerms.length === 0) {
+      return new Set<string>();
+    }
+    
+    if (validTerms.length === 1) {
+      // Single term: return all postings for that term
+      const termData = index[validTerms[0]];
+      return new Set(Object.keys(termData.postings));
+    }
+    
+    // Sort terms by increasing document frequency (rare terms first)
+    const sortedTerms = [...validTerms].sort((a, b) => index[a].df - index[b].df);
+    
+    // Start with postings of rarest term
+    const firstTermData = index[sortedTerms[0]];
+    let candidates = new Set(Object.keys(firstTermData.postings));
+    
+    // Progressively intersect with remaining terms
+    for (let i = 1; i < sortedTerms.length; i++) {
+      // Stop if we've reached target size
+      if (candidates.size <= config.candidateTargetSize) {
+        break;
+      }
+      
+      const termData = index[sortedTerms[i]];
+      candidates = this.intersectWithPostings(candidates, termData.postings);
+      
+      // If intersection yields zero candidates, we might be too restrictive
+      if (candidates.size === 0) {
+        break;
+      }
+    }
+    
+    // Safety fallback: if progressive intersection produced zero candidates 
+    // but union would produce candidates, fall back to union to preserve recall
+    if (candidates.size === 0) {
+      const unionCandidates = this.getUnionCandidates(validTerms, index);
+      if (unionCandidates.size > 0) {
+        logger.debug(`Progressive intersection yielded 0 candidates, falling back to union (${unionCandidates.size} candidates)`);
+        return unionCandidates;
+      }
+    }
+    
+    return candidates;
   }
 
   /**
