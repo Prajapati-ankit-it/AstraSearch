@@ -22,6 +22,8 @@
 import { RankingSignal, SearchDocument } from '../RankingSignal';
 import { RankingContext } from '../RankingContext';
 
+export const TERM_COVERAGE_SIGNAL_NAME = 'term_coverage';
+
 /**
  * Global weight for term coverage signal.
  *

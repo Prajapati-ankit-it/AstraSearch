@@ -1,6 +1,7 @@
 import { QueryIntent } from '../query/QueryIntent';
 import { PHRASE_SIGNAL_NAME } from './signals/PhraseBoostSignal';
 import { PROXIMITY_SIGNAL_NAME } from './signals/ProximityBoostSignal';
+import { TERM_COVERAGE_SIGNAL_NAME } from './signals/TermCoverageSignal';
 
 /**
  * Query-length-aware dampening multipliers.
@@ -24,11 +25,18 @@ const QUERY_LENGTH_MULTIPLIERS = {
 /**
  * Intent-aware weight modulation.
  *
- * The adjuster currently applies a simple, condition-based amplification.
- * Only phrase-like queries modify weights.
+ * The adjuster applies a simple, condition-based amplification with query-length-aware dampening.
+ * Only phrase-like queries modify weights through amplification.
  * All other intents return baseWeight unchanged.
  * No stacking occurs because only one condition exists.
  * Future intent profiles must explicitly define exclusivity if introduced.
+ *
+ * MULTIPLIER INTERACTION:
+ * - Query-length dampening applies to structural signals to prevent over-influence for long queries.
+ * - Phrase-like amplification is relative, not absolute.
+ * - Final weight = baseWeight × phraseMultiplier × lengthMultiplier.
+ * - For long phrase-like queries, amplification remains relative to same-length non-phrase queries.
+ * - ExactMatchSignal is intentionally excluded from dampening because exact equality becomes more discriminative for longer queries.
  *
  * This layer modulates signal weights based on query intent.
  * Some legacy signals may also inspect intent internally.
@@ -89,7 +97,7 @@ export class IntentWeightAdjuster {
     // Apply query-length dampening to structural signals only
     if (signalName === PHRASE_SIGNAL_NAME || 
         signalName === PROXIMITY_SIGNAL_NAME || 
-        signalName === 'term_coverage') {
+        signalName === TERM_COVERAGE_SIGNAL_NAME) {
       const lengthMultiplier = this.getQueryLengthMultiplier(intent.termCount);
       weight *= lengthMultiplier;
     }
