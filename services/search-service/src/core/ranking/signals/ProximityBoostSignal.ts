@@ -11,12 +11,20 @@
  * - Works with normalized document text and deduplicated query terms
  * - Maintains strict separation from indexing and retrieval logic
  * 
+ * SEMANTIC NOTE:
+ * Proximity is computed over the set of query terms that actually appear in the document.
+ * It does NOT require all query terms to be present.
+ * 
+ * Missing terms are handled separately by TermCoverageSignal.
+ * This separation avoids double-penalizing documents and keeps signal responsibilities orthogonal.
+ * 
  * PERFORMANCE:
  * - Time:
  *   - Tokenization: O(L) where L = document text length
  *   - Position collection: O(L) - single pass through tokens with O(1) query term lookup
- *   - Span computation (sliding window over matched positions): O(K) where K is total matched term positions
- *     (each position is processed at most twice: once when expanding the window, once when shrinking it)
+ *   - Span computation: O(P₁ × M × Pᵢ), where P₁ is the number of positions for the first term
+ *     and Pᵢ is the average number of positions per term; in the worst case where all
+ *     terms appear at every position this is O(M × L²)
  *   - Overall: O(L + K log K) where K is total matched term positions
  * - Implementation: single pass to tokenize doc.text into array, then single pass to collect term positions
  * - Performance guard: skip for large candidate sets to maintain scalability
@@ -102,6 +110,10 @@ export class ProximityBoostSignal implements RankingSignal {
     }
 
     // Sort positions by position
+    // We flatten and sort positions for clarity and correctness.
+    // Although positions are discovered in ascending order per term,
+    // interleaving across terms requires global sorting.
+    // Given small query term counts, O(K log K) is acceptable.
     allPositions.sort((a, b) => a.pos - b.pos);
 
     // Use sliding window to find minimal span covering all terms
