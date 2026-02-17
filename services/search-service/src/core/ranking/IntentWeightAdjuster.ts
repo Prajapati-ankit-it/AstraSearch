@@ -1,51 +1,39 @@
 import { QueryIntent } from '../query/QueryIntent';
+import { PHRASE_SIGNAL_NAME } from './signals/PhraseBoostSignal';
+import { PROXIMITY_SIGNAL_NAME } from './signals/ProximityBoostSignal';
 
 /**
- * Intent-aware Weight Adjustment
- * 
- * Modulates signal weights based on query intent characteristics.
- * 
- * DESIGN PRINCIPLES:
- * - Signals remain pure: scoring logic never changes based on intent
- * - Intent modifies weight only: preserves signal independence
- * - Prevents signal coupling: signals don't need to know about intent
- * - Maintains ranking modularity: clear separation of concerns
- * 
- * This approach allows signals to focus on their core scoring logic
- * while intent-based tuning happens centrally and transparently.
+ * Intent-aware weight modulation.
+ *
+ * Intent profile is treated as mutually exclusive.
+ * Only one profile is applied per query.
+ *
+ * This prevents multiplier stacking and keeps tuning predictable.
+ *
+ * This layer modulates signal weights based on query intent.
+ * Some legacy signals may also inspect intent internally.
+ * New signals SHOULD remain intent-agnostic and rely on this layer for tuning.
  */
+
+const PHRASE_LIKE_PHRASE_MULTIPLIER = 1.5;
+const PHRASE_LIKE_PROXIMITY_MULTIPLIER = 1.3;
+
 export class IntentWeightAdjuster {
-  static adjust(
-    signalName: string,
-    baseWeight: number,
-    intent: QueryIntent
-  ): number {
-    let weight = baseWeight;
 
-    // Single-term queries: reduce structural signal weights
-    if (intent.isSingleTerm) {
-      if (signalName === 'phrase_boost' || signalName === 'proximity_boost') {
-        weight *= 0.5;
-      }
-    }
+  static adjust(signalName: string, baseWeight: number, intent: QueryIntent): number {
 
-    // Very short queries: moderate reduction of structural signals
-    if (intent.isVeryShort) {
-      if (signalName === 'phrase_boost' || signalName === 'proximity_boost') {
-        weight *= 0.7;
-      }
-    }
-
-    // Phrase-like queries: boost structural signals
+    // Phrase-like queries take highest priority
     if (intent.isPhraseLike) {
-      if (signalName === 'phrase_boost') {
-        weight *= 1.5;
+      if (signalName === PHRASE_SIGNAL_NAME) {
+        return baseWeight * PHRASE_LIKE_PHRASE_MULTIPLIER;
       }
-      if (signalName === 'proximity_boost') {
-        weight *= 1.3;
+      if (signalName === PROXIMITY_SIGNAL_NAME) {
+        return baseWeight * PHRASE_LIKE_PROXIMITY_MULTIPLIER;
       }
+      return baseWeight;
     }
 
-    return weight;
+    // No stacking. Other intents currently do not adjust weight.
+    return baseWeight;
   }
 }

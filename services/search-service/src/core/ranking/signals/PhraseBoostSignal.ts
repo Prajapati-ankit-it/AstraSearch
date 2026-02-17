@@ -18,6 +18,8 @@
  * 
  * Weight must be tuned empirically using evaluation framework.
  */
+
+export const PHRASE_SIGNAL_NAME = 'phrase_boost';
 import { RankingSignal, SearchDocument } from '../RankingSignal';
 import { RankingContext } from '../RankingContext';
 import { config } from '../../../config/config';
@@ -35,7 +37,7 @@ import { config } from '../../../config/config';
 const PHRASE_BOOST_WEIGHT = 0.3;
 
 export class PhraseBoostSignal implements RankingSignal {
-  readonly name = 'phrase_boost';
+  readonly name = PHRASE_SIGNAL_NAME;
   readonly weight = PHRASE_BOOST_WEIGHT;
 
   score(doc: SearchDocument, query: string, context: RankingContext): number {

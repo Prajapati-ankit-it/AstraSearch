@@ -23,6 +23,17 @@ export class Ranker {
   ): RankedDocument {
     const activeSignals = this.registry.getActiveSignals();
     
+    // Precompute adjusted weights once per query (not per document)
+    const adjustedWeights = new Map<string, number>();
+    for (const signal of activeSignals) {
+      const adjusted = IntentWeightAdjuster.adjust(
+        signal.name,
+        signal.weight,
+        context.intent
+      );
+      adjustedWeights.set(signal.name, adjusted);
+    }
+    
     let signalScore = 0;
     for (const signal of activeSignals) {
       try {
@@ -34,13 +45,7 @@ export class Ranker {
           continue; // Skip this signal
         }
         
-        const adjustedWeight = IntentWeightAdjuster.adjust(
-          signal.name,
-          signal.weight,
-          context.intent
-        );
-
-        signalScore += score * adjustedWeight;
+        signalScore += score * adjustedWeights.get(signal.name)!;
       } catch (error) {
         // Signals must never crash ranking
         logger.warn(`Signal ${signal.name} failed for document ${docId}:`, error);
