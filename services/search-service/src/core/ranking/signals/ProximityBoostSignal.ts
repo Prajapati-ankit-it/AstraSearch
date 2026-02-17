@@ -37,6 +37,8 @@ import { RankingSignal, SearchDocument } from '../RankingSignal';
 import { RankingContext } from '../RankingContext';
 import { config } from '../../../config/config';
 
+export const PROXIMITY_SIGNAL_NAME = 'proximity_boost';
+
 /**
  * Global weight for proximity boost signal.
  *
@@ -50,7 +52,7 @@ import { config } from '../../../config/config';
 const PROXIMITY_WEIGHT = 0.15;
 
 export class ProximityBoostSignal implements RankingSignal {
-  readonly name = 'proximity_boost';
+  readonly name = PROXIMITY_SIGNAL_NAME;
   readonly weight = PROXIMITY_WEIGHT;
 
   score(doc: SearchDocument, query: string, context: RankingContext): number {

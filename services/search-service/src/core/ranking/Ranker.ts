@@ -1,6 +1,7 @@
 import { Document } from '../../types/search.types';
 import { RankingContext } from './RankingContext';
 import { SignalRegistry } from './SignalRegistry';
+import { IntentWeightAdjuster } from './IntentWeightAdjuster';
 import { logger } from '../../utils/logger';
 
 export interface RankedDocument {
@@ -13,17 +14,17 @@ export interface RankedDocument {
 export class Ranker {
   private static readonly registry = SignalRegistry.getInstance();
 
-  static rank(
+  private static rank(
     docId: string,
     bm25Score: number,
     document: Document,
     query: string,
-    context: RankingContext
+    context: RankingContext,
+    signals: any[],
+    adjustedWeights: Map<string, number>
   ): RankedDocument {
-    const activeSignals = this.registry.getActiveSignals();
-    
     let signalScore = 0;
-    for (const signal of activeSignals) {
+    for (const signal of signals) {
       try {
         const score = signal.score(document, query, context);
         
@@ -33,7 +34,7 @@ export class Ranker {
           continue; // Skip this signal
         }
         
-        signalScore += score * signal.weight;
+        signalScore += score * (adjustedWeights.get(signal.name) ?? signal.weight);
       } catch (error) {
         // Signals must never crash ranking
         logger.warn(`Signal ${signal.name} failed for document ${docId}:`, error);
@@ -56,10 +57,23 @@ export class Ranker {
     query: string,
     context: RankingContext
   ): RankedDocument[] {
+    const activeSignals = this.registry.getActiveSignals();
+    
+    // Precompute adjusted weights once per query (not per document)
+    const adjustedWeights = new Map<string, number>();
+    for (const signal of activeSignals) {
+      const adjusted = IntentWeightAdjuster.adjust(
+        signal.name,
+        signal.weight,
+        context.intent
+      );
+      adjustedWeights.set(signal.name, adjusted);
+    }
+    
     const results: RankedDocument[] = [];
 
     for (const [docId, { bm25Score, document }] of documents) {
-      const ranked = this.rank(docId, bm25Score, document, query, context);
+      const ranked = this.rank(docId, bm25Score, document, query, context, activeSignals, adjustedWeights);
       results.push(ranked);
     }
 
