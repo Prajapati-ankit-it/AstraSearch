@@ -20,7 +20,6 @@
  */
 import { RankingSignal, SearchDocument } from '../RankingSignal';
 import { RankingContext } from '../RankingContext';
-import { logger } from '../../../utils/logger';
 import { config } from '../../../config/config';
 
 /**
@@ -39,10 +38,6 @@ export class PhraseBoostSignal implements RankingSignal {
   readonly name = 'phrase_boost';
   readonly weight = PHRASE_BOOST_WEIGHT;
 
-  // Performance guard: prevent expensive phrase scanning on large candidate sets
-  // This avoids O(N × text length) scanning and introduces controlled ranking degradation
-  private readonly PHRASE_SCAN_THRESHOLD = config.phraseScanThreshold;
-
   score(doc: SearchDocument, query: string, context: RankingContext): number {
     // Apply only for multi-term queries that are not very short
     if (!context.intent.isMultiTerm || context.intent.isVeryShort) {
@@ -55,8 +50,7 @@ export class PhraseBoostSignal implements RankingSignal {
     }
 
     // Performance guard: skip phrase scanning for large candidate sets
-    if (context.candidateCount > this.PHRASE_SCAN_THRESHOLD) {
-      logger.info(`Phrase boost guard triggered: candidateCount=${context.candidateCount}, threshold=${this.PHRASE_SCAN_THRESHOLD}, query="${context.query}"`);
+    if (context.candidateCount > config.phraseScanThreshold) {
       return 0;
     }
 

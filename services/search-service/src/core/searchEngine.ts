@@ -123,6 +123,16 @@ export class SearchEngine {
     };
     logger.debug(`Candidate documents after pruning: ${candidateDocs.size}`);
 
+    // Log proximity boost performance guard once per query
+    if (candidateDocs.size > config.proximityScanThreshold) {
+      logger.debug(`Proximity boost disabled for this query due to candidate threshold: ${candidateDocs.size} > ${config.proximityScanThreshold}`);
+    }
+
+    // Log phrase boost performance guard once per query
+    if (candidateDocs.size > config.phraseScanThreshold) {
+      logger.debug(`Phrase boost disabled for this query due to candidate threshold: ${candidateDocs.size} > ${config.phraseScanThreshold}`);
+    }
+
     // Score documents using BM25 with precomputed IDF
     const docScores = BM25Scorer.scoreDocuments(
       Array.from(candidateDocs),
