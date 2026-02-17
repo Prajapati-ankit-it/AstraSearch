@@ -14,18 +14,17 @@ export interface RankedDocument {
 export class Ranker {
   private static readonly registry = SignalRegistry.getInstance();
 
-  static rank(
+  private static rank(
     docId: string,
     bm25Score: number,
     document: Document,
     query: string,
     context: RankingContext,
+    signals: any[],
     adjustedWeights: Map<string, number>
   ): RankedDocument {
-    const activeSignals = this.registry.getActiveSignals();
-    
     let signalScore = 0;
-    for (const signal of activeSignals) {
+    for (const signal of signals) {
       try {
         const score = signal.score(document, query, context);
         
@@ -35,7 +34,7 @@ export class Ranker {
           continue; // Skip this signal
         }
         
-        signalScore += score * adjustedWeights.get(signal.name)!;
+        signalScore += score * (adjustedWeights.get(signal.name) ?? signal.weight);
       } catch (error) {
         // Signals must never crash ranking
         logger.warn(`Signal ${signal.name} failed for document ${docId}:`, error);
@@ -74,7 +73,7 @@ export class Ranker {
     const results: RankedDocument[] = [];
 
     for (const [docId, { bm25Score, document }] of documents) {
-      const ranked = this.rank(docId, bm25Score, document, query, context, adjustedWeights);
+      const ranked = this.rank(docId, bm25Score, document, query, context, activeSignals, adjustedWeights);
       results.push(ranked);
     }
 

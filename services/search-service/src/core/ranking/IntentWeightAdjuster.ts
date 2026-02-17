@@ -15,6 +15,16 @@ import { PROXIMITY_SIGNAL_NAME } from './signals/ProximityBoostSignal';
  * New signals SHOULD remain intent-agnostic and rely on this layer for tuning.
  */
 
+/**
+ * Multipliers for phrase-like queries.
+ * 
+ * Design rationale:
+ * - Phrase multiplier (1.5) > proximity multiplier (1.3) because exact phrase matches
+ *   represent stronger structural alignment than proximity matches
+ * - Multipliers amplify base weights only, never replace them
+ * - These are heuristic values that must be validated offline through evaluation
+ * - Changes affect global ranking behavior and require careful measurement
+ */
 const PHRASE_LIKE_PHRASE_MULTIPLIER = 1.5;
 const PHRASE_LIKE_PROXIMITY_MULTIPLIER = 1.3;
 
