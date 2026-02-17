@@ -1,6 +1,7 @@
 import { Document } from '../../types/search.types';
 import { RankingContext } from './RankingContext';
 import { SignalRegistry } from './SignalRegistry';
+import { IntentWeightAdjuster } from './IntentWeightAdjuster';
 import { logger } from '../../utils/logger';
 
 export interface RankedDocument {
@@ -33,7 +34,13 @@ export class Ranker {
           continue; // Skip this signal
         }
         
-        signalScore += score * signal.weight;
+        const adjustedWeight = IntentWeightAdjuster.adjust(
+          signal.name,
+          signal.weight,
+          context.intent
+        );
+
+        signalScore += score * adjustedWeight;
       } catch (error) {
         // Signals must never crash ranking
         logger.warn(`Signal ${signal.name} failed for document ${docId}:`, error);
