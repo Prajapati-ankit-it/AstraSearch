@@ -3,6 +3,7 @@ import { DocumentLengthSignal } from './examples/DocumentLengthSignal';
 import { PhraseBoostSignal } from './signals/PhraseBoostSignal';
 import { TermCoverageSignal } from './signals/TermCoverageSignal';
 import { ProximityBoostSignal } from './signals/ProximityBoostSignal';
+import { ExactMatchSignal } from './signals/ExactMatchSignal';
 
 /**
  * Register all ranking signals here
@@ -26,6 +27,9 @@ export function registerSignals(): void {
 
   // Register phrase boost signal
   registry.register(new PhraseBoostSignal());
+
+  // Exact match provides highest precision for identical document/query pairs
+  registry.register(new ExactMatchSignal());
 
   // Coverage complements BM25 by rewarding breadth of term match
   registry.register(new TermCoverageSignal());
