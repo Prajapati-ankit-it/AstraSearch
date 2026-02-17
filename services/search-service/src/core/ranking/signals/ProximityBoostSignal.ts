@@ -33,11 +33,11 @@
  * Weight must be tuned empirically using evaluation framework.
  */
 
-export const PROXIMITY_SIGNAL_NAME = 'proximity_boost';
-
 import { RankingSignal, SearchDocument } from '../RankingSignal';
 import { RankingContext } from '../RankingContext';
 import { config } from '../../../config/config';
+
+export const PROXIMITY_SIGNAL_NAME = 'proximity_boost';
 
 /**
  * Global weight for proximity boost signal.

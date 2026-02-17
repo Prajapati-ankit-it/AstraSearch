@@ -19,10 +19,11 @@
  * Weight must be tuned empirically using evaluation framework.
  */
 
-export const PHRASE_SIGNAL_NAME = 'phrase_boost';
 import { RankingSignal, SearchDocument } from '../RankingSignal';
 import { RankingContext } from '../RankingContext';
 import { config } from '../../../config/config';
+
+export const PHRASE_SIGNAL_NAME = 'phrase_boost';
 
 /**
  * Global weight for the phrase boost signal.
