@@ -5,10 +5,11 @@ import { PROXIMITY_SIGNAL_NAME } from './signals/ProximityBoostSignal';
 /**
  * Intent-aware weight modulation.
  *
- * Intent profile is treated as mutually exclusive.
- * Only one profile is applied per query.
- *
- * This prevents multiplier stacking and keeps tuning predictable.
+ * The adjuster currently applies a simple, condition-based amplification.
+ * Only phrase-like queries modify weights.
+ * All other intents return baseWeight unchanged.
+ * No stacking occurs because only one condition exists.
+ * Future intent profiles must explicitly define exclusivity if introduced.
  *
  * This layer modulates signal weights based on query intent.
  * Some legacy signals may also inspect intent internally.
