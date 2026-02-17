@@ -19,20 +19,10 @@ export class Ranker {
     bm25Score: number,
     document: Document,
     query: string,
-    context: RankingContext
+    context: RankingContext,
+    adjustedWeights: Map<string, number>
   ): RankedDocument {
     const activeSignals = this.registry.getActiveSignals();
-    
-    // Precompute adjusted weights once per query (not per document)
-    const adjustedWeights = new Map<string, number>();
-    for (const signal of activeSignals) {
-      const adjusted = IntentWeightAdjuster.adjust(
-        signal.name,
-        signal.weight,
-        context.intent
-      );
-      adjustedWeights.set(signal.name, adjusted);
-    }
     
     let signalScore = 0;
     for (const signal of activeSignals) {
@@ -68,10 +58,23 @@ export class Ranker {
     query: string,
     context: RankingContext
   ): RankedDocument[] {
+    const activeSignals = this.registry.getActiveSignals();
+    
+    // Precompute adjusted weights once per query (not per document)
+    const adjustedWeights = new Map<string, number>();
+    for (const signal of activeSignals) {
+      const adjusted = IntentWeightAdjuster.adjust(
+        signal.name,
+        signal.weight,
+        context.intent
+      );
+      adjustedWeights.set(signal.name, adjusted);
+    }
+    
     const results: RankedDocument[] = [];
 
     for (const [docId, { bm25Score, document }] of documents) {
-      const ranked = this.rank(docId, bm25Score, document, query, context);
+      const ranked = this.rank(docId, bm25Score, document, query, context, adjustedWeights);
       results.push(ranked);
     }
 
