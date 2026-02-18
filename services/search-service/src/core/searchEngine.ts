@@ -102,8 +102,8 @@ export class SearchEngine {
     const uniqueTerms = retrievalTerms;
     const idfCache = BM25Scorer.computeIDFCache(uniqueTerms, index, corpusStats);
 
-    // Get candidate documents with progressive intersection pruning
-    const candidateDocs = BM25Scorer.getCandidateDocuments(uniqueTerms, index, corpusStats);
+    // Get candidate documents with union-based soft pruning
+    const candidateDocs = BM25Scorer.getCandidateDocuments(uniqueTerms, index);
 
     if (candidateDocs.size === 0) {
       logger.debug('No candidate documents found');

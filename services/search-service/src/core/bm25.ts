@@ -1,4 +1,5 @@
 import { InvertedIndex, CorpusStats } from '../types/search.types';
+import { config } from '../config/config';
 import { logger } from '../utils/logger';
 
 export class BM25Scorer {
@@ -71,15 +72,106 @@ export class BM25Scorer {
   }
 
   /**
-   * Get candidate documents for a query
-   * Preserves OR semantics with simple union approach
+   * Get candidate documents for a query using union-based soft pruning
+   *
+   * RETRIEVAL SEMANTICS:
+   * - Step 1: OR-union candidate generation preserves documents matching ANY query term
+   * - Step 2: If union size <= candidateTargetSize → return union (no pruning)
+   * - Step 3: Apply soft-AND coverage filtering when union size exceeds threshold
+   * - Step 4: Optional truncation by match count if still too large
+   * - Synonym expansion compatibility maintained: expanded terms participate in OR union
+   * - No silent semantic changes from OR to AND behavior
+   *
+   * RECALL AND PERFORMANCE TRADEOFFS:
+   * - Recall is reduced when union candidate count exceeds candidateTargetSize
+   * - This is an explicit performance tradeoff to cap ranking cost
+   * - Fallback to unionCandidates when coverage filtering produces zero results
+   *   is an intentional recall safety guard
+   *
+   * SOFT PRUNING STRATEGY:
+   * - Coverage threshold scales with query length: ceil(validTerms.length / 2)
+   * - 1-term → threshold = 1, 2-term → threshold = 1, 3-term → threshold = 2, etc.
+   * - Coverage filtering primarily affects queries with 3+ terms
+   * - Becomes stricter as query length increases
+   *
+   * RANKING LAYER UNTOUCHED:
+   * - This method only reduces the candidate set passed to ranking
+   * - Scoring formulas, signal logic, and weight modulation remain unchanged
+   * - Ranking receives a smaller but high-quality candidate set
    */
   static getCandidateDocuments(
     queryTerms: string[],
-    index: InvertedIndex,
-    stats: CorpusStats
+    index: InvertedIndex
   ): Set<string> {
-    return this.getUnionCandidates(queryTerms, index);
+    // validTerms avoids repeated index lookups and is reused in coverage calculation
+    const validTerms = queryTerms.filter(term => index[term] !== undefined);
+    
+    if (validTerms.length === 0) {
+      return new Set<string>();
+    }
+    
+    // Step 1: Compute unionCandidates via existing union method
+    const unionCandidates = this.getUnionCandidates(validTerms, index);
+    
+    // Step 2: If unionCandidates.size <= config.candidateTargetSize: return unionCandidates
+    if (unionCandidates.size <= config.candidateTargetSize) {
+      return unionCandidates;
+    }
+    
+    // Step 3: Apply soft pruning: keep docs matching >= Math.ceil(validTerms.length / 2)
+    // Coverage threshold scales with query length: ceil(validTerms.length / 2)
+    // 1-term → threshold = 1, 2-term → threshold = 1, 3-term → threshold = 2, 4-term → threshold = 2, 5-term → threshold = 3
+    // Coverage filtering primarily affects queries with 3+ terms and becomes stricter as query length increases
+    const coverageThreshold = Math.ceil(validTerms.length / 2);
+    const docMatchCounts = new Map<string, number>(); // docId -> matchCount (accumulates counts for all union docs)
+    
+    // Postings-first accumulation: O(totalPostingsOfQueryTerms) instead of O(|union| * |terms|)
+    for (const term of validTerms) {
+      const termData = index[term];
+      if (!termData) continue;
+      
+      for (const docId of Object.keys(termData.postings)) {
+        if (unionCandidates.has(docId)) {
+          const currentCount = docMatchCounts.get(docId) || 0;
+          docMatchCounts.set(docId, currentCount + 1);
+        }
+      }
+    }
+    
+    // Filter to documents meeting coverage threshold
+    const coverageFiltered = new Map<string, number>();
+    for (const [docId, matchCount] of docMatchCounts) {
+      if (matchCount >= coverageThreshold) {
+        coverageFiltered.set(docId, matchCount);
+      }
+    }
+    
+    // Add debug logging when pruning triggers
+    logger.debug(
+      `Candidate pruning: union=${unionCandidates.size}, threshold=${coverageThreshold}, afterCoverage=${coverageFiltered.size}`
+    );
+    
+    // Step 4: If still > candidateTargetSize: Sort by matchCount descending. Truncate to candidateTargetSize
+    if (coverageFiltered.size > config.candidateTargetSize) {
+      const sortedCandidates = Array.from(coverageFiltered.entries())
+        .sort((a, b) => b[1] - a[1]) // Sort by match count descending
+        .slice(0, config.candidateTargetSize); // Truncate to candidateTargetSize
+      
+      // Truncation intentionally reduces recall to cap ranking cost.
+      // This is a controlled performance safeguard.
+      logger.debug(`Candidate truncation: afterTruncation=${sortedCandidates.length}`);
+      
+      return new Set(sortedCandidates.map(([docId]) => docId));
+    }
+    
+    // Step 5: If pruning yields empty set: return unionCandidates
+    // This fallback preserves recall when coverage threshold is too strict
+    // for the given query. It is an intentional safety mechanism.
+    if (coverageFiltered.size === 0) {
+      return unionCandidates;
+    }
+    
+    return new Set(coverageFiltered.keys());
   }
 
   /**
