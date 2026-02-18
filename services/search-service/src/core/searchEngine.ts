@@ -12,6 +12,9 @@ import { SignalRegistry } from './ranking/SignalRegistry';
 import { QueryNormalizer } from './query/QueryNormalizer';
 import { SynonymExpander } from './query/SynonymExpander';
 import { QueryIntentAnalyzer } from './query/QueryIntent';
+import { PhraseBoostSignal } from './ranking/signals/PhraseBoostSignal';
+import { ProximityBoostSignal } from './ranking/signals/ProximityBoostSignal';
+import { ExactMatchSignal } from './ranking/signals/ExactMatchSignal';
 
 export class SearchEngine {
   private indexLoader: IndexLoader;
@@ -159,7 +162,17 @@ export class SearchEngine {
     logger.debug(`Scored ${docScores.size} documents with BM25`);
 
     // Apply ranking signals using optimized batch processing
-    const documentsForRanking = new Map<string, { bm25Score: number; document: Document; context: RankingContext }>();
+    // Create shared query-level context to avoid per-document duplication
+    const sharedQueryContext: Omit<RankingContext, 'phraseMatchInTitle' | 'proximityMatchInTitle' | 'exactMatchInTitle'> = {
+      corpusStats,
+      queryTerms: originalTerms,
+      query: originalQuery,
+      normalizedQuery: normalizedQuery,
+      candidateCount: candidateDocs.size,
+      intent: queryIntent
+    };
+
+    const documentsForRanking = new Map<string, { bm25Score: number; document: Document; fieldMatches: { phraseMatchInTitle: boolean; proximityMatchInTitle: boolean; exactMatchInTitle: boolean } }>();
 
     for (const [docId, bm25Score] of docScores) {
       const document = documents.get(docId);
@@ -168,30 +181,30 @@ export class SearchEngine {
         continue;
       }
 
-      // Compute field-aware metadata for this document
-      const fieldMatches = this.computeFieldMatches(document, normalizedQuery, originalTerms);
-
-      // Create per-document ranking context with field metadata
-      const documentContext: RankingContext = {
-        corpusStats,
-        queryTerms: originalTerms,
-        query: originalQuery,
-        normalizedQuery: normalizedQuery,
-        candidateCount: candidateDocs.size,
-        intent: queryIntent,
-        phraseMatchInTitle: fieldMatches.phraseMatchInTitle,
-        proximityMatchInTitle: fieldMatches.proximityMatchInTitle,
-        exactMatchInTitle: fieldMatches.exactMatchInTitle
-      };
+      // Compute field-aware metadata for this document using signal detection logic
+      // FIELD-AWARE STRUCTURAL BOOST SEMANTICS:
+      // - Detects whether structural patterns also appear in title
+      // - Signals themselves operate on body field only (doc.text)
+      // - Title matches amplify signal weight but do not independently generate signal scores
+      // - Title-only matches do NOT get amplified (only body matches get signals)
+      // - This provides structural reinforcement when body + title alignment occurs
+      const title = document.titleNormalized || '';
+      const phraseMatchInTitle = new PhraseBoostSignal().wouldTriggerOnText(title, sharedQueryContext);
+      const proximityMatchInTitle = new ProximityBoostSignal().wouldTriggerOnText(title, sharedQueryContext);
+      const exactMatchInTitle = new ExactMatchSignal().wouldTriggerOnText(title, sharedQueryContext);
 
       documentsForRanking.set(docId, {
         bm25Score,
         document: document,
-        context: documentContext
+        fieldMatches: {
+          phraseMatchInTitle,
+          proximityMatchInTitle,
+          exactMatchInTitle
+        }
       });
     }
 
-    const rankedDocuments = Ranker.rankMultiple(documentsForRanking, originalQuery);
+    const rankedDocuments = Ranker.rankMultipleWithSharedContext(documentsForRanking, sharedQueryContext, originalQuery);
 
     // Sort by final score
     const sortedResults = rankedDocuments
@@ -212,64 +225,6 @@ export class SearchEngine {
       }));
 
     return searchResults;
-  }
-
-  /**
-   * Compute field-aware match metadata for a document
-   * Determines if structural signals would trigger in title field
-   */
-  private computeFieldMatches(document: Document, normalizedQuery: string, queryTerms: string[]): {
-    phraseMatchInTitle: boolean;
-    proximityMatchInTitle: boolean;
-    exactMatchInTitle: boolean;
-  } {
-    const title = document.title || '';
-
-    // Check if phrase match occurs in title
-    const phraseMatchInTitle = title.includes(normalizedQuery);
-
-    // Check if exact match occurs in title
-    const exactMatchInTitle = title === normalizedQuery;
-
-    // Check proximity match (simplified: requires at least 2 query terms and they appear close together)
-    const proximityMatchInTitle = this.hasProximityMatch(title, queryTerms);
-
-    return {
-      phraseMatchInTitle,
-      proximityMatchInTitle,
-      exactMatchInTitle
-    };
-  }
-
-  /**
-   * Check if document title contains query terms in close proximity
-   * Simplified version of proximity detection for field matching
-   */
-  private hasProximityMatch(text: string, queryTerms: string[]): boolean {
-    if (queryTerms.length < 2 || !text) {
-      return false;
-    }
-
-    const tokens = text.split(/\s+/).filter(Boolean);
-    const queryTermsSet = new Set(queryTerms);
-
-    // Find positions of query terms
-    const positions: number[] = [];
-    for (let i = 0; i < tokens.length; i++) {
-      if (queryTermsSet.has(tokens[i])) {
-        positions.push(i);
-      }
-    }
-
-    // Need at least 2 distinct positions
-    if (positions.length < 2) {
-      return false;
-    }
-
-    // Check if any two positions are close (within reasonable proximity)
-    // Use a simple heuristic: check if min span is small enough
-    const minSpan = Math.min(...positions) - Math.max(...positions) + 1;
-    return minSpan <= queryTerms.length * 2; // Allow some spacing between terms
   }
 
   getStats(): any {

@@ -158,6 +158,109 @@ export class ProximityBoostSignal implements RankingSignal {
     return proximityScore;
   }
 
+  /**
+   * Determines if this signal would trigger on the given text.
+   * Uses the exact same detection logic as score() including performance guards.
+   * Used for field-aware metadata computation.
+   */
+  wouldTriggerOnText(text: string, context: RankingContext): boolean {
+    // Apply only to queries with 2 or more terms
+    if (context.queryTerms.length < 2) {
+      return false;
+    }
+
+    // Defensive check: ensure text exists and is string
+    if (!text || typeof text !== 'string') {
+      return false;
+    }
+
+    // Performance guard: skip proximity calculation for large candidate sets (same as score())
+    if (context.candidateCount > config.proximityScanThreshold) {
+      return false;
+    }
+
+    // NOTE: text is already normalized during ingestion pipeline
+    // Ingestion applies: NFKC Unicode normalization → lowercase → ASCII filtering → whitespace normalization
+    // Ranking layer must NOT re-normalize to maintain single-source-of-truth
+    // Tokenize text into array with positions
+    const tokens = text.split(/\s+/).filter(Boolean);
+
+    // Convert queryTerms to Set for O(1) lookup
+    const queryTermsSet = new Set(context.queryTerms);
+
+    // Build termPositions in single pass (O(L) instead of O(M×L))
+    const termPositions = new Map<string, number[]>();
+
+    for (let i = 0; i < tokens.length; i++) {
+      const token = tokens[i];
+      if (queryTermsSet.has(token)) {
+        if (!termPositions.has(token)) {
+          termPositions.set(token, []);
+        }
+        termPositions.get(token)!.push(i);
+      }
+    }
+
+    // Compute distinctTermsFound using termPositions.size
+    const distinctTermsFound = termPositions.size;
+
+    // Need at least 2 distinct query terms to compute proximity
+    if (distinctTermsFound < 2) {
+      return false;
+    }
+
+    // Compute minimal span covering all matched query terms using sliding window
+    // Build flattened array of all term positions
+    const allPositions: Array<{term: string, pos: number}> = [];
+    for (const [term, positions] of termPositions.entries()) {
+      for (const pos of positions) {
+        allPositions.push({ term, pos });
+      }
+    }
+
+    // Sort positions by position
+    // We flatten and sort positions for clarity and correctness.
+    // Although positions are discovered in ascending order per term,
+    // interleaving across terms requires global sorting.
+    // Given small query term counts, O(K log K) is acceptable.
+    allPositions.sort((a, b) => a.pos - b.pos);
+
+    // Use sliding window to find minimal span covering all terms
+    let minSpan = Infinity;
+    const requiredTerms = new Set(termPositions.keys());
+    const termCounts = new Map<string, number>();
+
+    let left = 0;
+    for (let right = 0; right < allPositions.length; right++) {
+      const rightItem = allPositions[right];
+      termCounts.set(rightItem.term, (termCounts.get(rightItem.term) || 0) + 1);
+
+      // Check if window covers all required terms
+      while (this.windowCoversAllTerms(termCounts, requiredTerms)) {
+        const currentSpan = rightItem.pos - allPositions[left].pos;
+        minSpan = Math.min(minSpan, currentSpan);
+
+        // Shrink window from left
+        const leftItem = allPositions[left];
+        const leftCount = termCounts.get(leftItem.term)!;
+        if (leftCount === 1) {
+          termCounts.delete(leftItem.term);
+        } else {
+          termCounts.set(leftItem.term, leftCount - 1);
+        }
+        left++;
+      }
+    }
+
+    // If no valid window found, proximity does not trigger
+    if (minSpan === Infinity) {
+      return false;
+    }
+
+    // If we found a valid span, proximity would trigger
+    return true;
+  }
+
   private windowCoversAllTerms(termCounts: Map<string, number>, requiredTerms: Set<string>): boolean {
     // termCounts only populated from requiredTerms.
     // Equal sizes imply full coverage.

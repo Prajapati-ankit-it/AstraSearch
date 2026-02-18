@@ -1,7 +1,8 @@
 export interface Document {
   id: string; // Document ID (e.g., "stackoverflow:92")
-  title?: string; // Optional document title for field-aware scoring
-  text: string; // Document content
+  title?: string; // Raw document title
+  titleNormalized?: string; // Normalized title using same pipeline as body text
+  text: string; // Document content (already normalized during ingestion)
   metadata: {
     source: string;
     question_id?: string;

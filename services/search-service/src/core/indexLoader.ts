@@ -4,12 +4,18 @@ import { InvertedIndex, Document, CorpusStats } from '../types/search.types';
 import { logger } from '../utils/logger';
 import { config } from '../config/config';
 import { NORMALIZATION_VERSION } from './query/QueryNormalizer';
+import { QueryNormalizer } from './query/QueryNormalizer';
 
 export class IndexLoader {
   private index: InvertedIndex | null = null;
   private documents: Map<string, Document> = new Map();
   private corpusStats: CorpusStats | null = null;
   private loaded = false;
+  private queryNormalizer: QueryNormalizer;
+
+  constructor() {
+    this.queryNormalizer = new QueryNormalizer();
+  }
 
   async loadIndex(): Promise<void> {
     try {
@@ -31,10 +37,16 @@ export class IndexLoader {
 
       // Load documents
       const documentsData = await fs.readFile(documentsPath, 'utf-8');
-      const documents: Document[] = JSON.parse(documentsData);
+      const rawDocuments: Document[] = JSON.parse(documentsData);
+
+      // Normalize document titles to match body text normalization
+      const normalizedDocuments: Document[] = rawDocuments.map(doc => ({
+        ...doc,
+        titleNormalized: doc.title ? QueryNormalizer.normalize(doc.title) : undefined
+      }));
 
       // Create document map for quick lookup
-      this.documents = new Map(documents.map(doc => [doc.id, doc]));
+      this.documents = new Map(normalizedDocuments.map(doc => [doc.id, doc]));
 
       // Validate corpus statistics after documents are loaded
       this.validateCorpusStats();
