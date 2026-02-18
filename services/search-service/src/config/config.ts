@@ -18,5 +18,13 @@ export const config = {
   },
   phraseScanThreshold: parseInt(process.env.PHRASE_SCAN_THRESHOLD || '2000'),
   proximityScanThreshold: parseInt(process.env.PROXIMITY_SCAN_THRESHOLD || '2000'),
-  candidateTargetSize: parseInt(process.env.CANDIDATE_TARGET_SIZE || '5000')
+  candidateTargetSize: parseInt(process.env.CANDIDATE_TARGET_SIZE || '5000'),
+  titleStructuralBoostMultiplier: parseFloat(process.env.TITLE_STRUCTURAL_BOOST_MULTIPLIER || '1.3')
 };
+
+// Validate titleStructuralBoostMultiplier at config load
+if (!Number.isFinite(config.titleStructuralBoostMultiplier) ||
+    config.titleStructuralBoostMultiplier < 1.0 ||
+    config.titleStructuralBoostMultiplier > 3.0) {
+  throw new Error(`Invalid titleStructuralBoostMultiplier: ${config.titleStructuralBoostMultiplier}. Must be between 1.0 and 3.0`);
+}

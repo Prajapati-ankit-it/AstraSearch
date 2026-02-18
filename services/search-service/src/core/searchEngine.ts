@@ -5,7 +5,7 @@ import { BM25Scorer } from './bm25';
 import { QueryCache } from '../cache/queryCache';
 import { logger } from '../utils/logger';
 import { config } from '../config/config';
-import { Ranker } from './ranking/Ranker';
+import { Ranker, RankedDocument } from './ranking/Ranker';
 import { RankingContext } from './ranking/RankingContext';
 import { registerSignals } from './ranking/registerSignals';
 import { SignalRegistry } from './ranking/SignalRegistry';
@@ -144,7 +144,7 @@ export class SearchEngine {
     logger.debug(`Scored ${docScores.size} documents with BM25`);
 
     // Apply ranking signals using optimized batch processing
-    const documentsForRanking = new Map<string, { bm25Score: number; document: Document }>();
+    const documentsForRanking = new Map<string, { bm25Score: number; document: Document; context: RankingContext }>();
 
     for (const [docId, bm25Score] of docScores) {
       const document = documents.get(docId);
@@ -152,13 +152,31 @@ export class SearchEngine {
         logger.warn(`Document ${docId} not found in documents map`);
         continue;
       }
+
+      // Compute field-aware metadata for this document
+      const fieldMatches = this.computeFieldMatches(document, normalizedQuery, originalTerms);
+
+      // Create per-document ranking context with field metadata
+      const documentContext: RankingContext = {
+        corpusStats,
+        queryTerms: originalTerms,
+        query: originalQuery,
+        normalizedQuery: normalizedQuery,
+        candidateCount: candidateDocs.size,
+        intent: queryIntent,
+        phraseMatchInTitle: fieldMatches.phraseMatchInTitle,
+        proximityMatchInTitle: fieldMatches.proximityMatchInTitle,
+        exactMatchInTitle: fieldMatches.exactMatchInTitle
+      };
+
       documentsForRanking.set(docId, {
         bm25Score,
-        document: document
+        document: document,
+        context: documentContext
       });
     }
 
-    const rankedDocuments = Ranker.rankMultiple(documentsForRanking, originalQuery, rankingContext);
+    const rankedDocuments = Ranker.rankMultiple(documentsForRanking, originalQuery);
 
     // Sort by final score
     const sortedResults = rankedDocuments
@@ -179,6 +197,64 @@ export class SearchEngine {
       }));
 
     return searchResults;
+  }
+
+  /**
+   * Compute field-aware match metadata for a document
+   * Determines if structural signals would trigger in title field
+   */
+  private computeFieldMatches(document: Document, normalizedQuery: string, queryTerms: string[]): {
+    phraseMatchInTitle: boolean;
+    proximityMatchInTitle: boolean;
+    exactMatchInTitle: boolean;
+  } {
+    const title = document.title || '';
+
+    // Check if phrase match occurs in title
+    const phraseMatchInTitle = title.includes(normalizedQuery);
+
+    // Check if exact match occurs in title
+    const exactMatchInTitle = title === normalizedQuery;
+
+    // Check proximity match (simplified: requires at least 2 query terms and they appear close together)
+    const proximityMatchInTitle = this.hasProximityMatch(title, queryTerms);
+
+    return {
+      phraseMatchInTitle,
+      proximityMatchInTitle,
+      exactMatchInTitle
+    };
+  }
+
+  /**
+   * Check if document title contains query terms in close proximity
+   * Simplified version of proximity detection for field matching
+   */
+  private hasProximityMatch(text: string, queryTerms: string[]): boolean {
+    if (queryTerms.length < 2 || !text) {
+      return false;
+    }
+
+    const tokens = text.split(/\s+/).filter(Boolean);
+    const queryTermsSet = new Set(queryTerms);
+
+    // Find positions of query terms
+    const positions: number[] = [];
+    for (let i = 0; i < tokens.length; i++) {
+      if (queryTermsSet.has(tokens[i])) {
+        positions.push(i);
+      }
+    }
+
+    // Need at least 2 distinct positions
+    if (positions.length < 2) {
+      return false;
+    }
+
+    // Check if any two positions are close (within reasonable proximity)
+    // Use a simple heuristic: check if min span is small enough
+    const minSpan = Math.min(...positions) - Math.max(...positions) + 1;
+    return minSpan <= queryTerms.length * 2; // Allow some spacing between terms
   }
 
   getStats(): any {

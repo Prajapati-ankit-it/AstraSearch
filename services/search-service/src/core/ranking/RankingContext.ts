@@ -43,6 +43,18 @@ import { QueryIntent } from '../query/QueryIntent';
  * candidateCount:
  *   Number of documents being scored for this query.
  *   Used by performance guards and adaptive algorithms.
+ * 
+ * FIELD-AWARE SIGNAL TUNING:
+ * 
+ * Field-based match metadata is computed once per document in SearchEngine and consumed during ranking weight adjustment.
+ * This enables ranking-layer field awareness without modifying signal internals.
+ * Structural signals (phrase, proximity, exact match) receive weight amplification
+ * when matches occur in the title field versus body field.
+ * 
+ * phraseMatchInTitle, proximityMatchInTitle, exactMatchInTitle:
+ *   Boolean flags indicating whether the query triggers these structural signals
+ *   in this document's title field. Computed by checking if title text contains query patterns
+ *   that would activate these signals. Used for field-aware weight adjustment in Ranker.
  */
 export interface RankingContext {
   readonly corpusStats: CorpusStats;
@@ -51,4 +63,9 @@ export interface RankingContext {
   readonly normalizedQuery: string;
   readonly candidateCount: number;
   readonly intent: QueryIntent;
+
+  // Field-aware signal tuning metadata
+  readonly phraseMatchInTitle?: boolean;
+  readonly proximityMatchInTitle?: boolean;
+  readonly exactMatchInTitle?: boolean;
 }
