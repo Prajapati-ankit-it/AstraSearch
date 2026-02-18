@@ -5,17 +5,35 @@ import { BM25Scorer } from './bm25';
 import { QueryCache } from '../cache/queryCache';
 import { logger } from '../utils/logger';
 import { config } from '../config/config';
-import { Ranker } from './ranking/Ranker';
+import { Ranker, RankedDocument } from './ranking/Ranker';
 import { RankingContext } from './ranking/RankingContext';
 import { registerSignals } from './ranking/registerSignals';
 import { SignalRegistry } from './ranking/SignalRegistry';
 import { QueryNormalizer } from './query/QueryNormalizer';
 import { SynonymExpander } from './query/SynonymExpander';
 import { QueryIntentAnalyzer } from './query/QueryIntent';
+import { PhraseBoostSignal } from './ranking/signals/PhraseBoostSignal';
+import { ProximityBoostSignal } from './ranking/signals/ProximityBoostSignal';
+import { ExactMatchSignal } from './ranking/signals/ExactMatchSignal';
 
 export class SearchEngine {
   private indexLoader: IndexLoader;
   private queryCache: QueryCache<SearchResult[]>;
+
+  /**
+   * FIELD-AWARENESS ARCHITECTURAL DESIGN:
+   *
+   * SearchEngine implements lightweight field-awareness through ranking-layer signal weighting only.
+   * Retrieval (candidate generation) and BM25 scoring operate on body field exclusively by design.
+   *
+   * This approach:
+   * - Avoids complexity of multi-field indexing and retrieval
+   * - Maintains performance through single-index operations
+   * - Provides semantic importance tuning via title field consideration in ranking
+   * - Computes field match metadata per-document in SearchEngine, consumed by Ranker
+   *
+   * Title matches amplify structural signal weights but do not influence retrieval or base BM25 scoring.
+   */
 
   constructor() {
     this.indexLoader = new IndexLoader();
@@ -144,7 +162,17 @@ export class SearchEngine {
     logger.debug(`Scored ${docScores.size} documents with BM25`);
 
     // Apply ranking signals using optimized batch processing
-    const documentsForRanking = new Map<string, { bm25Score: number; document: Document }>();
+    // Create shared query-level context to avoid per-document duplication
+    const sharedQueryContext: Omit<RankingContext, 'phraseMatchInTitle' | 'proximityMatchInTitle' | 'exactMatchInTitle'> = {
+      corpusStats,
+      queryTerms: originalTerms,
+      query: originalQuery,
+      normalizedQuery: normalizedQuery,
+      candidateCount: candidateDocs.size,
+      intent: queryIntent
+    };
+
+    const documentsForRanking = new Map<string, { bm25Score: number; document: Document; fieldMatches: { phraseMatchInTitle: boolean; proximityMatchInTitle: boolean; exactMatchInTitle: boolean } }>();
 
     for (const [docId, bm25Score] of docScores) {
       const document = documents.get(docId);
@@ -152,13 +180,31 @@ export class SearchEngine {
         logger.warn(`Document ${docId} not found in documents map`);
         continue;
       }
+
+      // Compute field-aware metadata for this document using signal detection logic
+      // FIELD-AWARE STRUCTURAL BOOST SEMANTICS:
+      // - Detects whether structural patterns also appear in title
+      // - Signals themselves operate on body field only (doc.text)
+      // - Title matches amplify signal weight but do not independently generate signal scores
+      // - Title-only matches do NOT get amplified (only body matches get signals)
+      // - This provides structural reinforcement when body + title alignment occurs
+      const title = document.titleNormalized || '';
+      const phraseMatchInTitle = new PhraseBoostSignal().wouldTriggerOnText(title, sharedQueryContext);
+      const proximityMatchInTitle = new ProximityBoostSignal().wouldTriggerOnText(title, sharedQueryContext);
+      const exactMatchInTitle = new ExactMatchSignal().wouldTriggerOnText(title, sharedQueryContext);
+
       documentsForRanking.set(docId, {
         bm25Score,
-        document: document
+        document: document,
+        fieldMatches: {
+          phraseMatchInTitle,
+          proximityMatchInTitle,
+          exactMatchInTitle
+        }
       });
     }
 
-    const rankedDocuments = Ranker.rankMultiple(documentsForRanking, originalQuery, rankingContext);
+    const rankedDocuments = Ranker.rankMultipleWithSharedContext(documentsForRanking, sharedQueryContext, originalQuery);
 
     // Sort by final score
     const sortedResults = rankedDocuments

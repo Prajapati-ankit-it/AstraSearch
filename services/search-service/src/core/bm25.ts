@@ -7,6 +7,17 @@ export class BM25Scorer {
   private static readonly B = 0.75;
 
   /**
+   * FIELD-AWARENESS ARCHITECTURAL DESIGN:
+   *
+   * BM25 operates on body field only by design.
+   * Field-awareness (title field consideration) applies only at ranking layer through structural signal weighting.
+   * This lightweight approach avoids complexity of multi-field indexing while providing semantic importance tuning.
+   *
+   * Retrieval and BM25 scoring remain body-only for performance and simplicity.
+   * Title matches influence ranking through signal weight amplification, not retrieval or base scoring.
+   */
+
+  /**
    * Compute BM25 score for a document given query terms
    *
    * Formula: score(D, Q) = Σ IDF(t) * ((tf * (k1 + 1)) / (tf + k1 * (1 - b + b * (dl / avgdl))))

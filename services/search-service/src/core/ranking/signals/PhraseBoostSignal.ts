@@ -64,4 +64,33 @@ export class PhraseBoostSignal implements RankingSignal {
     // Check if normalized contiguous query terms exist in document text
     return doc.text.includes(phrase) ? 1 : 0;
   }
+
+  /**
+   * Determines if this signal would trigger on the given text.
+   * Uses the exact same detection logic as score() including performance guards.
+   * Used for field-aware metadata computation.
+   */
+  wouldTriggerOnText(text: string, context: RankingContext): boolean {
+    // Apply only for multi-term queries that are not very short
+    if (!context.intent.isMultiTerm || context.intent.isVeryShort) {
+      return false;
+    }
+
+    // Defensive safety: ensure text exists and is string
+    if (!text || typeof text !== 'string') {
+      return false;
+    }
+
+    // Performance guard: skip phrase scanning for large candidate sets (same as score())
+    if (context.candidateCount > config.phraseScanThreshold) {
+      return false;
+    }
+
+    // Use normalized query string for phrase matching
+    // Preserves normalization symmetry with indexed documents
+    const phrase = context.normalizedQuery;
+
+    // Check if normalized contiguous query terms exist in text
+    return text.includes(phrase);
+  }
 }

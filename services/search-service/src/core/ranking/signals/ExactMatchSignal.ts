@@ -54,4 +54,22 @@ export class ExactMatchSignal implements RankingSignal {
     // Direct equality provides highest precision matching
     return doc.text === context.normalizedQuery ? 1 : 0;
   }
+
+  /**
+   * Determines if this signal would trigger on the given text.
+   * Uses the exact same detection logic as score().
+   * Used for field-aware metadata computation.
+   */
+  wouldTriggerOnText(text: string, context: RankingContext): boolean {
+    // Defensive guard: ensure text exists and is string
+    if (!text || typeof text !== 'string') {
+      return false;
+    }
+
+    // Exact normalized equality check
+    // text is already normalized during ingestion pipeline
+    // context.normalizedQuery is normalized query string
+    // Direct equality provides highest precision matching
+    return text === context.normalizedQuery;
+  }
 }
