@@ -72,23 +72,6 @@ export class BM25Scorer {
   }
 
   /**
-   * Score multiple documents for a query using field-aware BM25
-   *
-   * FIELD-AWARE SCORING:
-   * - Computes separate BM25 scores for title and body fields
-   * - Combines scores: score = (titleWeight * titleBM25) + (bodyWeight * bodyBM25)
-   * - Falls back to body-only scoring if title field absent or title index empty
-   * - Title weighting improves ranking precision for title-relevant queries
-   * - Retrieval now includes both body and title postings; recall preserved for title-only matches
-   * - Pruning layer remains untouched: field-aware scoring is post-retrieval
-   * - Field-specific length normalization is used when available
-   *
-   * BACKWARD COMPATIBILITY:
-   * - If title index is undefined or empty, uses body-only scoring
-   * - IDF computation per field ensures correctness and no double-counting
-   * - RankingContext and signals unchanged: only BM25 base score modified
-   */
-  /**
    * Get candidate documents for a query using union-based soft pruning
    *
    * RETRIEVAL SEMANTICS:
