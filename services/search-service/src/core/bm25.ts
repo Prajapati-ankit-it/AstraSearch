@@ -72,15 +72,33 @@ export class BM25Scorer {
   }
 
   /**
+   * Score multiple documents for a query using field-aware BM25
+   *
+   * FIELD-AWARE SCORING:
+   * - Computes separate BM25 scores for title and body fields
+   * - Combines scores: score = (titleWeight * titleBM25) + (bodyWeight * bodyBM25)
+   * - Falls back to body-only scoring if title field absent or title index empty
+   * - Title weighting improves ranking precision for title-relevant queries
+   * - Retrieval now includes both body and title postings; recall preserved for title-only matches
+   * - Pruning layer remains untouched: field-aware scoring is post-retrieval
+   * - Field-specific length normalization is used when available
+   *
+   * BACKWARD COMPATIBILITY:
+   * - If title index is undefined or empty, uses body-only scoring
+   * - IDF computation per field ensures correctness and no double-counting
+   * - RankingContext and signals unchanged: only BM25 base score modified
+   */
+  /**
    * Get candidate documents for a query using union-based soft pruning
    *
    * RETRIEVAL SEMANTICS:
    * - Step 1: OR-union candidate generation preserves documents matching ANY query term
-   * - Step 2: If union size <= candidateTargetSize → return union (no pruning)
+   * - Step 2: If union size <= config.candidateTargetSize → return union (no pruning)
    * - Step 3: Apply soft-AND coverage filtering when union size exceeds threshold
    * - Step 4: Optional truncation by match count if still too large
    * - Synonym expansion compatibility maintained: expanded terms participate in OR union
    * - No silent semantic changes from OR to AND behavior
+   * - Field-aware retrieval includes both body and title postings to preserve recall for title-only matches
    *
    * RECALL AND PERFORMANCE TRADEOFFS:
    * - Recall is reduced when union candidate count exceeds candidateTargetSize
@@ -101,17 +119,17 @@ export class BM25Scorer {
    */
   static getCandidateDocuments(
     queryTerms: string[],
-    index: InvertedIndex
+    fieldIndexes: FieldIndexes
   ): Set<string> {
     // validTerms avoids repeated index lookups and is reused in coverage calculation
-    const validTerms = queryTerms.filter(term => index[term] !== undefined);
+    const validTerms = queryTerms.filter(term => fieldIndexes.body[term] !== undefined || (fieldIndexes.title && fieldIndexes.title[term] !== undefined));
     
     if (validTerms.length === 0) {
       return new Set<string>();
     }
     
     // Step 1: Compute unionCandidates via existing union method
-    const unionCandidates = this.getUnionCandidates(validTerms, index);
+    const unionCandidates = this.getUnionCandidates(validTerms, fieldIndexes);
     
     // Step 2: If unionCandidates.size <= config.candidateTargetSize: return unionCandidates
     if (unionCandidates.size <= config.candidateTargetSize) {
@@ -127,10 +145,26 @@ export class BM25Scorer {
     
     // Postings-first accumulation: O(totalPostingsOfQueryTerms) instead of O(|union| * |terms|)
     for (const term of validTerms) {
-      const termData = index[term];
-      if (!termData) continue;
+      // Check both body and title indexes for this term
+      const bodyTermData = fieldIndexes.body[term];
+      const titleTermData = fieldIndexes.title?.[term];
       
-      for (const docId of Object.keys(termData.postings)) {
+      // Get postings from both fields
+      const allPostings = new Set<string>();
+      
+      if (bodyTermData) {
+        for (const docId of Object.keys(bodyTermData.postings)) {
+          allPostings.add(docId);
+        }
+      }
+      
+      if (titleTermData) {
+        for (const docId of Object.keys(titleTermData.postings)) {
+          allPostings.add(docId);
+        }
+      }
+      
+      for (const docId of allPostings) {
         if (unionCandidates.has(docId)) {
           const currentCount = docMatchCounts.get(docId) || 0;
           docMatchCounts.set(docId, currentCount + 1);
@@ -175,17 +209,26 @@ export class BM25Scorer {
   }
 
   /**
-   * Helper: Get union of all postings (fallback behavior)
+   * Helper: Get union of all postings from body and title indexes (fallback behavior)
    */
-  private static getUnionCandidates(queryTerms: string[], index: InvertedIndex): Set<string> {
+  private static getUnionCandidates(queryTerms: string[], fieldIndexes: FieldIndexes): Set<string> {
     const candidates = new Set<string>();
 
     for (const term of queryTerms) {
-      const termData = index[term];
-      if (!termData) continue;
+      // Check both body and title indexes for this term
+      const bodyTermData = fieldIndexes.body[term];
+      const titleTermData = fieldIndexes.title?.[term];
 
-      for (const docIdStr of Object.keys(termData.postings)) {
-        candidates.add(docIdStr);
+      if (bodyTermData) {
+        for (const docIdStr of Object.keys(bodyTermData.postings)) {
+          candidates.add(docIdStr);
+        }
+      }
+
+      if (titleTermData) {
+        for (const docIdStr of Object.keys(titleTermData.postings)) {
+          candidates.add(docIdStr);
+        }
       }
     }
 
@@ -238,18 +281,34 @@ export class BM25Scorer {
     index: InvertedIndex,
     idfCache: Map<string, number>,
     stats: CorpusStats,
-    documents: Map<string, Document>
+    document: Document,
+    isTitleField: boolean = false
   ): number {
     let totalScore = 0;
-    const document = documents.get(docId);
-    if (!document) {
-      return 0;
+
+    // Field-aware BM25 uses field-specific length normalization
+    let docLength: number;
+    let avgDocLength: number;
+
+    if (isTitleField) {
+      // Use title-specific lengths when available, fallback to body length approximation
+      if (stats.title_document_lengths && stats.title_document_lengths[docId] !== undefined) {
+        docLength = stats.title_document_lengths[docId];
+        avgDocLength = stats.avg_title_length || stats.avg_doc_length;
+      } else {
+        // Fallback to body length with explicit note that this is an approximation
+        docLength = stats.body_document_lengths?.[docId] || stats.document_lengths[docId];
+        avgDocLength = stats.avg_body_length || stats.avg_doc_length;
+        logger.debug(`Document ${docId} missing title length, using body length approximation for title field scoring`);
+      }
+    } else {
+      // Body field uses body-specific lengths
+      docLength = stats.body_document_lengths?.[docId] || stats.document_lengths[docId];
+      avgDocLength = stats.avg_body_length || stats.avg_doc_length;
     }
 
-    // Use document length from stats (same for both fields)
-    const docLength = stats.document_lengths[docId];
     if (!Number.isFinite(docLength)) {
-      logger.debug(`Document ${docId} has invalid length: ${docLength}`);
+      logger.debug(`Document ${docId} has invalid length: ${docLength} for ${isTitleField ? 'title' : 'body'} field`);
       return 0;
     }
 
@@ -269,7 +328,7 @@ export class BM25Scorer {
         continue; // Term not in IDF cache for this field
       }
 
-      const bm25Component = this.computeBM25Component(tf, docLength, stats.avg_doc_length);
+      const bm25Component = this.computeBM25Component(tf, docLength, avgDocLength);
       totalScore += idf * bm25Component;
     }
 
@@ -284,8 +343,9 @@ export class BM25Scorer {
    * - Combines scores: score = (titleWeight * titleBM25) + (bodyWeight * bodyBM25)
    * - Falls back to body-only scoring if title field absent or title index empty
    * - Title weighting improves ranking precision for title-relevant queries
-   * - Does not change recall: same documents retrieved, just better scoring
+   * - Retrieval now includes both body and title postings; recall preserved for title-only matches
    * - Pruning layer remains untouched: field-aware scoring is post-retrieval
+   * - Field-specific length normalization is used when available
    *
    * BACKWARD COMPATIBILITY:
    * - If title index is undefined or empty, uses body-only scoring
@@ -300,7 +360,24 @@ export class BM25Scorer {
     documents: Map<string, Document>
   ): Map<string, number> {
     const scores = new Map<string, number>();
-    const { titleWeight, bodyWeight } = config;
+    
+    // Defensive configuration validation
+    let titleWeight = config.titleWeight;
+    let bodyWeight = config.bodyWeight;
+    
+    // Validate weights: default to 2.0 and 1.0 if invalid, clamp between 0.1 and 10.0
+    if (!Number.isFinite(titleWeight) || titleWeight <= 0) {
+      logger.warn(`Invalid titleWeight: ${titleWeight}, defaulting to 2.0`);
+      titleWeight = 2.0;
+    }
+    if (!Number.isFinite(bodyWeight) || bodyWeight <= 0) {
+      logger.warn(`Invalid bodyWeight: ${bodyWeight}, defaulting to 1.0`);
+      bodyWeight = 1.0;
+    }
+    
+    // Clamp weights to reasonable range
+    titleWeight = Math.max(0.1, Math.min(10.0, titleWeight));
+    bodyWeight = Math.max(0.1, Math.min(10.0, bodyWeight));
     
     // Debug logging (once per query)
     if (fieldIndexes.title && Object.keys(fieldIndexes.title).length > 0) {
@@ -321,12 +398,12 @@ export class BM25Scorer {
       }
 
       // Compute body BM25 score (always available)
-      const bodyScore = this.computeFieldScore(docId, queryTerms, fieldIndexes.body, bodyIdfCache, stats, documents);
+      const bodyScore = this.computeFieldScore(docId, queryTerms, fieldIndexes.body, bodyIdfCache, stats, document, false);
 
       // Compute title BM25 score (if title field available)
       let titleScore = 0;
       if (document.title && fieldIndexes.title && titleIdfCache.size > 0) {
-        titleScore = this.computeFieldScore(docId, queryTerms, fieldIndexes.title, titleIdfCache, stats, documents);
+        titleScore = this.computeFieldScore(docId, queryTerms, fieldIndexes.title, titleIdfCache, stats, document, true);
       }
 
       // Combine field scores with weights

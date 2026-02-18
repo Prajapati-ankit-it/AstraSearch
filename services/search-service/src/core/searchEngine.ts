@@ -101,8 +101,11 @@ export class SearchEngine {
     // Get unique terms from retrieval terms for BM25 processing
     const uniqueTerms = retrievalTerms;
 
+    // Get field indexes for candidate generation
+    const fieldIndexes = this.indexLoader.getFieldIndexes();
+
     // Get candidate documents with union-based soft pruning
-    const candidateDocs = BM25Scorer.getCandidateDocuments(uniqueTerms, index);
+    const candidateDocs = BM25Scorer.getCandidateDocuments(uniqueTerms, fieldIndexes);
 
     if (candidateDocs.size === 0) {
       logger.debug('No candidate documents found');
@@ -133,11 +136,11 @@ export class SearchEngine {
     }
 
     // Score documents using field-aware BM25
-    const fieldIndexes = this.indexLoader.getFieldIndexes();
+    const scoringFieldIndexes = this.indexLoader.getFieldIndexes();
     const docScores = BM25Scorer.scoreDocuments(
       Array.from(candidateDocs),
       uniqueTerms,
-      fieldIndexes,
+      scoringFieldIndexes,
       corpusStats,
       documents
     );

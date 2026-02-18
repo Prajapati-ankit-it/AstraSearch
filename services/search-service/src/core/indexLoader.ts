@@ -153,6 +153,7 @@ export class IndexLoader {
     const titleVocabSize = this.fieldIndexes!.title ? Object.keys(this.fieldIndexes!.title).length : 0;
 
     return {
+      vocabularySize: bodyVocabSize, // Backward compatibility: overall vocabulary size
       bodyVocabularySize: bodyVocabSize,
       titleVocabularySize: titleVocabSize,
       documentsLoaded: this.documents.size,
