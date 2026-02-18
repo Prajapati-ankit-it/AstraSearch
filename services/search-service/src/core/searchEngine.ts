@@ -17,6 +17,21 @@ export class SearchEngine {
   private indexLoader: IndexLoader;
   private queryCache: QueryCache<SearchResult[]>;
 
+  /**
+   * FIELD-AWARENESS ARCHITECTURAL DESIGN:
+   *
+   * SearchEngine implements lightweight field-awareness through ranking-layer signal weighting only.
+   * Retrieval (candidate generation) and BM25 scoring operate on body field exclusively by design.
+   *
+   * This approach:
+   * - Avoids complexity of multi-field indexing and retrieval
+   * - Maintains performance through single-index operations
+   * - Provides semantic importance tuning via title field consideration in ranking
+   * - Computes field match metadata per-document in SearchEngine, consumed by Ranker
+   *
+   * Title matches amplify structural signal weights but do not influence retrieval or base BM25 scoring.
+   */
+
   constructor() {
     this.indexLoader = new IndexLoader();
     this.queryCache = new QueryCache(config.cacheTtl);
