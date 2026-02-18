@@ -8,9 +8,9 @@ export class BM25Scorer {
 
   /**
    * Compute BM25 score for a document given query terms
-   * 
+   *
    * Formula: score(D, Q) = Σ IDF(t) * ((tf * (k1 + 1)) / (tf + k1 * (1 - b + b * (dl / avgdl))))
-   * 
+   *
    * IDF(t) = log(1 + (N - df + 0.5) / (df + 0.5))
    */
   static scoreDocument(
@@ -76,7 +76,7 @@ export class BM25Scorer {
    *
    * RETRIEVAL SEMANTICS:
    * - Step 1: OR-union candidate generation preserves documents matching ANY query term
-   * - Step 2: If union size <= candidateTargetSize → return union (no pruning)
+   * - Step 2: If union size <= config.candidateTargetSize → return union (no pruning)
    * - Step 3: Apply soft-AND coverage filtering when union size exceeds threshold
    * - Step 4: Optional truncation by match count if still too large
    * - Synonym expansion compatibility maintained: expanded terms participate in OR union
@@ -105,39 +105,39 @@ export class BM25Scorer {
   ): Set<string> {
     // validTerms avoids repeated index lookups and is reused in coverage calculation
     const validTerms = queryTerms.filter(term => index[term] !== undefined);
-    
+
     if (validTerms.length === 0) {
       return new Set<string>();
     }
-    
+
     // Step 1: Compute unionCandidates via existing union method
     const unionCandidates = this.getUnionCandidates(validTerms, index);
-    
+
     // Step 2: If unionCandidates.size <= config.candidateTargetSize: return unionCandidates
     if (unionCandidates.size <= config.candidateTargetSize) {
       return unionCandidates;
     }
-    
+
     // Step 3: Apply soft pruning: keep docs matching >= Math.ceil(validTerms.length / 2)
     // Coverage threshold scales with query length: ceil(validTerms.length / 2)
     // 1-term → threshold = 1, 2-term → threshold = 1, 3-term → threshold = 2, 4-term → threshold = 2, 5-term → threshold = 3
     // Coverage filtering primarily affects queries with 3+ terms and becomes stricter as query length increases
     const coverageThreshold = Math.ceil(validTerms.length / 2);
     const docMatchCounts = new Map<string, number>(); // docId -> matchCount (accumulates counts for all union docs)
-    
+
     // Postings-first accumulation: O(totalPostingsOfQueryTerms) instead of O(|union| * |terms|)
     for (const term of validTerms) {
       const termData = index[term];
-      if (!termData) continue;
-      
-      for (const docId of Object.keys(termData.postings)) {
-        if (unionCandidates.has(docId)) {
-          const currentCount = docMatchCounts.get(docId) || 0;
-          docMatchCounts.set(docId, currentCount + 1);
+      if (termData) {
+        for (const docId of Object.keys(termData.postings)) {
+          if (unionCandidates.has(docId)) {
+            const currentCount = docMatchCounts.get(docId) || 0;
+            docMatchCounts.set(docId, currentCount + 1);
+          }
         }
       }
     }
-    
+
     // Filter to documents meeting coverage threshold
     const coverageFiltered = new Map<string, number>();
     for (const [docId, matchCount] of docMatchCounts) {
@@ -145,32 +145,32 @@ export class BM25Scorer {
         coverageFiltered.set(docId, matchCount);
       }
     }
-    
+
     // Add debug logging when pruning triggers
     logger.debug(
       `Candidate pruning: union=${unionCandidates.size}, threshold=${coverageThreshold}, afterCoverage=${coverageFiltered.size}`
     );
-    
+
     // Step 4: If still > candidateTargetSize: Sort by matchCount descending. Truncate to candidateTargetSize
     if (coverageFiltered.size > config.candidateTargetSize) {
       const sortedCandidates = Array.from(coverageFiltered.entries())
         .sort((a, b) => b[1] - a[1]) // Sort by match count descending
         .slice(0, config.candidateTargetSize); // Truncate to candidateTargetSize
-      
+
       // Truncation intentionally reduces recall to cap ranking cost.
       // This is a controlled performance safeguard.
       logger.debug(`Candidate truncation: afterTruncation=${sortedCandidates.length}`);
-      
+
       return new Set(sortedCandidates.map(([docId]) => docId));
     }
-    
+
     // Step 5: If pruning yields empty set: return unionCandidates
     // This fallback preserves recall when coverage threshold is too strict
     // for the given query. It is an intentional safety mechanism.
     if (coverageFiltered.size === 0) {
       return unionCandidates;
     }
-    
+
     return new Set(coverageFiltered.keys());
   }
 
@@ -182,10 +182,10 @@ export class BM25Scorer {
 
     for (const term of queryTerms) {
       const termData = index[term];
-      if (!termData) continue;
-
-      for (const docIdStr of Object.keys(termData.postings)) {
-        candidates.add(docIdStr);
+      if (termData) {
+        for (const docIdStr of Object.keys(termData.postings)) {
+          candidates.add(docIdStr);
+        }
       }
     }
 
@@ -193,29 +193,34 @@ export class BM25Scorer {
   }
 
   /**
-   * Helper: Intersect current candidates with postings object directly
-   * Avoids creating intermediate Set for postings
+   * Score multiple documents for a query
    */
-  private static intersectWithPostings(
-    current: Set<string>,
-    postings: { [docId: string]: number }
-  ): Set<string> {
-    const result = new Set<string>();
+  static scoreDocuments(
+    docIds: string[],
+    queryTerms: string[],
+    stats: CorpusStats,
+    index: InvertedIndex,
+    documents: Map<string, any>
+  ): Map<string, number> {
+    const scores = new Map<string, number>();
 
-    for (const docId of current) {
-      if (postings[docId] !== undefined) {
-        result.add(docId);
+    // Compute IDF cache for query terms
+    const idfCache = this.computeIdfCache(queryTerms, index, stats);
+
+    for (const docId of docIds) {
+      const score = this.scoreDocument(docId, queryTerms, idfCache, stats, index);
+      if (score > 0) {
+        scores.set(docId, score);
       }
     }
 
-    return result;
+    return scores;
   }
 
-
   /**
-   * Compute IDF cache for query terms (once per query)
+   * Compute IDF cache for query terms
    */
-  static computeIDFCache(queryTerms: string[], index: InvertedIndex, stats: CorpusStats): Map<string, number> {
+  private static computeIdfCache(queryTerms: string[], index: InvertedIndex, stats: CorpusStats): Map<string, number> {
     const idfCache = new Map<string, number>();
 
     for (const term of queryTerms) {
@@ -227,27 +232,5 @@ export class BM25Scorer {
     }
 
     return idfCache;
-  }
-
-  /**
-   * Score multiple documents for a query
-   */
-  static scoreDocuments(
-    docIds: string[],
-    queryTerms: string[],
-    index: InvertedIndex,
-    stats: CorpusStats,
-    idfCache: Map<string, number>
-  ): Map<string, number> {
-    const scores = new Map<string, number>();
-
-    for (const docId of docIds) {
-      const score = this.scoreDocument(docId, queryTerms, idfCache, stats, index);
-      if (score > 0) {
-        scores.set(docId, score);
-      }
-    }
-
-    return scores;
   }
 }

@@ -100,7 +100,6 @@ export class SearchEngine {
 
     // Get unique terms from retrieval terms for BM25 processing
     const uniqueTerms = retrievalTerms;
-    const idfCache = BM25Scorer.computeIDFCache(uniqueTerms, index, corpusStats);
 
     // Get candidate documents with union-based soft pruning
     const candidateDocs = BM25Scorer.getCandidateDocuments(uniqueTerms, index);
@@ -133,13 +132,13 @@ export class SearchEngine {
       logger.debug(`Phrase boost disabled for this query due to candidate threshold: ${candidateDocs.size} > ${config.phraseScanThreshold}`);
     }
 
-    // Score documents using BM25 with precomputed IDF
+    // Score documents using BM25
     const docScores = BM25Scorer.scoreDocuments(
       Array.from(candidateDocs),
       uniqueTerms,
-      index,
       corpusStats,
-      idfCache
+      index,
+      documents
     );
 
     logger.debug(`Scored ${docScores.size} documents with BM25`);

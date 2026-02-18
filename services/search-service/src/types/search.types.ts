@@ -1,5 +1,6 @@
 export interface Document {
   id: string; // Document ID (e.g., "stackoverflow:92")
+  title?: string; // Optional document title for field-aware scoring
   text: string; // Document content
   metadata: {
     source: string;
@@ -21,10 +22,21 @@ export interface InvertedIndex {
   [term: string]: TermPostings;
 }
 
+export interface FieldIndexes {
+  body: InvertedIndex; // Existing index treated as body field
+  title?: InvertedIndex; // Optional title index (can be empty for now)
+}
+
 export interface CorpusStats {
   total_documents: number;
-  avg_doc_length: number;
-  document_lengths: { [docId: string]: number };
+  avg_doc_length: number; // Legacy: overall average (for backward compatibility)
+  document_lengths: { [docId: string]: number }; // Legacy: overall lengths (for backward compatibility)
+
+  // Field-specific statistics for correct BM25 normalization
+  body_document_lengths?: { [docId: string]: number };
+  title_document_lengths?: { [docId: string]: number };
+  avg_body_length?: number;
+  avg_title_length?: number;
 }
 
 export interface SearchResult {

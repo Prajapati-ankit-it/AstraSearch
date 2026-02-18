@@ -29,7 +29,6 @@ export class IndexLoader {
       const statsData = await fs.readFile(statsPath, 'utf-8');
       this.corpusStats = JSON.parse(statsData);
 
-      // Validate corpus statistics
       // Load documents
       const documentsData = await fs.readFile(documentsPath, 'utf-8');
       const documents: Document[] = JSON.parse(documentsData);
@@ -134,8 +133,10 @@ export class IndexLoader {
       throw new Error('Index not loaded. Call loadIndex() first.');
     }
 
+    const vocabSize = Object.keys(this.index!).length;
+
     return {
-      vocabularySize: Object.keys(this.index!).length,
+      vocabularySize: vocabSize,
       documentsLoaded: this.documents.size,
       totalDocuments: this.corpusStats!.total_documents,
       avgDocLength: this.corpusStats!.avg_doc_length
