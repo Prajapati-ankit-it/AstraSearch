@@ -136,11 +136,10 @@ export class SearchEngine {
     }
 
     // Score documents using field-aware BM25
-    const scoringFieldIndexes = this.indexLoader.getFieldIndexes();
     const docScores = BM25Scorer.scoreDocuments(
       Array.from(candidateDocs),
       uniqueTerms,
-      scoringFieldIndexes,
+      fieldIndexes,
       corpusStats,
       documents
     );

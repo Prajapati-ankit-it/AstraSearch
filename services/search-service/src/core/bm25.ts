@@ -149,25 +149,40 @@ export class BM25Scorer {
       const bodyTermData = fieldIndexes.body[term];
       const titleTermData = fieldIndexes.title?.[term];
       
-      // Get postings from both fields
-      const allPostings = new Set<string>();
-      
-      if (bodyTermData) {
+      // Get postings from both fields - optimize Set allocation
+      if (bodyTermData && titleTermData) {
+        // Both fields exist - need to merge postings
+        const allPostings = new Set<string>();
+        
         for (const docId of Object.keys(bodyTermData.postings)) {
           allPostings.add(docId);
         }
-      }
-      
-      if (titleTermData) {
+        
         for (const docId of Object.keys(titleTermData.postings)) {
           allPostings.add(docId);
         }
-      }
-      
-      for (const docId of allPostings) {
-        if (unionCandidates.has(docId)) {
-          const currentCount = docMatchCounts.get(docId) || 0;
-          docMatchCounts.set(docId, currentCount + 1);
+        
+        for (const docId of allPostings) {
+          if (unionCandidates.has(docId)) {
+            const currentCount = docMatchCounts.get(docId) || 0;
+            docMatchCounts.set(docId, currentCount + 1);
+          }
+        }
+      } else if (bodyTermData) {
+        // Only body postings - iterate directly
+        for (const docId of Object.keys(bodyTermData.postings)) {
+          if (unionCandidates.has(docId)) {
+            const currentCount = docMatchCounts.get(docId) || 0;
+            docMatchCounts.set(docId, currentCount + 1);
+          }
+        }
+      } else if (titleTermData) {
+        // Only title postings - iterate directly
+        for (const docId of Object.keys(titleTermData.postings)) {
+          if (unionCandidates.has(docId)) {
+            const currentCount = docMatchCounts.get(docId) || 0;
+            docMatchCounts.set(docId, currentCount + 1);
+          }
         }
       }
     }
@@ -299,7 +314,6 @@ export class BM25Scorer {
         // Fallback to body length with explicit note that this is an approximation
         docLength = stats.body_document_lengths?.[docId] || stats.document_lengths[docId];
         avgDocLength = stats.avg_body_length || stats.avg_doc_length;
-        logger.debug(`Document ${docId} missing title length, using body length approximation for title field scoring`);
       }
     } else {
       // Body field uses body-specific lengths
@@ -308,7 +322,6 @@ export class BM25Scorer {
     }
 
     if (!Number.isFinite(docLength)) {
-      logger.debug(`Document ${docId} has invalid length: ${docLength} for ${isTitleField ? 'title' : 'body'} field`);
       return 0;
     }
 
