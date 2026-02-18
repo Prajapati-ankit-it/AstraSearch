@@ -133,7 +133,7 @@ export class BM25Scorer {
     }
     
     // Filter to documents meeting coverage threshold
-    let coverageFiltered = new Map<string, number>();
+    const coverageFiltered = new Map<string, number>();
     for (const [docId, matchCount] of prunedCandidates) {
       if (matchCount >= coverageThreshold) {
         coverageFiltered.set(docId, matchCount);
