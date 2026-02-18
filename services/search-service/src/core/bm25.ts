@@ -72,30 +72,29 @@ export class BM25Scorer {
   }
 
   /**
-   * Get candidate documents for a query using OR-based soft pruning
+   * Get candidate documents for a query using union-based soft pruning
    * 
    * OR SEMANTICS PRESERVATION:
-   * - Strict intersection was removed to maintain OR retrieval semantics
+   * - Union-based candidate generation preserves OR retrieval semantics
    * - Query semantics remain OR: documents matching ANY query term are candidates
    * - Synonym expansion compatibility maintained: expanded terms participate in OR union
    * - No silent semantic changes from OR to AND behavior
    * 
    * SOFT PRUNING STRATEGY:
-   * - Union-based retrieval: Start with all documents matching any query term
-   * - Coverage threshold filtering: Keep docs matching ≥ half of query terms
-   * - Soft coverage threshold is safer than strict intersection, preserves recall
+   * - Pruning happens post-union: all OR-matching documents considered initially
+   * - Coverage threshold filtering: keep docs matching ≥ half of query terms
+   * - Soft coverage threshold balances quality and recall
    * - Final truncation by match count if still over target size
-   * - Safety fallback to union if pruning eliminates too many candidates
+   * - Recall preserved except when extremely large candidate sets require trimming
    * 
    * RANKING LAYER UNTOUCHED:
    * - This method only reduces the candidate set passed to ranking
    * - Scoring formulas, signal logic, and weight modulation remain unchanged
-   * - Ranking receives a smaller but high-quality candidate set with OR semantics preserved
+   * - Ranking receives a smaller but high-quality candidate set
    */
   static getCandidateDocuments(
     queryTerms: string[],
-    index: InvertedIndex,
-    stats: CorpusStats
+    index: InvertedIndex
   ): Set<string> {
     // Filter out terms not in index
     const validTerms = queryTerms.filter(term => index[term] !== undefined);
@@ -104,22 +103,22 @@ export class BM25Scorer {
       return new Set<string>();
     }
     
-    // 1️⃣ Restore union-based retrieval
+    // 1️⃣ Compute unionCandidates via existing union method
     const unionCandidates = this.getUnionCandidates(validTerms, index);
     
-    // 2️⃣ If union size is within target, return as-is
+    // 2️⃣ If unionCandidates.size <= config.candidateTargetSize: return unionCandidates
     if (unionCandidates.size <= config.candidateTargetSize) {
       return unionCandidates;
     }
     
-    // 3️⃣ Apply soft pruning: keep docs matching ≥ half of query terms
+    // 3️⃣ If unionCandidates.size > config.candidateTargetSize: Apply soft pruning
     const coverageThreshold = Math.ceil(validTerms.length / 2);
     const prunedCandidates = new Map<string, number>(); // docId -> matchCount
     
     for (const docId of unionCandidates) {
       let matchCount = 0;
       
-      // Count how many distinct query terms this document matches
+      // Compute distinct matched term count
       for (const term of validTerms) {
         const termData = index[term];
         if (termData && termData.postings[docId] !== undefined) {
@@ -127,24 +126,23 @@ export class BM25Scorer {
         }
       }
       
-      // Keep docs meeting coverage threshold
+      // Keep docs where: matchCount >= Math.ceil(validTerms.length / 2)
       if (matchCount >= coverageThreshold) {
         prunedCandidates.set(docId, matchCount);
       }
     }
     
-    // 4️⃣ If still over target size, sort by match count and truncate
+    // 4️⃣ If still > candidateTargetSize: Sort by matchCount descending. Truncate to candidateTargetSize
     if (prunedCandidates.size > config.candidateTargetSize) {
       const sortedCandidates = Array.from(prunedCandidates.entries())
         .sort((a, b) => b[1] - a[1]) // Sort by match count descending
-        .slice(0, config.candidateTargetSize); // Truncate to target size
+        .slice(0, config.candidateTargetSize); // Truncate to candidateTargetSize
       
       return new Set(sortedCandidates.map(([docId]) => docId));
     }
     
-    // 5️⃣ Safety fallback: if pruning eliminated too many and results empty
+    // 5️⃣ If pruning yields empty set: return unionCandidates
     if (prunedCandidates.size === 0) {
-      logger.debug(`Soft pruning eliminated all candidates, falling back to union (${unionCandidates.size} candidates)`);
       return unionCandidates;
     }
     
