@@ -75,21 +75,24 @@ export class BM25Scorer {
    * Get candidate documents for a query using union-based soft pruning
    *
    * RETRIEVAL SEMANTICS:
-   * - Initial union preserves OR semantics: documents matching ANY query term are candidates
-   * - Coverage filtering introduces soft-AND behavior: requires ≥ half of query terms to match
+   * - Step 1: OR-union candidate generation preserves documents matching ANY query term
+   * - Step 2: If union size <= candidateTargetSize → return union (no pruning)
+   * - Step 3: Apply soft-AND coverage filtering when union size exceeds threshold
+   * - Step 4: Optional truncation by match count if still too large
    * - Synonym expansion compatibility maintained: expanded terms participate in OR union
    * - No silent semantic changes from OR to AND behavior
    *
    * RECALL AND PERFORMANCE TRADEOFFS:
-   * - Recall is reduced when unionCandidates.size > candidateTargetSize
-   * - Truncation is an explicit performance safeguard that intentionally reduces recall to cap ranking cost
-   * - Coverage threshold scales with query length: 1 term → threshold = 1, 2 terms → threshold = 1, 3 terms → threshold = 2, etc.
+   * - Recall is reduced when union candidate count exceeds candidateTargetSize
+   * - This is an explicit performance tradeoff to cap ranking cost
+   * - Fallback to unionCandidates when coverage filtering produces zero results
+   *   is an intentional recall safety guard
    *
    * SOFT PRUNING STRATEGY:
-   * - Pruning happens post-union: all OR-matching documents considered initially
-   * - Coverage threshold filtering: keep docs matching ≥ half of query terms
-   * - Soft coverage threshold balances quality and recall
-   * - Final truncation by match count if still over target size
+   * - Coverage threshold scales with query length: ceil(validTerms.length / 2)
+   * - 1-term → threshold = 1, 2-term → threshold = 1, 3-term → threshold = 2, etc.
+   * - Coverage filtering primarily affects queries with 3+ terms
+   * - Becomes stricter as query length increases
    *
    * RANKING LAYER UNTOUCHED:
    * - This method only reduces the candidate set passed to ranking
@@ -116,8 +119,11 @@ export class BM25Scorer {
     }
     
     // Step 3: Apply soft pruning: keep docs matching >= Math.ceil(validTerms.length / 2)
+    // Coverage threshold scales with query length: ceil(validTerms.length / 2)
+    // 1-term → threshold = 1, 2-term → threshold = 1, 3-term → threshold = 2, 4-term → threshold = 2, 5-term → threshold = 3
+    // Coverage filtering primarily affects queries with 3+ terms and becomes stricter as query length increases
     const coverageThreshold = Math.ceil(validTerms.length / 2);
-    const prunedCandidates = new Map<string, number>(); // docId -> matchCount
+    const docMatchCounts = new Map<string, number>(); // docId -> matchCount (accumulates counts for all union docs)
     
     // Postings-first accumulation: O(totalPostingsOfQueryTerms) instead of O(|union| * |terms|)
     for (const term of validTerms) {
@@ -126,22 +132,24 @@ export class BM25Scorer {
       
       for (const docId of Object.keys(termData.postings)) {
         if (unionCandidates.has(docId)) {
-          const currentCount = prunedCandidates.get(docId) || 0;
-          prunedCandidates.set(docId, currentCount + 1);
+          const currentCount = docMatchCounts.get(docId) || 0;
+          docMatchCounts.set(docId, currentCount + 1);
         }
       }
     }
     
     // Filter to documents meeting coverage threshold
     let coverageFiltered = new Map<string, number>();
-    for (const [docId, matchCount] of prunedCandidates) {
+    for (const [docId, matchCount] of docMatchCounts) {
       if (matchCount >= coverageThreshold) {
         coverageFiltered.set(docId, matchCount);
       }
     }
     
     // Add debug logging when pruning triggers
-    logger.debug(`Candidate pruning: union=${unionCandidates.size}, threshold=${coverageThreshold}, after_coverage=${coverageFiltered.size}`);
+    logger.debug(
+      `Candidate pruning: union=${unionCandidates.size}, threshold=${coverageThreshold}, afterCoverage=${coverageFiltered.size}`
+    );
     
     // Step 4: If still > candidateTargetSize: Sort by matchCount descending. Truncate to candidateTargetSize
     if (coverageFiltered.size > config.candidateTargetSize) {
@@ -149,13 +157,16 @@ export class BM25Scorer {
         .sort((a, b) => b[1] - a[1]) // Sort by match count descending
         .slice(0, config.candidateTargetSize); // Truncate to candidateTargetSize
       
-      // Truncation intentionally reduces recall to cap ranking cost
-      logger.debug(`Candidate truncation: after_truncation=${sortedCandidates.length}`);
+      // Truncation intentionally reduces recall to cap ranking cost.
+      // This is a controlled performance safeguard.
+      logger.debug(`Candidate truncation: afterTruncation=${sortedCandidates.length}`);
       
       return new Set(sortedCandidates.map(([docId]) => docId));
     }
     
     // Step 5: If pruning yields empty set: return unionCandidates
+    // This fallback preserves recall when coverage threshold is too strict
+    // for the given query. It is an intentional safety mechanism.
     if (coverageFiltered.size === 0) {
       return unionCandidates;
     }
