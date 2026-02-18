@@ -18,7 +18,5 @@ export const config = {
   },
   phraseScanThreshold: parseInt(process.env.PHRASE_SCAN_THRESHOLD || '2000'),
   proximityScanThreshold: parseInt(process.env.PROXIMITY_SCAN_THRESHOLD || '2000'),
-  candidateTargetSize: parseInt(process.env.CANDIDATE_TARGET_SIZE || '5000'),
-  titleWeight: parseFloat(process.env.TITLE_WEIGHT || '2.0'),
-  bodyWeight: parseFloat(process.env.BODY_WEIGHT || '1.0')
+  candidateTargetSize: parseInt(process.env.CANDIDATE_TARGET_SIZE || '5000')
 };
