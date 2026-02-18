@@ -1,5 +1,6 @@
 export interface Document {
   id: string; // Document ID (e.g., "stackoverflow:92")
+  title?: string; // Optional document title for field-aware scoring
   text: string; // Document content
   metadata: {
     source: string;
@@ -19,6 +20,11 @@ export interface TermPostings {
 
 export interface InvertedIndex {
   [term: string]: TermPostings;
+}
+
+export interface FieldIndexes {
+  body: InvertedIndex; // Existing index treated as body field
+  title?: InvertedIndex; // Optional title index (can be empty for now)
 }
 
 export interface CorpusStats {

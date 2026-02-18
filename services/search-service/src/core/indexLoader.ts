@@ -1,12 +1,12 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { InvertedIndex, Document, CorpusStats } from '../types/search.types';
+import { InvertedIndex, FieldIndexes, Document, CorpusStats } from '../types/search.types';
 import { logger } from '../utils/logger';
 import { config } from '../config/config';
 import { NORMALIZATION_VERSION } from './query/QueryNormalizer';
 
 export class IndexLoader {
-  private index: InvertedIndex | null = null;
+  private fieldIndexes: FieldIndexes | null = null;
   private documents: Map<string, Document> = new Map();
   private corpusStats: CorpusStats | null = null;
   private loaded = false;
@@ -21,9 +21,15 @@ export class IndexLoader {
       logger.info(`Loading documents from: ${documentsPath}`);
       logger.info(`Loading stats from: ${statsPath}`);
 
-      // Load inverted index
+      // Load inverted index (treated as body field)
       const indexData = await fs.readFile(indexPath, 'utf-8');
-      this.index = JSON.parse(indexData);
+      const bodyIndex: InvertedIndex = JSON.parse(indexData);
+
+      // Initialize field indexes: body is required, title is optional
+      this.fieldIndexes = {
+        body: bodyIndex,
+        title: undefined // Can be populated later if title indexing is implemented
+      };
 
       // Load corpus statistics
       const statsData = await fs.readFile(statsPath, 'utf-8');
@@ -43,7 +49,8 @@ export class IndexLoader {
       this.loaded = true;
 
       logger.info(`Index loaded successfully:`);
-      logger.info(`- Vocabulary size: ${Object.keys(this.index!).length}`);
+      logger.info(`- Body vocabulary size: ${Object.keys(bodyIndex).length}`);
+      logger.info(`- Title index: ${this.fieldIndexes.title ? 'loaded' : 'not loaded'}`);
       logger.info(`- Documents loaded: ${this.documents.size}`);
       logger.info(`- Total documents in corpus: ${this.corpusStats!.total_documents}`);
       logger.info(`- Average document length: ${this.corpusStats!.avg_doc_length.toFixed(2)}`);
@@ -98,10 +105,18 @@ export class IndexLoader {
   }
 
   getIndex(): InvertedIndex {
-    if (!this.loaded || !this.index) {
+    if (!this.loaded || !this.fieldIndexes) {
       throw new Error('Index not loaded. Call loadIndex() first.');
     }
-    return this.index;
+    // For backward compatibility, return body index
+    return this.fieldIndexes.body;
+  }
+
+  getFieldIndexes(): FieldIndexes {
+    if (!this.loaded || !this.fieldIndexes) {
+      throw new Error('Index not loaded. Call loadIndex() first.');
+    }
+    return this.fieldIndexes;
   }
 
   getCorpusStats(): CorpusStats {
@@ -134,8 +149,12 @@ export class IndexLoader {
       throw new Error('Index not loaded. Call loadIndex() first.');
     }
 
+    const bodyVocabSize = Object.keys(this.fieldIndexes!.body).length;
+    const titleVocabSize = this.fieldIndexes!.title ? Object.keys(this.fieldIndexes!.title).length : 0;
+
     return {
-      vocabularySize: Object.keys(this.index!).length,
+      bodyVocabularySize: bodyVocabSize,
+      titleVocabularySize: titleVocabSize,
       documentsLoaded: this.documents.size,
       totalDocuments: this.corpusStats!.total_documents,
       avgDocLength: this.corpusStats!.avg_doc_length

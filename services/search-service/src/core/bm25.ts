@@ -1,4 +1,4 @@
-import { InvertedIndex, CorpusStats } from '../types/search.types';
+import { InvertedIndex, CorpusStats, FieldIndexes, Document } from '../types/search.types';
 import { config } from '../config/config';
 import { logger } from '../utils/logger';
 
@@ -213,9 +213,9 @@ export class BM25Scorer {
 
 
   /**
-   * Compute IDF cache for query terms (once per query)
+   * Compute IDF cache for query terms in a specific field
    */
-  static computeIDFCache(queryTerms: string[], index: InvertedIndex, stats: CorpusStats): Map<string, number> {
+  private static computeFieldIdfCache(queryTerms: string[], index: InvertedIndex, stats: CorpusStats): Map<string, number> {
     const idfCache = new Map<string, number>();
 
     for (const term of queryTerms) {
@@ -230,21 +230,110 @@ export class BM25Scorer {
   }
 
   /**
-   * Score multiple documents for a query
+   * Compute BM25 score for a document in a specific field
+   */
+  private static computeFieldScore(
+    docId: string,
+    queryTerms: string[],
+    index: InvertedIndex,
+    idfCache: Map<string, number>,
+    stats: CorpusStats,
+    documents: Map<string, Document>
+  ): number {
+    let totalScore = 0;
+    const document = documents.get(docId);
+    if (!document) {
+      return 0;
+    }
+
+    // Use document length from stats (same for both fields)
+    const docLength = stats.document_lengths[docId];
+    if (!Number.isFinite(docLength)) {
+      logger.debug(`Document ${docId} has invalid length: ${docLength}`);
+      return 0;
+    }
+
+    for (const term of queryTerms) {
+      const termData = index[term];
+      if (!termData) {
+        continue; // Term not in this field's index
+      }
+
+      const tf = termData.postings[docId];
+      if (!tf) {
+        continue; // Term not in this document for this field
+      }
+
+      const idf = idfCache.get(term);
+      if (idf === undefined) {
+        continue; // Term not in IDF cache for this field
+      }
+
+      const bm25Component = this.computeBM25Component(tf, docLength, stats.avg_doc_length);
+      totalScore += idf * bm25Component;
+    }
+
+    return totalScore;
+  }
+
+  /**
+   * Score multiple documents for a query using field-aware BM25
+   *
+   * FIELD-AWARE SCORING:
+   * - Computes separate BM25 scores for title and body fields
+   * - Combines scores: score = (titleWeight * titleBM25) + (bodyWeight * bodyBM25)
+   * - Falls back to body-only scoring if title field absent or title index empty
+   * - Title weighting improves ranking precision for title-relevant queries
+   * - Does not change recall: same documents retrieved, just better scoring
+   * - Pruning layer remains untouched: field-aware scoring is post-retrieval
+   *
+   * BACKWARD COMPATIBILITY:
+   * - If title index is undefined or empty, uses body-only scoring
+   * - IDF computation per field ensures correctness and no double-counting
+   * - RankingContext and signals unchanged: only BM25 base score modified
    */
   static scoreDocuments(
     docIds: string[],
     queryTerms: string[],
-    index: InvertedIndex,
+    fieldIndexes: FieldIndexes,
     stats: CorpusStats,
-    idfCache: Map<string, number>
+    documents: Map<string, Document>
   ): Map<string, number> {
     const scores = new Map<string, number>();
+    const { titleWeight, bodyWeight } = config;
+    
+    // Debug logging (once per query)
+    if (fieldIndexes.title && Object.keys(fieldIndexes.title).length > 0) {
+      logger.debug(`Field-aware BM25 active: titleWeight=${titleWeight}, bodyWeight=${bodyWeight}`);
+    }
+
+    // Compute IDF caches for each field
+    const bodyIdfCache = this.computeFieldIdfCache(queryTerms, fieldIndexes.body, stats);
+    const titleIdfCache = fieldIndexes.title 
+      ? this.computeFieldIdfCache(queryTerms, fieldIndexes.title, stats)
+      : new Map<string, number>();
 
     for (const docId of docIds) {
-      const score = this.scoreDocument(docId, queryTerms, idfCache, stats, index);
-      if (score > 0) {
-        scores.set(docId, score);
+      const document = documents.get(docId);
+      if (!document) {
+        logger.warn(`Document ${docId} not found in documents map`);
+        continue;
+      }
+
+      // Compute body BM25 score (always available)
+      const bodyScore = this.computeFieldScore(docId, queryTerms, fieldIndexes.body, bodyIdfCache, stats, documents);
+
+      // Compute title BM25 score (if title field available)
+      let titleScore = 0;
+      if (document.title && fieldIndexes.title && titleIdfCache.size > 0) {
+        titleScore = this.computeFieldScore(docId, queryTerms, fieldIndexes.title, titleIdfCache, stats, documents);
+      }
+
+      // Combine field scores with weights
+      const finalScore = (titleWeight * titleScore) + (bodyWeight * bodyScore);
+      
+      if (finalScore > 0) {
+        scores.set(docId, finalScore);
       }
     }
 
