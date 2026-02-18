@@ -268,7 +268,7 @@ export class SearchEngine {
 
     // Check if any two positions are close (within reasonable proximity)
     // Use a simple heuristic: check if min span is small enough
-    const minSpan = Math.min(...positions) - Math.max(...positions) + 1;
+    const minSpan = Math.max(...positions) - Math.min(...positions) + 1;
     return minSpan <= queryTerms.length * 2; // Allow some spacing between terms
   }
 
