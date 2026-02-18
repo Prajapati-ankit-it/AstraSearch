@@ -378,6 +378,8 @@ export class BM25Scorer {
     // Debug logging (once per query)
     if (fieldIndexes.title && Object.keys(fieldIndexes.title).length > 0) {
       logger.debug(`Field-aware BM25 active: titleWeight=${titleWeight}, bodyWeight=${bodyWeight}`);
+    } else {
+      logger.debug(`Field-aware BM25 fallback to body-only scoring: title index missing or empty. titleWeight=${titleWeight}, bodyWeight=${bodyWeight}`);
     }
 
     // Compute IDF caches for each field
