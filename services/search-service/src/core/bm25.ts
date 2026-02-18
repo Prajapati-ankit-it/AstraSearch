@@ -149,7 +149,7 @@ export class BM25Scorer {
       const bodyTermData = fieldIndexes.body[term];
       const titleTermData = fieldIndexes.title?.[term];
       
-      // Get postings from both fields - optimize Set allocation
+      // Merge postings from body and title for this term, deduplicating docIds so each doc is counted once
       if (bodyTermData && titleTermData) {
         // Both fields exist - need to merge postings
         const allPostings = new Set<string>();
