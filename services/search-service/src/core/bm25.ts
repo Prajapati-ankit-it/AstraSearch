@@ -72,25 +72,25 @@ export class BM25Scorer {
   }
 
   /**
-   * Get candidate documents for a query using progressive pruning
+   * Get candidate documents for a query using OR-based soft pruning
    * 
-   * PROGRESSIVE PRUNING STRATEGY:
-   * - Rare-first intersection: Sort query terms by increasing document frequency
-   *   This maximizes early reduction of candidate set size by starting with the most selective terms
-   * - Progressive intersection: Stop intersecting when candidate set ≤ target size
-   *   This preserves recall while avoiding unnecessary computation
-   * - Safety fallback: If progressive intersection yields zero candidates but union would not,
-   *   fall back to union to preserve recall for documents matching all query terms
+   * OR SEMANTICS PRESERVATION:
+   * - Strict intersection was removed to maintain OR retrieval semantics
+   * - Query semantics remain OR: documents matching ANY query term are candidates
+   * - Synonym expansion compatibility maintained: expanded terms participate in OR union
+   * - No silent semantic changes from OR to AND behavior
+   * 
+   * SOFT PRUNING STRATEGY:
+   * - Union-based retrieval: Start with all documents matching any query term
+   * - Coverage threshold filtering: Keep docs matching ≥ half of query terms
+   * - Soft coverage threshold is safer than strict intersection, preserves recall
+   * - Final truncation by match count if still over target size
+   * - Safety fallback to union if pruning eliminates too many candidates
    * 
    * RANKING LAYER UNTOUCHED:
    * - This method only reduces the candidate set passed to ranking
    * - Scoring formulas, signal logic, and weight modulation remain unchanged
-   * - Ranking receives a smaller but high-quality candidate set
-   * 
-   * PERFORMANCE:
-   * - O(N log N) where N = number of query terms (for sorting by frequency)
-   * - Intersection cost proportional to candidate set size, not corpus size
-   * - Early termination reduces unnecessary intersection work
+   * - Ranking receives a smaller but high-quality candidate set with OR semantics preserved
    */
   static getCandidateDocuments(
     queryTerms: string[],
@@ -104,46 +104,51 @@ export class BM25Scorer {
       return new Set<string>();
     }
     
-    if (validTerms.length === 1) {
-      // Single term: return all postings for that term
-      const termData = index[validTerms[0]];
-      return new Set(Object.keys(termData.postings));
+    // 1️⃣ Restore union-based retrieval
+    const unionCandidates = this.getUnionCandidates(validTerms, index);
+    
+    // 2️⃣ If union size is within target, return as-is
+    if (unionCandidates.size <= config.candidateTargetSize) {
+      return unionCandidates;
     }
     
-    // Sort terms by increasing document frequency (rare terms first)
-    const sortedTerms = [...validTerms].sort((a, b) => index[a].df - index[b].df);
+    // 3️⃣ Apply soft pruning: keep docs matching ≥ half of query terms
+    const coverageThreshold = Math.ceil(validTerms.length / 2);
+    const prunedCandidates = new Map<string, number>(); // docId -> matchCount
     
-    // Start with postings of rarest term
-    const firstTermData = index[sortedTerms[0]];
-    let candidates = new Set(Object.keys(firstTermData.postings));
-    
-    // Progressively intersect with remaining terms
-    for (let i = 1; i < sortedTerms.length; i++) {
-      // Stop if we've reached target size
-      if (candidates.size <= config.candidateTargetSize) {
-        break;
+    for (const docId of unionCandidates) {
+      let matchCount = 0;
+      
+      // Count how many distinct query terms this document matches
+      for (const term of validTerms) {
+        const termData = index[term];
+        if (termData && termData.postings[docId] !== undefined) {
+          matchCount++;
+        }
       }
       
-      const termData = index[sortedTerms[i]];
-      candidates = this.intersectWithPostings(candidates, termData.postings);
+      // Keep docs meeting coverage threshold
+      if (matchCount >= coverageThreshold) {
+        prunedCandidates.set(docId, matchCount);
+      }
+    }
+    
+    // 4️⃣ If still over target size, sort by match count and truncate
+    if (prunedCandidates.size > config.candidateTargetSize) {
+      const sortedCandidates = Array.from(prunedCandidates.entries())
+        .sort((a, b) => b[1] - a[1]) // Sort by match count descending
+        .slice(0, config.candidateTargetSize); // Truncate to target size
       
-      // If intersection yields zero candidates, we might be too restrictive
-      if (candidates.size === 0) {
-        break;
-      }
+      return new Set(sortedCandidates.map(([docId]) => docId));
     }
     
-    // Safety fallback: if progressive intersection produced zero candidates 
-    // but union would produce candidates, fall back to union to preserve recall
-    if (candidates.size === 0) {
-      const unionCandidates = this.getUnionCandidates(validTerms, index);
-      if (unionCandidates.size > 0) {
-        logger.debug(`Progressive intersection yielded 0 candidates, falling back to union (${unionCandidates.size} candidates)`);
-        return unionCandidates;
-      }
+    // 5️⃣ Safety fallback: if pruning eliminated too many and results empty
+    if (prunedCandidates.size === 0) {
+      logger.debug(`Soft pruning eliminated all candidates, falling back to union (${unionCandidates.size} candidates)`);
+      return unionCandidates;
     }
     
-    return candidates;
+    return new Set(prunedCandidates.keys());
   }
 
   /**
