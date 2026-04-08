@@ -1,83 +1,98 @@
-# AstraSearch - Problem-Solution Search Engine
+# AstraSearch - StackOverflow Search Engine
 
-A scalable indexing system for searching StackOverflow answers using Python.
+Search engine for StackOverflow answers using BM25 and structural ranking.
 
-## Project Structure
+## Problem
 
-```
-search-engine/
-│
-├── configs/
-│
-├── data/
-│
-├── index/
-│
-├── pipeline/                ← Python offline jobs
-│
-├── services/                ← online services
-│   │
-│   └── search-service/      ← Node service
-│
-├── crawler/
-│
-├── docker/
-│
-├── requirements.txt
-└── README.md
+Keyword search does not rank results well because it ignores:
 
-```
+* term importance
+* title vs body difference
+* phrase match and proximity
 
-## Features
+## Solution
 
-- **Configuration-driven schema mapping** via YAML
-- **Streaming CSV processing** for memory efficiency
-- **Modular text processing pipeline** (cleaning → normalization → tokenization)
-- **Scalable inverted index** supporting millions of documents
-- **Production-style error handling** and logging
-- **Incremental indexing** support for future scaling
+Two-stage system:
 
-## Quick Start
+* Python pipeline builds an inverted index
+* Node.js service handles queries and ranking
 
-1. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+## System Design
 
-2. Run the indexing pipeline:
-```bash
-python pipeline/run_pipeline.py
-```
+**Architecture**
 
-3. Check the output:
-   - Processed documents: `data/processed/documents.json`
-   - Search index: `index/inverted_index.json`
-   - Statistics: `index/stats.json`
+* Offline indexing (Python)
+* Online query serving (Node.js)
 
-## Pipeline Stages
+**Components**
 
-1. **Document Extraction**: Reads CSV data, maps fields via config, cleans HTML
-2. **Text Processing**: Normalizes, tokenizes, and removes stopwords
-3. **Index Building**: Creates inverted index with efficient posting lists
-4. **Persistence**: Saves index and statistics to disk
+* Index builder: parses data, tokenizes, builds postings
+* Search service: query processing, retrieval, ranking
+* Inverted index: term → document list with frequencies
+* Evaluation: precision, recall, NDCG
 
-## Configuration
+**Data Flow**
 
-Edit `configs/ingestion.yaml` to modify field mappings:
+1. Read CSV → clean HTML
+2. Normalize + tokenize
+3. Build inverted index
+4. Query → tokenize → retrieve candidates → BM25 → ranking → top-K
 
-```yaml
-dataset: stackoverflow_answers
+**Design Choices**
 
-fields:
-  doc_id: Id
-  parent_id: ParentId
-  score: Score
-  content: Body
-```
+* Split indexing and serving → better performance isolation
+* JSON index → easy debugging, higher memory cost
+* Modular ranking → easy to add/remove signals
+* Soft filtering → reduces work but may drop some results
+
+**Tradeoffs**
+
+* Faster development vs memory efficiency (JSON)
+* Lower latency vs lower recall (filtering)
+* Simple design vs no real-time updates
 
 ## Performance
 
-- Processes 20K documents in ~10 seconds
-- Memory-efficient streaming design
-- Scales to 1M+ documents without redesign
-- Configurable batch processing for larger datasets
+* Tested up to ~300K documents
+* Query latency:
+
+  * cache hit: <1 ms
+  * cache miss: 10–50 ms
+* Main cost: candidate retrieval from posting lists
+* Memory grows linearly with data size
+
+## Tech Stack
+
+* Python (indexing)
+* Node.js + Fastify (API)
+* TypeScript
+* JSON index
+
+## Features
+
+* BM25 scoring
+* Field-aware ranking (title, body)
+* Phrase and proximity signals
+* Query intent handling
+* Evaluation tools
+
+## How to Run
+
+```bash
+pip install -r requirements.txt
+cd services/search-service && npm install
+
+python pipeline/run_pipeline.py
+cd services/search-service && npm run dev
+
+curl "http://localhost:3000/search?q=javascript%20promise&limit=10"
+```
+
+## Limitations
+
+* Full index in memory (not efficient at large scale)
+* No incremental updates
+* No query operators (AND/OR)
+* No distributed support
+
+---
